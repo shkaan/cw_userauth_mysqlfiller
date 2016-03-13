@@ -1,0 +1,73 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: medium;
+}
+
+.container {
+    position: absolute;
+    top: 35%;
+    left: 20%;
+    transform: translateY(-50%);
+}
+
+.table-scroll {
+    height: 500px;
+    overflow: auto;
+    background-color: #fcfcfc;
+}
+
+#thead-color {
+    color: #113006;
+}
+
+#topbox {
+    position: absolute;
+    width: 90%;
+    height: 10%;
+
+    border: 3px solid #237aff;
+    left: 0;
+    background-color: #237aff;
+}
+
+#messages {
+    position: relative;
+}
+
+#welcome {
+    position: fixed;
+    right: 0;
+    width: 10%;
+    height: 10%;
+    border: 2px solid #237aff;
+    padding: 10px;
+    /*font-size: small;*/
+}
+
+#error {
+    position: relative;
+
+    color: #e40000;
+    font-size: medium;
+}
+
+#info {
+    position: relative;
+    color: #097f02;
+}
+
+.row {
+    position: relative;
+    margin-top: 10%;
+    margin-left: 10%;
+}
+
+#register {
+    position: relative;
+    left: 1%;
+
+}
+
+.voffset1 {
+    margin-top: 5%;
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head.ejs %>
+    <title><%= title %></title>
+</head>
+
+<body>
+
+<div id="welcome">
+    <p align="center">
+        User logged in: <strong><%= user %></strong>
+    </p>
+
+    <p align="center">
+        <a href="/signout" title="sign out">sign out</a>
+    </p>
+</div>
+
+<div id="topbox"></div>
+
+<div class="container-fluid">
+
+
+    <div class="row">
+        <form method="post" action="/mainPost">
+            <div class="col-xs-4">
+                <input type="text" name="question" class="form-control" placeholder="Question"
+                       required="true" autofocus="autofocus">
+            </div>
+
+            <div class="col-xs-4">
+                <input type="text" name="answer" class="form-control" placeholder="Answer" required="true">
+            </div>
+
+            <div class="col-xs-1">
+                <input type="submit" class="btn btn-primary" value="Save to DB">
+            </div>
+
+            <div class="col-xs-3" id="messages">
+                <% if (errorMessage) { %>
+                <span id="error"><%= errorMessage %></span>
+                <% }else{ %>
+                <span id="info"><%= infoMessage %></span>
+                <% } %>
+            </div>
+
+
+        </form>
+
+        <!--<div class="col-xs-12">-->
+        <div class="voffset1">
+            <h3>Your recent entries:</h3>
+        </div>
+
+        <div class="col-xs-8">
+            <div class="table-scroll">
+
+
+                <table class="table">
+                    <thead id="thead-color">
+                    <tr>
+                        <th class="col-xs-1">#</th>
+                        <th class="col-xs-4">Question</th>
+                        <th class="col-xs-4">Answer</th>
+                        <!--<th class="col-xs-1"></th>-->
+                    </tr>
+                    </thead>
+
+                    <tbody id="table-body">
+                    <% if (question) { %>
+                    <% question.forEach(function(ques, i){ %>
+                    <tr class="blink">
+
+                        <td class="col-xs-1 "><%= i + 1 %></td>
+                        <td class="col-xs-5 id=question"><%= ques.question %></td>
+                        <td class="col-xs-5 id=answer"><%= ques.answer %></td>
+                        <td class="btn-default btn-xs">Edit</td>
+                        <td class="btn-default btn-xs deletebtn">Delete</td>
+
+
+                    </tr>
+                    <% })} %>
+                    <!--<tfoot>-->
+                    <!--<tr>-->
+                    <!--<th class="col-xs-1">ID</th>-->
+                    <!--<th class="col-xs-4">Question</th>-->
+                    <!--<th class="col-xs-4">Answer</th>-->
+                    <!--</tr>-->
+                    <!--</tfoot>-->
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#messages").delay(2500).fadeOut(800);
+        $('.blink:last').animate({opacity: 0.25}, 150, "linear", function () {
+            $(this).delay(1000).animate({opacity: 1}, 400);
+        });
+        var $body = $('tbody');
+        var list = $body.children('tr');
+        $body.html(list.get().reverse());
+
+
+    });
+
+    $(function () {
+//
+        $('.deletebtn').click(function () {
+            var question = $(this).closest('tr').find('td:nth-child(2)').text();
+            var answer=$(this).closest('tr').find('td:nth-child(3)').text();
+
+            $.ajax({
+                type: 'POST',
+//                contentType: 'application/json',
+//                dataType: "json",
+                url: 'http://localhost:3000/deleteRow',
+                data: {
+                    question: question,
+                    answer: answer
+                },
+                success: function (res) {
+//                    alert('success');
+                    console.log(JSON.stringify(res));
+                }
+
+            })
+
+
+        });
+    })
+</script>
+
+</body>
+</html>
+
+
