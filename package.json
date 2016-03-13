@@ -1,8 +1,7 @@
 {
-  "name": "passport_mysql_express_auth",
-  "description": "ExpressJs + Passport.js + MySQL Authentication",
+  "name": "cw_db_filler_with_user_auth",
   "version": "1.0.0",
-  "author": "shkaan",
+  "description": "db filler app with user authentication",
   "main": "app.js",
   "dependencies": {
     "bcrypt-nodejs": "*",
@@ -17,5 +16,19 @@
     "mysql": "*",
     "passport": "*",
     "passport-local": "*"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shkaan/try.git"
+  },
+  "author": "shkaan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shkaan/try/issues"
+  },
+  "homepage": "https://github.com/shkaan/try#readme"
 }
