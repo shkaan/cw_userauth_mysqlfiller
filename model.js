@@ -8,16 +8,15 @@ var User = DB.Model.extend({
 
 var Words = DB.Model.extend({
     tableName: 'cwWords',
+    idAttribute: 'entryId',
     timestamps: true
 
 });
 
-//Fetch helper function
-var fetcher = function (id, callback) {
-    //var sessid = id;
-    Words.where({
-        sessionid: id
-    }).query()
+//DB query, post, delete, etc  helper functions
+var fetcher = function (columnName, columnValue, callback) {
+    Words.where(columnName, columnValue
+    ).query()
         .then(function (result) {
                 //console.log(result);
                 callback(result);
@@ -25,12 +24,20 @@ var fetcher = function (id, callback) {
         )
 };
 
-//module.exports.fetcher = fetcher;
+var rowDeleter = function (columnId, callback) {
+    Words.where('entryId', columnId)
+        .destroy()
+        .then(function (result) {
+            //console.log(result);
+            callback('deleted succesfully');
+        })
 
+};
 
 module.exports = {
     User: User,
     Words: Words,
-    fetcher: fetcher
+    fetcher: fetcher,
+    rowDeleter: rowDeleter
 };
 

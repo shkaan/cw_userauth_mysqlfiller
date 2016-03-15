@@ -16,6 +16,9 @@ var route = require('./route');
 // model
 var Model = require('./model');
 
+var urlencodedParser = bodyParser.urlencoded({extended: false});
+//var jsonParser = bodyParser.json();
+
 var app = express();
 
 passport.use(new LocalStrategy(function (username, password, done) {
@@ -49,11 +52,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-var urlencodedParser = bodyParser.urlencoded({extended: false});
-var jsonParser = bodyParser.json();
 
-//app.use(session({secret: 'secret strategic xxzzz code'}));
-app.use(morgan('dev', {immediate: false}));
+
 app.use(cookieParser());
 app.use(session({
     secret: 'noobs and boobs',
@@ -63,6 +63,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(morgan('dev', {immediate: false}));
 
 app.use(express.static(path.join(__dirname, 'static')));
 

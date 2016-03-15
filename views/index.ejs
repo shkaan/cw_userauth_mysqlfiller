@@ -17,7 +17,9 @@
     </p>
 </div>
 
-<div id="topbox"></div>
+<div id="topbox">
+    <h1>CrossWord DB</h1>
+</div>
 
 <div class="container-fluid">
 
@@ -48,57 +50,102 @@
 
         </form>
 
-        <!--<div class="col-xs-12">-->
-        <div class="voffset1">
-            <h3>Your recent entries:</h3>
-        </div>
+        <!--<div class="voffset1">-->
+        <!--<h3>Your recent entries:</h3>-->
+        <!--</div>-->
 
         <div class="col-xs-8">
-            <div class="table-scroll">
+
+            <div class="voffset1">
+                <ul class="nav nav-pills" role="tablist" id="myTab">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                              data-toggle="pill">Your recent entries</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="pill">All
+                            of
+                            your entries</a></li>
+                </ul>
+            </div>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <!--<div class="voffset1">-->
+                    <h3>Your recent entries:</h3>
+                    <!--</div>-->
+                    <div class="table-scroll">
+                        <table class="table">
+                            <thead class="thead-color">
+                            <tr>
+                                <th class="col-xs-1">#</th>
+                                <th class="col-xs-4">Question</th>
+                                <th class="col-xs-4">Answer</th>
+                                <!--<th class="col-xs-1"></th>-->
+                            </tr>
+                            </thead>
+
+                            <tbody id="table-body-recent">
+                            <% if (query) { %>
+                            <% query.forEach(function(val, i){ %>
+                            <% if(val.sessionid === sess){ %>
+                            <tr class="blink">
+                                <td class="col-xs-1 hide"><%= val.entryId %></td>
+                                <td class="col-xs-1 reverse"><%= i + 1 %></td>
+                                <td class="col-xs-5 "><%= val.question %></td>
+                                <td class="col-xs-5 "><%= val.answer %></td>
+                                <td class="btn-default btn-xs">Edit</td>
+                                <td class="btn-default btn-xs deletebtn">Delete</td>
 
 
-                <table class="table">
-                    <thead id="thead-color">
-                    <tr>
-                        <th class="col-xs-1">#</th>
-                        <th class="col-xs-4">Question</th>
-                        <th class="col-xs-4">Answer</th>
-                        <!--<th class="col-xs-1"></th>-->
-                    </tr>
-                    </thead>
+                            </tr>
+                            <% }})} %>
 
-                    <tbody id="table-body">
-                    <% if (question) { %>
-                    <% question.forEach(function(ques, i){ %>
-                    <tr class="blink">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                        <td class="col-xs-1 "><%= i + 1 %></td>
-                        <td class="col-xs-5 id=question"><%= ques.question %></td>
-                        <td class="col-xs-5 id=answer"><%= ques.answer %></td>
-                        <td class="btn-default btn-xs">Edit</td>
-                        <td class="btn-default btn-xs deletebtn">Delete</td>
+                <div role="tabpanel" class="tab-pane" id="profile">
+                    <!--<div class="voffset1">-->
+                    <h3>All entries by you:</h3>
+                    <!--</div>-->
+                    <div class="table-scroll">
+                        <table class="table">
+                            <thead class="thead-color">
+                            <tr>
+                                <th class="col-xs-1">#</th>
+                                <th class="col-xs-4">Question</th>
+                                <th class="col-xs-4">Answer</th>
+                                <!--<th class="col-xs-1"></th>-->
+                            </tr>
+                            </thead>
+
+                            <tbody id="table-body-all">
+
+                            <% if (query) {var len = query.length; %>
+                            <% query.forEach(function(val, i){ %>
+                            <tr class="blink">
+
+                                <td class="col-xs-1 hide"><%= val.entryId %></td>
+                                <td class="col-xs-1 "><%= len - i %></td>
+                                <td class="col-xs-5 "><%= val.question %></td>
+                                <td class="col-xs-5 "><%= val.answer %></td>
+                                <td class="btn-default btn-xs">Edit</td>
+                                <td class="btn-default btn-xs deletebtn">Delete</td>
 
 
-                    </tr>
-                    <% })} %>
-                    <!--<tfoot>-->
-                    <!--<tr>-->
-                    <!--<th class="col-xs-1">ID</th>-->
-                    <!--<th class="col-xs-4">Question</th>-->
-                    <!--<th class="col-xs-4">Answer</th>-->
-                    <!--</tr>-->
-                    <!--</tfoot>-->
+                            </tr>
+                            <% })} %>
 
-                    </tbody>
+                            </tbody>
+                        </table>
+                    </div>
 
-                </table>
+                </div>
+
+
             </div>
         </div>
-
-
     </div>
 </div>
-
 
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -107,41 +154,43 @@
 <script type="text/javascript">
     $(function () {
         $("#messages").delay(2500).fadeOut(800);
-        $('.blink:last').animate({opacity: 0.25}, 150, "linear", function () {
-            $(this).delay(1000).animate({opacity: 1}, 400);
+        $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
+            $(this).delay(100).animate({opacity: 1}, 400);
         });
-        var $body = $('tbody');
-        var list = $body.children('tr');
-        $body.html(list.get().reverse());
-
+//
+        $('a[data-toggle="pill"]').on('show.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('a[href="' + activeTab + '"]').tab('show');
+        }
 
     });
-
-    $(function () {
-//
-        $('.deletebtn').click(function () {
-            var question = $(this).closest('tr').find('td:nth-child(2)').text();
-            var answer=$(this).closest('tr').find('td:nth-child(3)').text();
-
-            $.ajax({
-                type: 'POST',
+    //    $(function () {
+    $('.deletebtn').on('click', function () {
+//        var $tr = $(this).closest('tr');
+        var deleteRow = $(this).closest('tr').find('td:first').text();
+//            var answer = $(this).closest('tr').find('td:nth-child(3)').text();
+//            $(this).closest('tr').css({ 'color': 'red'});
+        $.ajax({
+            type: 'POST',
 //                contentType: 'application/json',
 //                dataType: "json",
-                url: 'http://localhost:3000/deleteRow',
-                data: {
-                    question: question,
-                    answer: answer
-                },
-                success: function (res) {
-//                    alert('success');
-                    console.log(JSON.stringify(res));
-                }
-
-            })
-
-
-        });
-    })
+            url: 'http://localhost:3000/deleteRow',
+            data: {
+                entryId: deleteRow
+//                    answer: answer
+            },
+            success: function (res) {
+//                    alert(res);
+                $('td').filter(function () {
+                    return $(this).text() === res;
+                }).parent().remove();
+            }
+        })
+    });
+    //    })
 </script>
 
 </body>

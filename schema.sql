@@ -10,6 +10,7 @@ create table if not exists cwWords(
     answer varchar(100) NOT NULL,
     created_by varchar(100),
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by varchar(100),
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     sessionid varchar(100)
 )engine=innodb;

@@ -3,6 +3,12 @@ body {
     font-size: medium;
 }
 
+h1 {
+    font-family: 'Permanent Marker', cursive;
+    color: #f4e9e9;
+    margin-left: 13%;
+}
+
 .container {
     position: absolute;
     top: 35%;
@@ -16,8 +22,8 @@ body {
     background-color: #fcfcfc;
 }
 
-#thead-color {
-    color: #113006;
+.thead-color {
+    color: #000b58;
 }
 
 #topbox {

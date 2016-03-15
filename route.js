@@ -6,9 +6,6 @@ var bcrypt = require('bcrypt-nodejs');
 // custom library
 // model
 var Model = require('./model');
-//console.log(Model);
-var fetcher = require('./model');
-//console.log(Model);
 
 // index
 var index = function (req, res, next) {
@@ -18,6 +15,8 @@ var index = function (req, res, next) {
         res.redirect('/signin');
     } else {
         var user = req.user;
+        var sess = req.sessionID;
+        //console.log(sess);
         var errorMessage = req.session.exists;
         var infoMessage = req.session.success;
         var arr = [];
@@ -28,34 +27,20 @@ var index = function (req, res, next) {
         delete req.session.success;
         //console.log(infoMessage);
         //console.log(req.session);
-        Model.fetcher(req.sessionID, result);
+        Model.fetcher('created_by', user.username, result);
         function result(result) {
             arr = result;
-            //console.log(arr);
-            //arr.forEach(function (test) {
-            //        var print = test;
-            //        console.log(print.question)
-            //    }
-            //);
+            arr.reverse();
             res.render('index', {
                 title: 'Home', user: user.username,
                 errorMessage: errorMessage, infoMessage: infoMessage,
-                question: arr
+                query: arr, sess: sess
             });
-            //question: question, answer: answer
         }
 
-        //console.log(user);
-
-        //console.log(user.username);
     }
 
 };
-
-
-//console.log(req.session);
-//console.log("Cookies: ", req.cookies);
-//console.log(user);
 
 
 // sign in
@@ -117,9 +102,7 @@ var signUpPost = function (req, res, next) {
         if (model) {
             res.render('signup', {title: 'signup', errorMessage: 'username already exists'});
         } else {
-            //****************************************************//
-            // MORE VALIDATION GOES HERE(E.G. PASSWORD VALIDATION)
-            //****************************************************//
+
             var password = user.password;
             var hash = bcrypt.hashSync(password);
 
@@ -173,8 +156,6 @@ var mainPost = function (req, res, next) {
                 req.session.exists = "already exists";
                 return res.redirect('/');
             } else {
-
-
                 var wordsWrite = new Model.Words({
                     question: words.question,
                     answer: words.answer,
@@ -186,10 +167,7 @@ var mainPost = function (req, res, next) {
                         if (success) {
                             //console.log(success);
                             req.session.success = "epic success";
-                            req.session.question = wordsWrite.toJSON().question;
-                            req.session.answer = wordsWrite.toJSON().answer;
                             //console.log(req.session);
-
                             return res.redirect('/');
                         }
                     }).catch(function (err) {
@@ -202,8 +180,15 @@ var mainPost = function (req, res, next) {
 //deleteRow
 //POST
 var deleteRow = function (req, res, next) {
-    console.log(req.body);
-    res.end('received and responded');
+    //console.log(req.body);
+    var deleteRow = req.body.entryId;
+    //console.log(deleteRow);
+    Model.rowDeleter(deleteRow, result);
+    function result(result) {
+        console.log(result);
+        res.end(deleteRow);
+    }
+
 };
 
 
