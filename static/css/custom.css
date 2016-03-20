@@ -1,12 +1,26 @@
+
 body {
     font-family: 'Roboto', sans-serif;
     font-size: medium;
+}
+
+.row {
+    position: relative;
+    margin-top: 10%;
+    margin-left: 10%;
 }
 
 h1 {
     font-family: 'Permanent Marker', cursive;
     color: #f4e9e9;
     margin-left: 13%;
+}
+
+
+.edit-cell input[type=text] {
+    width: 100%;
+    border: 1px;
+    background-color: rgb(228, 228, 234);
 }
 
 .container {
@@ -62,11 +76,12 @@ h1 {
     color: #097f02;
 }
 
-.row {
+#ajaxsuccess {
     position: relative;
-    margin-top: 10%;
-    margin-left: 10%;
+    color: #097f02;
 }
+
+
 
 #register {
     position: relative;

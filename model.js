@@ -2,15 +2,13 @@ var DB = require('./db').DB;
 
 var User = DB.Model.extend({
     tableName: 'cwUsers',
-    idAttribute: 'userId',
-    timestamps: true
+    idAttribute: 'userId'
 });
 
 var Words = DB.Model.extend({
     tableName: 'cwWords',
     idAttribute: 'entryId',
-    timestamps: true
-
+    hasTimestamps: true
 });
 
 //DB query, post, delete, etc  helper functions
@@ -30,14 +28,33 @@ var rowDeleter = function (columnId, callback) {
         .then(function (result) {
             //console.log(result);
             callback('deleted succesfully');
-        })
+        }).catch(function (err) {
+        console.error(err);
+    })
 
+};
+
+var rowEdit = function (columnId, question, answer, username, callback) {
+    new Words({'entryId': columnId})
+        .save({
+                question: question,
+                answer: answer,
+                updated_by: username
+
+            })//,
+            //{patch: true})
+        .then(function (result) {
+            callback(result);
+        }).catch(function (err) {
+        console.error(err);
+    })
 };
 
 module.exports = {
     User: User,
     Words: Words,
     fetcher: fetcher,
-    rowDeleter: rowDeleter
+    rowDeleter: rowDeleter,
+    rowEdit: rowEdit
 };
 

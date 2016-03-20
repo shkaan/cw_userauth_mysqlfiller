@@ -140,13 +140,10 @@ var mainPost = function (req, res, next) {
     //console.log(user);
     //console.log(req.sessionID);
     var wordsCheck = new Model.Words({
-
         question: words.question,
         answer: words.answer
-
     }).fetch();
     //console.log(req.body);
-
     return wordsCheck
         .then(function (exists) {
             //console.log(wordsCheck);
@@ -171,7 +168,8 @@ var mainPost = function (req, res, next) {
                             return res.redirect('/');
                         }
                     }).catch(function (err) {
-                    throw err
+                    console.error(err);
+
                 });
             }
         })
@@ -185,8 +183,31 @@ var deleteRow = function (req, res, next) {
     //console.log(deleteRow);
     Model.rowDeleter(deleteRow, result);
     function result(result) {
-        console.log(result);
+        //console.log(result);
         res.end(deleteRow);
+    }
+};
+
+//editRow
+//POST
+var editRow = function (req, res, next) {
+    console.log(req.body);
+    var entryId = req.body.entryId;
+    var question = req.body.question;
+    var answer = req.body.answer;
+    var user = req.user.toJSON();
+    //console.log(user);
+    //console.log(entryId + "::" + question + "::" + answer);
+    Model.rowEdit(entryId, question, answer, user.username, result);
+    function result(result) {
+        //console.log (result.toJSON());
+        var result = result.toJSON();
+        var jqres = JSON.stringify(result);
+        var jpars = JSON.parse(jqres);
+        console.log(result);
+        console.log(jqres);
+        console.log(jpars);
+        res.end(jqres);
     }
 
 };
@@ -220,3 +241,6 @@ module.exports.mainPost = mainPost;
 
 //deleteRow
 module.exports.deleteRow = deleteRow;
+
+//editRow
+module.exports.editRow = editRow;

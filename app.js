@@ -9,6 +9,7 @@ var path = require('path');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var morgan = require('morgan');
+var favicon = require('serve-favicon');
 
 // custom libraries
 // routes
@@ -52,8 +53,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-
-
 app.use(cookieParser());
 app.use(session({
     secret: 'noobs and boobs',
@@ -66,6 +65,8 @@ app.use(passport.session());
 app.use(morgan('dev', {immediate: false}));
 
 app.use(express.static(path.join(__dirname, 'static')));
+app.use(favicon(path.join(__dirname, '/static/favicon.ico')));
+
 
 // GET
 app.get('/', route.index);
@@ -91,8 +92,11 @@ app.get('/signout', route.signOut);
 app.post('/mainPost', urlencodedParser, route.mainPost);
 
 //delete
-//POST (by jQuery AJAX)
+//POST (jQuery AJAX)
 app.post('/deleteRow', urlencodedParser, route.deleteRow);
+
+//edit
+app.post('/editRow', urlencodedParser, route.editRow);
 
 /********************************/
 

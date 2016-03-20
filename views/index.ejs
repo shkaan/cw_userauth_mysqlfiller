@@ -3,6 +3,8 @@
 <head>
     <% include head.ejs %>
     <title><%= title %></title>
+    <!--jQuery script-->
+    <script src="scripts/main.js"></script>
 </head>
 
 <body>
@@ -28,11 +30,11 @@
         <form method="post" action="/mainPost">
             <div class="col-xs-4">
                 <input type="text" name="question" class="form-control" placeholder="Question"
-                       required="true" autofocus="autofocus">
+                       required autofocus="autofocus">
             </div>
 
             <div class="col-xs-4">
-                <input type="text" name="answer" class="form-control" placeholder="Answer" required="true">
+                <input type="text" name="answer" class="form-control" placeholder="Answer" required>
             </div>
 
             <div class="col-xs-1">
@@ -46,6 +48,9 @@
                 <span id="info"><%= infoMessage %></span>
                 <% } %>
             </div>
+            <div>
+                <span id="ajaxsuccess"></span>
+            </div>
 
 
         </form>
@@ -57,17 +62,22 @@
         <div class="col-xs-8">
 
             <div class="voffset1">
-                <ul class="nav nav-pills" role="tablist" id="myTab">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
-                                                              data-toggle="pill">Your recent entries</a></li>
-                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="pill">All
-                            of
-                            your entries</a></li>
+                <!--<ul class="nav nav-pills" role="tablist" id="myTab">-->
+                <!--<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"-->
+                <!--data-toggle="pill">Your recent entries</a></li>-->
+                <!--<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="pill">All-->
+                <!--of-->
+                <!--your entries</a></li>-->
+                <!--</ul>-->
+
+                <ul class="nav nav-pills mytab">
+                    <li role="presentation"><a href="#recent" data-toggle="pill">Recent</a></li>
+                    <li role="presentation"><a href="#alltime" data-toggle="pill">All time</a></li>
                 </ul>
             </div>
 
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">
+                <div role="tabpanel" class="tab-pane" id="recent">
                     <!--<div class="voffset1">-->
                     <h3>Your recent entries:</h3>
                     <!--</div>-->
@@ -82,28 +92,41 @@
                             </tr>
                             </thead>
 
+
+                            <!--<%# if (query) { %>-->
+                            <!--<%# query.forEach(function(val, i){ %>-->
+                            <!--<%# if(val.sessionid === sess){ %>-->
+                            <!--<tr class="blink">-->
+                            <!--<td class="col-xs-1 hide"><%#= val.entryId %></td>-->
+                            <!--<td class="col-xs-1 reverse"><%#= i + 1 %></td>-->
+                            <!--<td class="col-xs-5 "><%#= val.question %></td>-->
+                            <!--<td class="col-xs-5 "><%#= val.answer %></td>-->
+                            <!--<td class="btn-default btn-xs editbtn">Edit</td>-->
+                            <!--<td class="btn-default btn-xs deletebtn">Delete</td>-->
+
                             <tbody id="table-body-recent">
+
                             <% if (query) { %>
-                            <% query.forEach(function(val, i){ %>
-                            <% if(val.sessionid === sess){ %>
+                            <% for(var i = 0, len = query.length;i < len;i++){ %>
+                            <% if(query[i].sessionid === sess){ %>
                             <tr class="blink">
-                                <td class="col-xs-1 hide"><%= val.entryId %></td>
+                                <td class="col-xs-1 hide"><%= query[i].entryId %></td>
                                 <td class="col-xs-1 reverse"><%= i + 1 %></td>
-                                <td class="col-xs-5 "><%= val.question %></td>
-                                <td class="col-xs-5 "><%= val.answer %></td>
-                                <td class="btn-default btn-xs">Edit</td>
+                                <td class="col-xs-5 "><%= query[i].question %></td>
+                                <td class="col-xs-5 "><%= query[i].answer %></td>
+                                <td class="btn-default btn-xs editbtn">Edit</td>
                                 <td class="btn-default btn-xs deletebtn">Delete</td>
 
 
                             </tr>
-                            <% }})} %>
+                            <% }}} %>
 
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="profile">
+                <div role="tabpanel" class="tab-pane" id="alltime">
                     <!--<div class="voffset1">-->
                     <h3>All entries by you:</h3>
                     <!--</div>-->
@@ -120,20 +143,31 @@
 
                             <tbody id="table-body-all">
 
-                            <% if (query) {var len = query.length; %>
-                            <% query.forEach(function(val, i){ %>
-                            <tr class="blink">
+                            <!--<%# if (query) {var len = query.length; %>-->
+                            <!--<%# query.forEach(function(val, i){ %>-->
+                            <!--<tr class="blink">-->
 
-                                <td class="col-xs-1 hide"><%= val.entryId %></td>
-                                <td class="col-xs-1 "><%= len - i %></td>
-                                <td class="col-xs-5 "><%= val.question %></td>
-                                <td class="col-xs-5 "><%= val.answer %></td>
-                                <td class="btn-default btn-xs">Edit</td>
+                                <!--<td class="col-xs-1 hide"><%#= val.entryId %></td>-->
+                                <!--<td class="col-xs-1 "><%#= len - i %></td>-->
+                                <!--<td class="col-xs-5 "><%#= val.question %></td>-->
+                                <!--<td class="col-xs-5 "><%#= val.answer %></td>-->
+                                <!--<td class="btn-default btn-xs editbtn">Edit</td>-->
+                                <!--<td class="btn-default btn-xs deletebtn">Delete</td>-->
+
+                            <% if (query) { %>
+                            <% for(var i = 0, len = query.length;i < len;i++){ %>
+                            <%  %>
+                            <tr class="blink">
+                                <td class="col-xs-1 hide"><%= query[i].entryId %></td>
+                                <td class="col-xs-1 reverse"><%= len - i %></td>
+                                <td class="col-xs-5 "><%= query[i].question %></td>
+                                <td class="col-xs-5 "><%= query[i].answer %></td>
+                                <td class="btn-default btn-xs editbtn">Edit</td>
                                 <td class="btn-default btn-xs deletebtn">Delete</td>
 
 
                             </tr>
-                            <% })} %>
+                            <% }} %>
 
                             </tbody>
                         </table>
@@ -147,50 +181,9 @@
     </div>
 </div>
 
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $("#messages").delay(2500).fadeOut(800);
-        $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
-            $(this).delay(100).animate({opacity: 1}, 400);
-        });
-//
-        $('a[data-toggle="pill"]').on('show.bs.tab', function (e) {
-            localStorage.setItem('activeTab', $(e.target).attr('href'));
-        });
-        var activeTab = localStorage.getItem('activeTab');
-        if (activeTab) {
-            $('a[href="' + activeTab + '"]').tab('show');
-        }
 
-    });
-    //    $(function () {
-    $('.deletebtn').on('click', function () {
-//        var $tr = $(this).closest('tr');
-        var deleteRow = $(this).closest('tr').find('td:first').text();
-//            var answer = $(this).closest('tr').find('td:nth-child(3)').text();
-//            $(this).closest('tr').css({ 'color': 'red'});
-        $.ajax({
-            type: 'POST',
-//                contentType: 'application/json',
-//                dataType: "json",
-            url: 'http://localhost:3000/deleteRow',
-            data: {
-                entryId: deleteRow
-//                    answer: answer
-            },
-            success: function (res) {
-//                    alert(res);
-                $('td').filter(function () {
-                    return $(this).text() === res;
-                }).parent().remove();
-            }
-        })
-    });
-    //    })
+<script type="text/javascript">
+
 </script>
 
 </body>

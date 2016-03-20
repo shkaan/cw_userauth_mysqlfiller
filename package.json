@@ -1,6 +1,6 @@
 {
   "name": "cw_db_filler_with_user_auth",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "db filler app with user authentication",
   "main": "app.js",
   "dependencies": {
@@ -15,7 +15,8 @@
     "morgan": "^1.7.0",
     "mysql": "*",
     "passport": "*",
-    "passport-local": "*"
+    "passport-local": "*",
+    "serve-favicon": "^2.3.0"
   },
   "devDependencies": {},
   "scripts": {
