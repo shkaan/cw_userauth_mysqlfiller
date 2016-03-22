@@ -10,6 +10,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var morgan = require('morgan');
 var favicon = require('serve-favicon');
+var compression = require('compression');
+
 
 // custom libraries
 // routes
@@ -63,8 +65,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan('dev', {immediate: false}));
-
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(compression({threshold: 0}));
+//    {
+//    threshold: 500,
+//    filter: function (req, res) {
+//        var ct = res.get('content-type');
+//        if (ct) {
+//            return true
+//        }
+//        // return `true` for content types that you want to compress,
+//        // `false` otherwise
+//        console.log(ct);
+//    }
+//}));
+app.use(express.static(path.join(__dirname, 'static'), {maxAge:31536000000}));
 app.use(favicon(path.join(__dirname, '/static/favicon.ico')));
 
 

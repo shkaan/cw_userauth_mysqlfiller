@@ -35,11 +35,9 @@ var index = function (req, res, next) {
                 title: 'Home', user: user.username,
                 errorMessage: errorMessage, infoMessage: infoMessage,
                 query: arr, sess: sess
-            });
+            })
         }
-
     }
-
 };
 
 
@@ -207,6 +205,7 @@ var editRow = function (req, res, next) {
         console.log(result);
         console.log(jqres);
         console.log(jpars);
+        res.writeHead(200,{'Content-Type': 'text/plain'});
         res.end(jqres);
     }
 

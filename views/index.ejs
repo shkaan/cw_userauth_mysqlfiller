@@ -147,16 +147,16 @@
                             <!--<%# query.forEach(function(val, i){ %>-->
                             <!--<tr class="blink">-->
 
-                                <!--<td class="col-xs-1 hide"><%#= val.entryId %></td>-->
-                                <!--<td class="col-xs-1 "><%#= len - i %></td>-->
-                                <!--<td class="col-xs-5 "><%#= val.question %></td>-->
-                                <!--<td class="col-xs-5 "><%#= val.answer %></td>-->
-                                <!--<td class="btn-default btn-xs editbtn">Edit</td>-->
-                                <!--<td class="btn-default btn-xs deletebtn">Delete</td>-->
+                            <!--<td class="col-xs-1 hide"><%#= val.entryId %></td>-->
+                            <!--<td class="col-xs-1 "><%#= len - i %></td>-->
+                            <!--<td class="col-xs-5 "><%#= val.question %></td>-->
+                            <!--<td class="col-xs-5 "><%#= val.answer %></td>-->
+                            <!--<td class="btn-default btn-xs editbtn">Edit</td>-->
+                            <!--<td class="btn-default btn-xs deletebtn">Delete</td>-->
 
                             <% if (query) { %>
                             <% for(var i = 0, len = query.length;i < len;i++){ %>
-                            <%  %>
+                            <%    %>
                             <tr class="blink">
                                 <td class="col-xs-1 hide"><%= query[i].entryId %></td>
                                 <td class="col-xs-1 reverse"><%= len - i %></td>
@@ -181,10 +181,6 @@
     </div>
 </div>
 
-
-<script type="text/javascript">
-
-</script>
 
 </body>
 </html>
