@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include head.ejs %>
+    <title><%= title %></title>
+    <!--jQuery script-->
+    <script src="scripts/admin.js"></script>
+
+</head>
+
+<body>
+<div class="container-fluid">
+    <% include topheader.ejs %>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="buttonbar text-center">
+                <ul class="nav nav-pills text-center voffset1">
+                    <li role="presentation" class="usersDB"><a data-toggle="pill">Users Database View</a></li>
+                    <li role="presentation" class="wordsDB"><a data-toggle="pill">Words Database View</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="dbview" id="table-container"></div>
+
+</div>
+</body>
+</html>

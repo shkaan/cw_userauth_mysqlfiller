@@ -1,21 +1,38 @@
+@-ms-viewport {
+    width: device-width;
+}
 
 body {
     font-family: 'Roboto', sans-serif;
     font-size: medium;
 }
 
-.row {
-    position: relative;
-    margin-top: 10%;
-    margin-left: 10%;
+.content-wraper {
+    margin-left: 5%;
 }
 
-h1 {
+.row-eq-height {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.main-form {
+    margin-top: 3%;
+    /*margin-left: 8%;*/
+}
+
+.tablescont {
+    /*position: relative;*/
+    /*right: 7%;*/
+}
+
+.header-font {
     font-family: 'Permanent Marker', cursive;
     color: #f4e9e9;
     margin-left: 13%;
 }
-
 
 .edit-cell input[type=text] {
     width: 100%;
@@ -23,17 +40,24 @@ h1 {
     background-color: rgb(228, 228, 234);
 }
 
-.container {
-    position: absolute;
-    top: 35%;
-    left: 20%;
-    transform: translateY(-50%);
+.signin-container {
+    /*min-height: 100%;  !* Fallback for browsers do NOT support vh unit *!*/
+    /*min-height: 100vh; !* These two lines are counted as one :-)       *!*/
+    /*width: 100%;*/
+
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*height: 100vh;*/
+    /*position: absolute;*/
+    /*margin-top: 15%;*/
+    /*left: 33%;*/
+    /*transform: translateY(-50%);*/
 }
 
 .table-scroll {
-    height: 500px;
+    max-height: 50vh;
     overflow: auto;
-    background-color: #fcfcfc;
+    /*background-color: #bae3ff;*/
 }
 
 .thead-color {
@@ -41,54 +65,120 @@ h1 {
 }
 
 #topbox {
-    position: absolute;
-    width: 90%;
-    height: 10%;
-
-    border: 3px solid #237aff;
-    left: 0;
+    /*position: absolute;*/
+    /*width: 90%;*/
+    /*height: 10%;*/
+    /*border: 3px solid #237aff;*/
+    /*left: 0;*/
     background-color: #237aff;
 }
 
-#messages {
-    position: relative;
-}
-
 #welcome {
-    position: fixed;
-    right: 0;
-    width: 10%;
-    height: 10%;
-    border: 2px solid #237aff;
-    padding: 10px;
+    /*position: absolute;*/
+    /*left: 90%;*/
+    /*width: 10%;*/
+    /*height: 100%;*/
+    border: 1px solid #237aff;
+    background-color: #fffafe;
+    /*padding: 10px;*/
     /*font-size: small;*/
 }
 
-#error {
-    position: relative;
+.msg-container {
+    /*position: relative;*/
+    /*left: 48.5%;*/
+    /*top: 7px;*/
+    /*width: 300px;*/
+    /*padding-top: 2%;*/
 
-    color: #e40000;
-    font-size: medium;
+    /*min-height: 10%;*/
+    height: 20px;
+    /*border: 1px solid red;*/
+    margin-top: 0.5%;
+    /*font-size: large;*/
+
+}
+
+.text-left {
+    text-align: left;
+    /*border: 1px solid blue;*/
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+#messages {
 }
 
 #info {
-    position: relative;
     color: #097f02;
+}
+
+#error {
+    color: #e40000;
 }
 
 #ajaxsuccess {
-    position: relative;
     color: #097f02;
 }
 
-
+#ajaxfail {
+    color: #e40000;
+}
 
 #register {
-    position: relative;
-    left: 1%;
+    /*position: relative;*/
+    /*left: 1%;*/
 
+}
+
+.dbview {
+    margin-top: 1%;
 }
 
 .voffset1 {
-    margin-top: 5%;
+    padding-top: 5px;
 }
+
+.voffset2 {
+    padding-top: 10px;
+}
+
+.loffset1 {
+    padding-left: 5px;
+}
+
+.error-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.error-actions {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.error-actions .btn {
+    margin-right: 10px;
+}
+
+/*//sign-in screen aligning middle*/
+html, body, .container-table {
+    height: 100%;
+}
+
+.container-table {
+    display: table;
+}
+
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
+    padding-bottom: 100px;
+}
+

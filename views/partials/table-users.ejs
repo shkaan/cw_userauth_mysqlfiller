@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-scroll">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Created at</th>
+                    <th>Access Level</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% if (dbView){ %>
+                <% for (var i = 0, len = dbView.length; i < len;i++) { %>
+                <tr>
+                    <td><%= dbView[i].username %></td>
+                    <td><%= dbView[i].password %></td>
+                    <td><%= dateParser(dbView[i].created_at).format('DD-MMM-YYYY  HH:mm:ss') %></td>
+                    <td><%= dbView[i].access_level %></td>
+                </tr>
+                <% }} %>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-1">
+
+        <div data-target="#newuser" class="btn btn-primary" data-toggle="collapse">
+            Add new user
+        </div>
+    </div>
+
+</div>
+
+<div class="collapse voffset2" id="newuser">
+    <div class="col-md-12">
+        <form method="post" action="/testRoute" class="form-horizontal" id="user-submit" role="form">
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <input type="text" class="form-control " name="username" autofocus placeholder="Username" required
+                           autocomplete="off">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <input type="text" class="form-control" name="password" placeholder="Password" required
+                           autocomplete="off">
+                </div>
+            </div>
+
+            <div class="row">
+                <label><input type="checkbox" name="access_level" value="admin"> Create as ADMIN</label>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <input type="submit" class="btn btn-primary" value="Submit">
+                    <span id="ajaxfail" class="loffset1"></span>
+                    <span id="ajaxsuccess" class="loffset1"></span>
+                </div>
+            </div>
+            <!--<div class="#adminmessages col-md-3 text-left">-->
+            <!--<p id="ajaxsuccess"></p>-->
+
+            <!--<p id="ajaxfail"></p>-->
+            <!--</div>-->
+        </form>
+    </div>
+</div>
+</div>

@@ -48,9 +48,10 @@ $(function () {
             },
             success: function (res) {
 //                    alert(res);
-                $('td').filter(function () {
+                $('.keyid').filter(function () {
                     return $(this).text() === res;
                 }).parent().remove();
+                $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
             }
         })
     });
@@ -94,7 +95,7 @@ $(function () {
                         success: function (res) {
                             var res = JSON.parse(res);
 //                            alert(res.question);
-                            var rowWrite = $('td').filter(function () {
+                            var rowWrite = $('.keyid').filter(function () {
                                 return $(this).text() === res.entryId;
                             });
 
@@ -111,8 +112,9 @@ $(function () {
                     $(selectQ).text(newContentQ);
                     $(selectA).text(newContentA);
                     $(selectQ).add(selectA).removeClass("edit-cell");
-
-                    alert('no changes');
+                    $('.editbtn').on('click', adder);
+                    handlerActive = false;
+                    $('#ajaxsuccess').text('Nothing changed').fadeIn(50).delay(2500).fadeOut(800);
                 }
 
             }
@@ -134,5 +136,9 @@ $(function () {
         })
 
     });
+
+
 });
+
+
 

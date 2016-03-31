@@ -13,13 +13,16 @@
     "express": "4.x",
     "express-session": "*",
     "knex": "^0.10.0",
+    "moment": "^2.12.0",
     "morgan": "^1.7.0",
     "mysql": "*",
     "passport": "*",
     "passport-local": "*",
     "serve-favicon": "^2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "faker": "^3.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

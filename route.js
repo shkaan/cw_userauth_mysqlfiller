@@ -1,6 +1,7 @@
 // vendor library
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
+var moment = require('moment');
 
 
 // custom library
@@ -16,7 +17,7 @@ var index = function (req, res, next) {
     } else {
         var user = req.user;
         var sess = req.sessionID;
-        //console.log(sess);
+        //console.log(user);
         var errorMessage = req.session.exists;
         var infoMessage = req.session.success;
         var arr = [];
@@ -32,7 +33,7 @@ var index = function (req, res, next) {
             arr = result;
             arr.reverse();
             res.render('index', {
-                title: 'Home', user: user.username,
+                title: 'Home', user: user,
                 errorMessage: errorMessage, infoMessage: infoMessage,
                 query: arr, sess: sess
             })
@@ -90,6 +91,7 @@ var signUp = function (req, res, next) {
 // POST
 var signUpPost = function (req, res, next) {
     var user = req.body;
+    console.log(req.body);
     //var usernamePromise = null;
 
     var usernamePromise = new Model.User({username: user.username}).fetch();
@@ -106,10 +108,18 @@ var signUpPost = function (req, res, next) {
 
             var signUpUser = new Model.User({username: user.username, password: hash});
 
-            signUpUser.save().then(function (model) {
-                // sign in the newly registered user
-                signInPost(req, res, next);
-            });
+            signUpUser
+                .save()
+                .then(function (model) {
+                    // sign in the newly registered user
+                    signInPost(req, res, next);
+                })
+                .catch(function (err) {
+                        console.log(err);
+                        res.send('500');
+
+                    }
+                );
         }
     });
 };
@@ -133,44 +143,49 @@ var notFound404 = function (req, res, next) {
 //main
 //POST
 var mainPost = function (req, res, next) {
-    var words = req.body;
-    var user = req.user.toJSON();
-    //console.log(user);
-    //console.log(req.sessionID);
-    var wordsCheck = new Model.Words({
-        question: words.question,
-        answer: words.answer
-    }).fetch();
-    //console.log(req.body);
-    return wordsCheck
-        .then(function (exists) {
-            //console.log(wordsCheck);
-            //console.log(exists);
-            if (exists) {
-                //res.render('index', {title: 'Home', errorMessage: 'already exists'});
-                req.session.exists = "already exists";
-                return res.redirect('/');
-            } else {
-                var wordsWrite = new Model.Words({
-                    question: words.question,
-                    answer: words.answer,
-                    created_by: user.username,
-                    sessionid: req.sessionID
-                });
-                wordsWrite.save()
-                    .then(function (success) {
-                        if (success) {
-                            //console.log(success);
-                            req.session.success = "epic success";
-                            //console.log(req.session);
-                            return res.redirect('/');
-                        }
-                    }).catch(function (err) {
-                    console.error(err);
+    if (!req.isAuthenticated()) {
+        res.redirect('/signin');
+    } else {
 
-                });
-            }
-        })
+        var words = req.body;
+        var user = req.user.toJSON();
+        //console.log(user);
+        //console.log(req.sessionID);
+        var wordsCheck = new Model.Words({
+            question: words.question,
+            answer: words.answer
+        }).fetch();
+        //console.log(req.body);
+        return wordsCheck
+            .then(function (exists) {
+                //console.log(wordsCheck);
+                //console.log(exists);
+                if (exists) {
+                    //res.render('index', {title: 'Home', errorMessage: 'already exists'});
+                    req.session.exists = "Entry already exists";
+                    return res.redirect('/');
+                } else {
+                    var wordsWrite = new Model.Words({
+                        question: words.question,
+                        answer: words.answer,
+                        created_by: user.username,
+                        sessionid: req.sessionID
+                    });
+                    wordsWrite.save()
+                        .then(function (success) {
+                            if (success) {
+                                //console.log(success);
+                                req.session.success = "Epic Success!!!";
+                                //console.log(req.session);
+                                return res.redirect('/');
+                            }
+                        }).catch(function (err) {
+                        console.error(err);
+
+                    });
+                }
+            })
+    }
 };
 
 //deleteRow
@@ -182,14 +197,14 @@ var deleteRow = function (req, res, next) {
     Model.rowDeleter(deleteRow, result);
     function result(result) {
         //console.log(result);
-        res.end(deleteRow);
+        res.end(result);
     }
 };
 
 //editRow
 //POST
 var editRow = function (req, res, next) {
-    console.log(req.body);
+    console.log(req.headers);
     var entryId = req.body.entryId;
     var question = req.body.question;
     var answer = req.body.answer;
@@ -198,17 +213,77 @@ var editRow = function (req, res, next) {
     //console.log(entryId + "::" + question + "::" + answer);
     Model.rowEdit(entryId, question, answer, user.username, result);
     function result(result) {
-        //console.log (result.toJSON());
-        var result = result.toJSON();
-        var jqres = JSON.stringify(result);
-        var jpars = JSON.parse(jqres);
-        console.log(result);
-        console.log(jqres);
-        console.log(jpars);
-        res.writeHead(200,{'Content-Type': 'text/plain'});
+        //console.log (result);
+        var resultParse = result.toJSON();
+        var jqres = JSON.stringify(resultParse);
+        //var jpars = JSON.parse(jqres);
+        //console.log(result);
+        //console.log(jqres);
+        //console.log(jpars);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end(jqres);
     }
 
+};
+
+//Admin
+//GET
+var adminView = function (req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.redirect('/signin');
+    } else {
+        var user = req.user.toJSON();
+        var dbView = new Model.Words().fetchAll().then(function (data) {
+            dbView = data.toJSON();
+            //console.log(dbView);
+            //for (var i = 0; i < dbView.length; i++) {
+            //    var dateParsed = dbView[i].created_at.toISOString();
+            //console.log(dateParsed);
+            //console.log(dbView[i]);
+            //}
+            res.render('admin', {
+                title: 'Admin Control Panel',
+                user: user, dbView: dbView, dateParser: moment
+            });
+        });
+    }
+};
+//Admin Ajax Words Fetch
+//GET
+var adminWordsFetch = function (req, res, next) {
+    //console.log(req.headers);
+    var dbView = new Model.Words().fetchAll().then(function (data) {
+        dbView = data.toJSON();
+        res.render('partials/table-words', {dbView: dbView, dateParser: moment});
+    })
+};
+
+//Admin Ajax Users Fetch
+//GET
+var adminUsersFetch = function (req, res, next) {
+    //console.log(req.headers);
+    var dbView = new Model.User().fetchAll().then(function (data) {
+        dbView = data.toJSON();
+        //console.log(dbView);
+        res.render('partials/table-users', {dbView: dbView, dateParser: moment});
+        //res.end('GG');
+    })
+};
+
+//testRoute
+//POST
+var testRoute = function (req, res, next) {
+    //console.log(req.headers);
+    //console.log(req.body);
+    var data = req.body;
+    //console.log(typeof data);
+    Model.newUserSave(data, function (callback) {
+        //console.log(callback);
+        //console.log(data);
+
+
+        res.end(JSON.stringify(callback));
+    })
 };
 
 
@@ -243,3 +318,17 @@ module.exports.deleteRow = deleteRow;
 
 //editRow
 module.exports.editRow = editRow;
+
+//adminView
+module.exports.adminView = adminView;
+
+//Ajax Words
+module.exports.adminWordsFetch = adminWordsFetch;
+
+//Ajax Users
+module.exports.adminUsersFetch = adminUsersFetch;
+
+//testRoute
+module.exports.testRoute = testRoute;
+
+

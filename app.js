@@ -41,6 +41,7 @@ passport.use(new LocalStrategy(function (username, password, done) {
 }));
 
 passport.serializeUser(function (user, done) {
+    //console.log(user);
     done(null, user.username);
 });
 
@@ -49,6 +50,34 @@ passport.deserializeUser(function (username, done) {
         done(null, user);
     });
 });
+
+//create user 'root' with admin priviledges and invalidate function after call
+var createRoot = function () {
+    createRoot = function () {
+    };
+    var checkRoot = new Model.User({username: 'root'}).fetch();
+    return checkRoot.then(function (exists) {
+        if (exists) {
+            console.error('root already exists');
+        } else {
+            var password = 'noobsandboobs';
+            var hash = bcrypt.hashSync(password);
+            var root = new Model.User({
+                username: 'root',
+                password: hash,
+                access_level: 'admin'
+            });
+            root.save()
+                .then(function () {
+                    console.log('root created');
+
+                }).catch(function (err) {
+                console.error(err);
+            })
+        }
+    })
+};
+createRoot();
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -65,7 +94,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan('dev', {immediate: false}));
-app.use(compression({threshold: 0}));
+app.use(compression({threshold: 1024}));
 //    {
 //    threshold: 500,
 //    filter: function (req, res) {
@@ -78,7 +107,7 @@ app.use(compression({threshold: 0}));
 //        console.log(ct);
 //    }
 //}));
-app.use(express.static(path.join(__dirname, 'static'), {maxAge:31536000000}));
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(favicon(path.join(__dirname, '/static/favicon.ico')));
 
 
@@ -93,9 +122,9 @@ app.post('/signin', urlencodedParser, route.signInPost);
 
 // signup
 // GET
-app.get('/signup', route.signUp);
+//app.get('/signup', route.signUp);
 // POST
-app.post('/signup', urlencodedParser, route.signUpPost);
+//app.post('/signup', urlencodedParser, route.signUpPost);
 
 // logout
 // GET
@@ -110,10 +139,31 @@ app.post('/mainPost', urlencodedParser, route.mainPost);
 app.post('/deleteRow', urlencodedParser, route.deleteRow);
 
 //edit
+//POST
 app.post('/editRow', urlencodedParser, route.editRow);
 
-/********************************/
+//admin
+//GET
+app.get('/adminView', route.adminView);
 
+//admin Ajax Words Fetch
+//GET
+app.get('/adminWordsFetch', route.adminWordsFetch);
+
+//admin Ajax Users Fetch
+//GET
+app.get('/adminUsersFetch', route.adminUsersFetch);
+
+//testing route
+//POST
+app.post('/testRoute', urlencodedParser, route.testRoute);
+
+//Catch all err
+/********************************/
+app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Nesto se iskundachilo!');
+});
 /********************************/
 // 404 not found
 app.use(route.notFound404);
