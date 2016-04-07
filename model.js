@@ -57,7 +57,8 @@ var rowEdit = function (columnId, question, answer, username, callback) {
 
 
 var newUserSave = function (data, callback) {
-    new User({username: data.username}).fetch()
+    new User({username: data.username})
+        .fetch()
         .then(function (result) {
             if (result) {
                 callback({status: 'exists'});
@@ -65,8 +66,9 @@ var newUserSave = function (data, callback) {
                 new User(data).set('password', bcrypt.hashSync(data.password))
                     .save()
                     .then(function (result) {
-                        var data = result.toJSON();
-                        new User({username: data.username}).fetch()
+                        result = result.toJSON();
+                        new User({username: result.username})
+                            .fetch()
                             .then(function (fetchResult) {
                                 callback(fetchResult);
                             });

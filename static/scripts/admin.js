@@ -12,7 +12,7 @@ $(function () {
         }).done (function (res) {
             //alert(res);
             $('#table-container').html(res);
-
+            $.bootstrapSortable(true);
         })
     });
     $('.usersDB').on('click', function (e) {
@@ -26,6 +26,7 @@ $(function () {
             //alert(res);
             $('#table-container').html(res);
             console.log('radi do jaja');
+            $.bootstrapSortable(true);
 
         }).fail(function (reason) {
                 console.log(reason)
@@ -35,7 +36,7 @@ $(function () {
                     e.preventDefault();
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:3000/testRoute',
+                        url: 'http://localhost:3000/createUser',
                         dataType: 'json',
                         data: $("#user-submit").serialize()
                     }).done(function (res) {
@@ -51,12 +52,15 @@ $(function () {
                                 '<td>' + res.created_at + '</td>' +
                                 '<td>' + res.access_level + '</td>' +
                                 '/tr>');
-                            $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(1000).fadeOut(2000);
+                            $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
+                            $.bootstrapSortable(true);
+                            $('#user-submit')[0].reset();
+                            $('#usrfocus').focus();
                             //$('.usersDB').trigger('click');
                         }
                         //$('#table-container').html(res);
                     }).fail(function (reason) {
-                        alert(reason)
+                        console.error(reason)
                     });
 
                 })

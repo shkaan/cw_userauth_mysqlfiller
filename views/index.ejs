@@ -72,12 +72,15 @@
                             <h3>Your recent entries:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive">
+                                <table class="table table-responsive sortable">
                                     <thead class="thead-color">
                                     <tr>
-                                        <th>#</th>
-                                        <th>Question</th>
-                                        <th>Answer</th>
+                                        <th class="hide" data-defaultsort="disabled"></th>
+                                        <th class="col-md-1">#</th>
+                                        <th class="col-md-4 az">Question</th>
+                                        <th class="col-md-4 az">Answer</th>
+                                        <th class="col-md-1" data-defaultsort="disabled"></th>
+                                        <th class="col-md-1" data-defaultsort="disabled"></th>
                                     </tr>
                                     </thead>
 
@@ -86,12 +89,12 @@
                                     <% for(var i = 0, len = query.length;i < len;i++){ %>
                                     <% if(query[i].sessionid === sess){ %>
                                     <tr class="blink">
-                                        <td class="col-xs-1 col-md-1 keyid hide"><%= query[i].entryId %></td>
-                                        <td class="col-xs-1 col-md-1 reverse"><%= i + 1 %></td>
-                                        <td class="col-xs-1 col-md-4 "><%= query[i].question %></td>
-                                        <td class="col-xs-1 col-md-4 "><%= query[i].answer %></td>
-                                        <td class="col-xs-1 col-md-1 btn-default btn-xs text-center editbtn">Edit</td>
-                                        <td class="col-xs-1 col-md-1 btn-default btn-xs text-center deletebtn">Delete
+                                        <td class="keyid hide"><%= query[i].entryId %></td>
+                                        <td class="reverse"><%= i + 1 %></td>
+                                        <td class=""><%= query[i].question %></td>
+                                        <td class=""><%= query[i].answer %></td>
+                                        <td class="btn-default btn-xs text-center editbtn">Edit</td>
+                                        <td class="btn-default btn-xs text-center deletebtn">Delete
                                         </td>
                                     </tr>
                                     <% }}} %>
@@ -104,12 +107,15 @@
                             <h3>All entries by you:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive">
+                                <table class="table table-responsive sortable">
                                     <thead class="thead-color">
                                     <tr>
-                                        <th>#</th>
-                                        <th>Question</th>
-                                        <th>Answer</th>
+                                        <th class="hide" data-defaultsort="disabled"></th>
+                                        <th class="col-md-1">#</th>
+                                        <th class="col-md-4 az">Question</th>
+                                        <th class="col-md-4 az">Answer</th>
+                                        <th class="col-md-1" data-defaultsort="disabled"></th>
+                                        <th class="col-md-1" data-defaultsort="disabled"></th>
                                     </tr>
                                     </thead>
 
@@ -117,12 +123,12 @@
                                     <% if (query) { %>
                                     <% for(var i = 0, len = query.length;i < len;i++){ %>
                                     <tr class="blink">
-                                        <td class="col-xs-1 col-md-1 keyid hide"><%= query[i].entryId %></td>
-                                        <td class="col-xs-1 col-md-1 reverse"><%= len - i %></td>
-                                        <td class="col-xs-1 col-md-4 "><%= query[i].question %></td>
-                                        <td class="col-xs-1 col-md-4 "><%= query[i].answer %></td>
-                                        <td class="col-xs-1 col-md-1 text-center btn-default btn-xs editbtn">Edit</td>
-                                        <td class="col-xs-1 col-md-1 text-center btn-default btn-xs deletebtn">Delete
+                                        <td class="keyid hide"><%= query[i].entryId %></td>
+                                        <td class="reverse"><%= len - i %></td>
+                                        <td class=""><%= query[i].question %></td>
+                                        <td class=""><%= query[i].answer %></td>
+                                        <td class="text-center btn-default btn-xs editbtn">Edit</td>
+                                        <td class="text-center btn-default btn-xs deletebtn">Delete
                                         </td>
                                     </tr>
                                     <% }} %>

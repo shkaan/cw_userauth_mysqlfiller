@@ -69,7 +69,7 @@ var createRoot = function () {
             });
             root.save()
                 .then(function () {
-                    console.log('root created');
+                    console.info('root created');
 
                 }).catch(function (err) {
                 console.error(err);
@@ -154,9 +154,9 @@ app.get('/adminWordsFetch', route.adminWordsFetch);
 //GET
 app.get('/adminUsersFetch', route.adminUsersFetch);
 
-//testing route
+//Create new user from admin panel
 //POST
-app.post('/testRoute', urlencodedParser, route.testRoute);
+app.post('/createUser', urlencodedParser, route.createUser);
 
 //Catch all err
 /********************************/

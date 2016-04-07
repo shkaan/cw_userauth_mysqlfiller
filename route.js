@@ -8,6 +8,9 @@ var moment = require('moment');
 // model
 var Model = require('./model');
 
+//helper functions
+var fn = require('./fn');
+
 // index
 var index = function (req, res, next) {
     //console.log("Cookies: ", req.headers.cookie);
@@ -220,7 +223,7 @@ var editRow = function (req, res, next) {
         //console.log(result);
         //console.log(jqres);
         //console.log(jpars);
-        res.writeHead(200, {'Content-Type': 'text/plain'});
+        // res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end(jqres);
     }
 
@@ -261,7 +264,7 @@ var adminWordsFetch = function (req, res, next) {
 //Admin Ajax Users Fetch
 //GET
 var adminUsersFetch = function (req, res, next) {
-    //console.log(req.headers);
+    console.log(req.headers);
     var dbView = new Model.User().fetchAll().then(function (data) {
         dbView = data.toJSON();
         //console.log(dbView);
@@ -272,17 +275,17 @@ var adminUsersFetch = function (req, res, next) {
 
 //testRoute
 //POST
-var testRoute = function (req, res, next) {
-    //console.log(req.headers);
+var createUser = function (req, res, next) {
+    // console.log(req.headers);
     //console.log(req.body);
     var data = req.body;
     //console.log(typeof data);
     Model.newUserSave(data, function (callback) {
-        //console.log(callback);
+        // console.log(callback);
         //console.log(data);
-
-
-        res.end(JSON.stringify(callback));
+        var viewParsed = fn.dateParser(callback);
+        console.log(viewParsed);
+        res.end(JSON.stringify(viewParsed));
     })
 };
 
@@ -329,6 +332,6 @@ module.exports.adminWordsFetch = adminWordsFetch;
 module.exports.adminUsersFetch = adminUsersFetch;
 
 //testRoute
-module.exports.testRoute = testRoute;
+module.exports.createUser = createUser;
 
 
