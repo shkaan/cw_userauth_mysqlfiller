@@ -31,7 +31,7 @@ var rowDeleter = function (columnId, callback) {
     Words.where('entryId', columnId)
         .destroy()
         .then(function (result) {
-            console.log(result);
+            // console.log(result);
             callback(columnId);
         })
         .catch(function (err) {

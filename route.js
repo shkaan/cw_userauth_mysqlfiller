@@ -15,33 +15,31 @@ var fn = require('./fn');
 var index = function (req, res, next) {
     //console.log("Cookies: ", req.headers.cookie);
     //console.log(req.cookies);
-    if (!req.isAuthenticated()) {
-        res.redirect('/signin');
-    } else {
-        var user = req.user;
-        var sess = req.sessionID;
-        //console.log(user);
-        var errorMessage = req.session.exists;
-        var infoMessage = req.session.success;
-        var arr = [];
-        if (user !== null) {
-            user = user.toJSON();
-        }
-        delete req.session.exists;
-        delete req.session.success;
-        //console.log(infoMessage);
-        //console.log(req.session);
-        Model.fetcher('created_by', user.username, result);
-        function result(result) {
-            arr = result;
-            arr.reverse();
-            res.render('index', {
-                title: 'Home', user: user,
-                errorMessage: errorMessage, infoMessage: infoMessage,
-                query: arr, sess: sess
-            })
-        }
+
+    var user = req.user;
+    var sess = req.sessionID;
+    //console.log(user);
+    var errorMessage = req.session.exists;
+    var infoMessage = req.session.success;
+    var arr = [];
+    if (user) {
+        user = user.toJSON();
     }
+    delete req.session.exists;
+    delete req.session.success;
+    //console.log(infoMessage);
+    //console.log(req.session);
+    Model.fetcher('created_by', user.username, result);
+    function result(result) {
+        arr = result;
+        arr.reverse();
+        res.render('index', {
+            title: 'Home', user: user,
+            errorMessage: errorMessage, infoMessage: infoMessage,
+            query: arr, sess: sess
+        })
+    }
+
 };
 
 
@@ -99,7 +97,6 @@ var signUpPost = function (req, res, next) {
 
     var usernamePromise = new Model.User({username: user.username}).fetch();
 
-
     return usernamePromise.then(function (model) {
 
         if (model) {
@@ -118,7 +115,7 @@ var signUpPost = function (req, res, next) {
                     signInPost(req, res, next);
                 })
                 .catch(function (err) {
-                        console.log(err);
+                        console.error(err);
                         res.send('500');
 
                     }
@@ -146,55 +143,54 @@ var notFound404 = function (req, res, next) {
 //main
 //POST
 var mainPost = function (req, res, next) {
-    if (!req.isAuthenticated()) {
-        res.redirect('/signin');
-    } else {
 
-        var words = req.body;
-        var user = req.user.toJSON();
-        //console.log(user);
-        //console.log(req.sessionID);
-        var wordsCheck = new Model.Words({
-            question: words.question,
-            answer: words.answer
-        }).fetch();
-        //console.log(req.body);
-        return wordsCheck
-            .then(function (exists) {
-                //console.log(wordsCheck);
-                //console.log(exists);
-                if (exists) {
-                    //res.render('index', {title: 'Home', errorMessage: 'already exists'});
-                    req.session.exists = "Entry already exists";
-                    return res.redirect('/');
-                } else {
-                    var wordsWrite = new Model.Words({
-                        question: words.question,
-                        answer: words.answer,
-                        created_by: user.username,
-                        sessionid: req.sessionID
-                    });
-                    wordsWrite.save()
-                        .then(function (success) {
-                            if (success) {
-                                //console.log(success);
-                                req.session.success = "Epic Success!!!";
-                                //console.log(req.session);
-                                return res.redirect('/');
-                            }
-                        }).catch(function (err) {
-                        console.error(err);
+    var words = req.body;
+    var user = req.user.toJSON();
+    //console.log(user);
+    //console.log(req.sessionID);
+    var wordsCheck = new Model.Words({
+        question: words.question,
+        answer: words.answer
+    }).fetch();
+    //console.log(req.body);
+    return wordsCheck
+        .then(function (exists) {
+            //console.log(wordsCheck);
+            //console.log(exists);
+            if (exists) {
+                //res.render('index', {title: 'Home', errorMessage: 'already exists'});
+                req.session.exists = "Entry already exists";
+                return res.redirect('/');
+            } else {
+                var wordsWrite = new Model.Words({
+                    question: words.question,
+                    answer: words.answer,
+                    created_by: user.username,
+                    sessionid: req.sessionID
+                });
+                wordsWrite.save()
+                    .then(function (success) {
+                        if (success) {
+                            //console.log(success);
+                            req.session.success = "Epic Success!!!";
+                            //console.log(req.session);
+                            return res.redirect('/');
+                        }
+                    }).catch(function (err) {
+                    console.error(err);
 
-                    });
-                }
-            })
-    }
+                });
+            }
+        })
+
 };
 
 //deleteRow
 //POST
 var deleteRow = function (req, res, next) {
-    //console.log(req.body);
+    // console.log(req.body);
+    // console.log(req.user);
+
     var deleteRow = req.body.entryId;
     //console.log(deleteRow);
     Model.rowDeleter(deleteRow, result);
@@ -232,9 +228,6 @@ var editRow = function (req, res, next) {
 //Admin
 //GET
 var adminView = function (req, res, next) {
-    if (!req.isAuthenticated()) {
-        res.redirect('/signin');
-    } else {
         var user = req.user.toJSON();
         var dbView = new Model.Words().fetchAll().then(function (data) {
             dbView = data.toJSON();
@@ -249,15 +242,15 @@ var adminView = function (req, res, next) {
                 user: user, dbView: dbView, dateParser: moment
             });
         });
-    }
 };
+
 //Admin Ajax Words Fetch
 //GET
 var adminWordsFetch = function (req, res, next) {
     //console.log(req.headers);
     var dbView = new Model.Words().fetchAll().then(function (data) {
         dbView = data.toJSON();
-        res.render('partials/table-words', {dbView: dbView, dateParser: moment});
+        res.render('ajax_views/table-words', {dbView: dbView, dateParser: moment});
     })
 };
 
@@ -268,12 +261,12 @@ var adminUsersFetch = function (req, res, next) {
     var dbView = new Model.User().fetchAll().then(function (data) {
         dbView = data.toJSON();
         //console.log(dbView);
-        res.render('partials/table-users', {dbView: dbView, dateParser: moment});
+        res.render('ajax_views/table-users', {dbView: dbView, dateParser: moment});
         //res.end('GG');
     })
 };
 
-//testRoute
+//Admin create user
 //POST
 var createUser = function (req, res, next) {
     // console.log(req.headers);

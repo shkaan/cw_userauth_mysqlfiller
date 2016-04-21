@@ -2,6 +2,10 @@
  * Created by Wish Kaan on 20-Mar-16.
  */
 $(function () {
+
+    var url = $(location).attr('host');
+    console.log(url);
+
     $("#messages").delay(2500).fadeOut(800);
     $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
         $(this).delay(100).animate({opacity: 1}, 400);
@@ -15,7 +19,7 @@ $(function () {
 //
 //                <ul class="nav nav-tabs">
 //                <div id="p1" class="tab-pane">
-//                Put the script below to set first tab like default (Requires the jQuery cookie plugin)
+//                Put the script below to set first tab like default
 
 
     $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
@@ -36,25 +40,43 @@ $(function () {
     //    DELETE AJAX EVENT
     //    AJAX post data when delete button is clicked, remove row after response
     $('.deletebtn').on('click', function () {
-//        var $tr = $(this).closest('tr');
-        var deleteRow = $(this).closest('tr').find('td:first').text();
-//            var answer = $(this).closest('tr').find('td:nth-child(3)').text();
-//            $(this).closest('tr').css({ 'color': 'red'});
+        var deleteRowId = $(this).closest('tr').find('td:first').text();
+        $('#delete-confirmed').attr('data-id', deleteRowId);
+        $('.deletemodal').modal('show')
+    });
+
+    $('#delete-confirmed').on('click', function (e) {
+        var rowId = $(e.target).attr('data-id');
+        console.log(rowId);
+        $('.deletemodal').modal('hide');
+
         $.ajax({
-            type: 'POST',
-            url: 'http://localhost:3000/deleteRow',
-            data: {
-                entryId: deleteRow
-            },
-            success: function (res) {
+                type: 'POST',
+                url: 'http://localhost:3000/deleteRow',
+                data: {
+                    entryId: rowId
+                }
+            })
+            .done(function (res) {
 //                    alert(res);
                 $('.keyid').filter(function () {
                     return $(this).text() === res;
                 }).parent().remove();
                 $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
-            }
-        })
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                alert('Error occured\n' + jqXHR.status+ '\n' + errorThrown +
+                '\n\n' + 'Try refreshing this page')
+            })
     });
+
+    $('.deletemodal').on('hidden.bs.modal', function () {
+        $('#delete-confirmed').removeAttr('data-id');
+
+    });
+//            var answer = $(this).closest('tr').find('td:nth-child(3)').text();
+//            $(this).closest('tr').css({ 'color': 'red'});
+
 
     //AJAX EDIT BUTTON EVENT
     //when edit button is clicked select q&a fields, transform td's into input fields, preserve old data

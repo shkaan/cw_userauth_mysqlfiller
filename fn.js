@@ -20,8 +20,29 @@ var dateParser = function (obj) {
     }
 };
 
+//use on routes that require user level access
+var protectedUser = function (req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.redirect('/signin');
+    } else {
+        next();
+    }
+};
+
+//use on routes that require admin level access
+var protectedAdmin = function (req, res, next) {
+    var user = req.user.toJSON();
+    if (!req.isAuthenticated() || user.access_level !== 'admin') {
+        res.end('UNAUTHORIZED!\nPlease log in');
+    } else {
+        next();
+    }
+};
+
 
 module.exports = {
-    dateParser: dateParser
+    dateParser: dateParser,
+    protectedUser: protectedUser,
+    protectedAdmin: protectedAdmin
 };
 

@@ -5,7 +5,7 @@
                 <thead>
                 <tr>
                     <th class="col-md-2">Username</th>
-                    <th class="col-md-6">Password</th>
+                    <!--<th class="col-md-6">Password</th>-->
                     <th class="col-md-2">Created at</th>
                     <th class="col-md-2">Access Level</th>
                 </tr>
@@ -15,7 +15,7 @@
                 <% for (var i = 0, len = dbView.length; i < len;i++) { %>
                 <tr>
                     <td><%= dbView[i].username %></td>
-                    <td><%= dbView[i].password %></td>
+                    <!--<td><%#= dbView[i].password %></td>-->
                     <td><%= dateParser(dbView[i].created_at).format('DD-MMM-YYYY  HH:mm:ss') %></td>
                     <td><%= dbView[i].access_level %></td>
                 </tr>
@@ -27,6 +27,8 @@
         </div>
     </div>
 </div>
+
+<div class="help-block"></div>
 
 <div class="row">
     <div class="col-md-1">

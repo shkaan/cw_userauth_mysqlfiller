@@ -18,6 +18,7 @@ var compression = require('compression');
 var route = require('./route');
 // model
 var Model = require('./model');
+var fn = require('./fn');
 
 var urlencodedParser = bodyParser.urlencoded({extended: false});
 //var jsonParser = bodyParser.json();
@@ -112,7 +113,7 @@ app.use(favicon(path.join(__dirname, '/static/favicon.ico')));
 
 
 // GET
-app.get('/', route.index);
+app.get('/', fn.protectedUser, route.index);
 
 // signin
 // GET
@@ -132,31 +133,31 @@ app.get('/signout', route.signOut);
 
 //mainPost
 //POST
-app.post('/mainPost', urlencodedParser, route.mainPost);
+app.post('/mainPost', fn.protectedUser, urlencodedParser, route.mainPost);
 
 //delete
 //POST (jQuery AJAX)
-app.post('/deleteRow', urlencodedParser, route.deleteRow);
+app.post('/deleteRow', fn.protectedUser, urlencodedParser, route.deleteRow);
 
 //edit
 //POST
-app.post('/editRow', urlencodedParser, route.editRow);
+app.post('/editRow', fn.protectedUser, urlencodedParser, route.editRow);
 
 //admin
 //GET
-app.get('/adminView', route.adminView);
+app.get('/adminView', fn.protectedAdmin, route.adminView);
 
 //admin Ajax Words Fetch
 //GET
-app.get('/adminWordsFetch', route.adminWordsFetch);
+app.get('/adminWordsFetch', fn.protectedAdmin, route.adminWordsFetch);
 
 //admin Ajax Users Fetch
 //GET
-app.get('/adminUsersFetch', route.adminUsersFetch);
+app.get('/adminUsersFetch', fn.protectedAdmin, route.adminUsersFetch);
 
 //Create new user from admin panel
 //POST
-app.post('/createUser', urlencodedParser, route.createUser);
+app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
 
 //Catch all err
 /********************************/

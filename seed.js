@@ -28,7 +28,7 @@ function createPosts(total) {
 console.log('> seeding...');
 
 // create # posts
-var myposts = createPosts(250);
+var myposts = createPosts(800);
 
 
     for (var i in myposts) {

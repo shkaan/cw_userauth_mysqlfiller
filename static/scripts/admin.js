@@ -2,6 +2,10 @@
  * Created by Wish Kaan on 26-Mar-16.
  */
 $(function () {
+
+    var url = $(location).attr('host');
+    console.log(url);
+    
     $('.wordsDB').on('click', function (e) {
         e.preventDefault();
         $.ajax({
@@ -48,7 +52,6 @@ $(function () {
                             $('.table tbody').append(
                                 '<tr>' +
                                 '<td>' + res.username + '</td>' +
-                                '<td>' + res.password + '</td>' +
                                 '<td>' + res.created_at + '</td>' +
                                 '<td>' + res.access_level + '</td>' +
                                 '/tr>');
