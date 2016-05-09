@@ -2,10 +2,10 @@
 var knex = require('knex')({
     client: "mysql",
     connection: {
-        host: 'localhost',  // your host
-        user: 'root', // your database username
-        password: 'Bajaim13', // your database password
-        database: 'crossword', //SCHEMA to use
+        host: 'l9dwvv6j64hlhpul.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',  // your host
+        user: 'iyc4qnjpwpyk0rs0', // your database username
+        password: 'y0llnux5zzuzu3kr ', // your database password
+        database: 'k2yzot55d4yv5e7l', //SCHEMA to use
         charset: 'UTF8_GENERAL_CI'
 
     }
