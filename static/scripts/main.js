@@ -2,8 +2,9 @@
  * Created by Wish Kaan on 20-Mar-16.
  */
 $(function () {
-
-    var url = $(location).attr('host');
+    var protocol = $(location).attr('protocol');
+    var host = $(location).attr('host');
+    var url = protocol + '//' + host;
     console.log(url);
 
     $("#messages").delay(2500).fadeOut(800);
@@ -52,7 +53,7 @@ $(function () {
 
         $.ajax({
                 type: 'POST',
-                url: 'https://' + url + '/deleteRow',
+                url: url + '/deleteRow',
                 data: {
                     entryId: rowId
                 }
