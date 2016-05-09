@@ -3,9 +3,6 @@
  */
 $(function () {
 
-    var url = $(location).attr('host');
-    console.log(url);
-
     $("#messages").delay(2500).fadeOut(800);
     $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
         $(this).delay(100).animate({opacity: 1}, 400);
@@ -115,14 +112,15 @@ $(function () {
                             answer: newContentA
                         },
                         success: function (res) {
-                            var res = JSON.parse(res);
+                            var data = JSON.parse(res);
 //                            alert(res.question);
                             var rowWrite = $('.keyid').filter(function () {
-                                return $(this).text() === res.entryId;
+                                return $(this).text() === data.entryId;
                             });
+                            console.log(rowWrite);
 
-                            $(rowWrite).parent().find('td:nth-child(3)').text(res.question);
-                            $(rowWrite).parent().find('td:nth-child(4)').text(res.answer);
+                            $(rowWrite).parent().find('td:nth-child(3)').text(data.question);
+                            $(rowWrite).parent().find('td:nth-child(4)').text(data.answer);
                             $(selectQ).add(selectA).removeClass("edit-cell");
                             $('.editbtn').on('click', adder);
                             handlerActive = false;

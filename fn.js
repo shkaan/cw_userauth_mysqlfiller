@@ -5,25 +5,15 @@ var moment = require('moment');
 
 
 //parsing dates to more readable format in views
-var dateParser = function (obj) {
-    var date = obj.toJSON();
-    if (date.created_at && date.created_by) {
-        date.created_at = moment(date.created_at).format('DD-MMM-YYYY  HH:mm:ss');
-        date.created_by = moment(date.created_by).format('DD-MMM-YYYY  HH:mm:ss');
-        return date
-    } else if (date.created_at) {
-        date.created_at = moment(date.created_at).format('DD-MMM-YYYY  HH:mm:ss');
-        return date
-    } else {
-        date.created_by = moment(date.created_by).format('DD-MMM-YYYY  HH:mm:ss');
-        return date
-    }
+var dateParser = function (date) {
+    return moment(date).format('DD-MMM-YYYY  HH:mm:ss');
 };
+
 
 //use on routes that require user level access
 var protectedUser = function (req, res, next) {
     if (!req.isAuthenticated()) {
-        res.redirect('/signin');
+        return res.redirect('/signin');
     } else {
         next();
     }
@@ -31,11 +21,18 @@ var protectedUser = function (req, res, next) {
 
 //use on routes that require admin level access
 var protectedAdmin = function (req, res, next) {
-    var user = req.user.toJSON();
-    if (!req.isAuthenticated() || user.access_level !== 'admin') {
-        res.end('UNAUTHORIZED!\nPlease log in');
+    var route = req.url;
+    // console.log(route);
+    if (req.user) {
+        var user = req.user.toJSON();
+        if (!req.isAuthenticated() || user.access_level !== 'admin') {
+            console.log(user.username + ' tried to access ' + route + '\n404 rendered!');
+            return res.render('404', {title: '404 Not Found'});
+        } else {
+            next();
+        }
     } else {
-        next();
+        return next(new Error("Protected route hit, user undefined"));
     }
 };
 

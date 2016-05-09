@@ -92,7 +92,7 @@ var signUp = function (req, res, next) {
 // POST
 var signUpPost = function (req, res, next) {
     var user = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     //var usernamePromise = null;
 
     var usernamePromise = new Model.User({username: user.username}).fetch();
@@ -203,14 +203,11 @@ var deleteRow = function (req, res, next) {
 //editRow
 //POST
 var editRow = function (req, res, next) {
-    console.log(req.headers);
-    var entryId = req.body.entryId;
-    var question = req.body.question;
-    var answer = req.body.answer;
+    // console.log(req.body);
     var user = req.user.toJSON();
     //console.log(user);
     //console.log(entryId + "::" + question + "::" + answer);
-    Model.rowEdit(entryId, question, answer, user.username, result);
+    Model.rowEdit(req.body, user.username, result);
     function result(result) {
         //console.log (result);
         var resultParse = result.toJSON();
@@ -228,20 +225,14 @@ var editRow = function (req, res, next) {
 //Admin
 //GET
 var adminView = function (req, res, next) {
-        var user = req.user.toJSON();
-        var dbView = new Model.Words().fetchAll().then(function (data) {
-            dbView = data.toJSON();
-            //console.log(dbView);
-            //for (var i = 0; i < dbView.length; i++) {
-            //    var dateParsed = dbView[i].created_at.toISOString();
-            //console.log(dateParsed);
-            //console.log(dbView[i]);
-            //}
-            res.render('admin', {
-                title: 'Admin Control Panel',
-                user: user, dbView: dbView, dateParser: moment
-            });
-        });
+    var user = req.user.toJSON();
+    Model.userCount(function(result){
+        console.log(result)
+    });
+    res.render('admin', {
+        title: 'Admin Control Panel',
+        user: user
+    });
 };
 
 //Admin Ajax Words Fetch
@@ -250,18 +241,23 @@ var adminWordsFetch = function (req, res, next) {
     //console.log(req.headers);
     var dbView = new Model.Words().fetchAll().then(function (data) {
         dbView = data.toJSON();
-        res.render('ajax_views/table-words', {dbView: dbView, dateParser: moment});
+        res.render('ajax_views/table-words', {dbView: dbView, dateParser: fn.dateParser});
     })
 };
 
 //Admin Ajax Users Fetch
 //GET
 var adminUsersFetch = function (req, res, next) {
-    console.log(req.headers);
+    // console.log(req.headers);
     var dbView = new Model.User().fetchAll().then(function (data) {
         dbView = data.toJSON();
+        Model.groupCounter('access_level','cwusers','access_level', function (result) {
+            console.log(result);
+            var counter = result;
+            res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter:counter});
+
+        });
         //console.log(dbView);
-        res.render('ajax_views/table-users', {dbView: dbView, dateParser: moment});
         //res.end('GG');
     })
 };
@@ -272,13 +268,15 @@ var createUser = function (req, res, next) {
     // console.log(req.headers);
     //console.log(req.body);
     var data = req.body;
-    //console.log(typeof data);
+    // console.log(typeof data);
     Model.newUserSave(data, function (callback) {
-        // console.log(callback);
-        //console.log(data);
-        var viewParsed = fn.dateParser(callback);
-        console.log(viewParsed);
-        res.end(JSON.stringify(viewParsed));
+        var userData =(callback);
+        console.log(userData);
+        userData.created_at = fn.dateParser(userData.created_at);
+        Model.groupCounter('access_level as lvl','cwusers','access_level',function (result) {
+            res.end(JSON.stringify(userData));
+
+        })
     })
 };
 

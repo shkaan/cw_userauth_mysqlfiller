@@ -18,6 +18,7 @@ var compression = require('compression');
 var route = require('./route');
 // model
 var Model = require('./model');
+//Custom middleware and stuff
 var fn = require('./fn');
 
 var urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -162,6 +163,7 @@ app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
 //Catch all err
 /********************************/
 app.use(function (err, req, res, next) {
+    console.log('error handler triggered!');
     console.error(err.stack);
     res.status(500).send('Nesto se iskundachilo!');
 });

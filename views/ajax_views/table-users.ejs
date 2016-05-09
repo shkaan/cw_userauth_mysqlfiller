@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="table-scroll">
+        <div class="table-scroll col-md-9">
             <table class="table sortable">
                 <thead>
                 <tr>
@@ -16,14 +16,17 @@
                 <tr>
                     <td><%= dbView[i].username %></td>
                     <!--<td><%#= dbView[i].password %></td>-->
-                    <td><%= dateParser(dbView[i].created_at).format('DD-MMM-YYYY  HH:mm:ss') %></td>
+                    <td><%= dateParser(dbView[i].created_at) %></td>
                     <td><%= dbView[i].access_level %></td>
                 </tr>
                 <% }} %>
                 </tbody>
-
             </table>
-
+        </div>
+        <div class="well col-md-2 statswell pull-right text-center">
+            <p><%= counter[0].access_level.toUpperCase() + ' : ' %> <span><%= counter[0].count %></span></p>
+            <p><%= counter[1].access_level.toUpperCase() + ' : ' %> <span><%= counter[1].count %></span></p>
+            <p><strong>TOTAL</strong> : <span><%= counter[0].count + counter[1].count %></span></p>
         </div>
     </div>
 </div>
@@ -32,17 +35,16 @@
 
 <div class="row">
     <div class="col-md-1">
-
         <div data-target="#newuser" class="btn btn-primary" data-toggle="collapse">
             Add new user
         </div>
     </div>
-
 </div>
+
 
 <div class="collapse voffset2" id="newuser">
     <div class="col-md-12">
-        <form method="post" action="/testRoute" class="form-horizontal" id="user-submit" role="form">
+        <form method="post" action="/is a top secret" class="form-horizontal" id="user-submit" role="form">
 
             <div class="row">
                 <div class="form-group col-md-2">
@@ -77,4 +79,4 @@
         </form>
     </div>
 </div>
-</div>
+

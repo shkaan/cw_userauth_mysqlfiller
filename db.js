@@ -1,4 +1,3 @@
-
 var knex = require('knex')({
     client: "mysql",
     connection: {
@@ -7,6 +6,7 @@ var knex = require('knex')({
         password: 'Bajaim13', // your database password
         database: 'crossword', //SCHEMA to use
         charset: 'UTF8_GENERAL_CI'
+        //debug: true
 
     }
 });

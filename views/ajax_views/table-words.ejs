@@ -19,9 +19,9 @@
                     <td><%= dbView[i].question %></td>
                     <td><%= dbView[i].answer %></td>
                     <td><%= dbView[i].created_by %></td>
-                    <td><%= dateParser(dbView[i].created_at).format('DD-MMM-YYYY  HH:mm:ss') %></td>
+                    <td><%= dateParser(dbView[i].created_at) %></td>
                     <td><%= dbView[i].updated_by %></td>
-                    <td><%= dateParser(dbView[i].updated_at).format('DD-MMM-YYYY  HH:mm:ss') %></td>
+                    <td><%= dateParser(dbView[i].updated_at) %></td>
 
                 </tr>
                 <% }} %>

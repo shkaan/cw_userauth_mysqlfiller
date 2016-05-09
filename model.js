@@ -13,6 +13,29 @@ var Words = DB.Model.extend({
 });
 
 
+//user counter
+var userCount = function (callback) {
+    new User().count('userID', 'password')
+        .then(function (count) {
+            callback(count);
+        })
+        .catch(function (err) {
+            console.error(err);
+        })
+};
+
+//words counter
+var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
+    DB.knex.select(selectColumn).count('* as count').from(table).groupBy(groupBycolumn)
+        .then(function (res) {
+            cb(res);
+        })
+        .catch(function (err) {
+            console.error(err);
+        })
+};
+
+
 //DB query, post, delete, etc  helper functions
 var fetcher = function (columnName, columnValue, callback) {
     Words.where(columnName, columnValue)
@@ -30,7 +53,7 @@ var fetcher = function (columnName, columnValue, callback) {
 var rowDeleter = function (columnId, callback) {
     Words.where('entryId', columnId)
         .destroy()
-        .then(function (result) {
+        .then(function () {
             // console.log(result);
             callback(columnId);
         })
@@ -40,11 +63,11 @@ var rowDeleter = function (columnId, callback) {
 
 };
 
-var rowEdit = function (columnId, question, answer, username, callback) {
-    new Words({'entryId': columnId})
+var rowEdit = function (data, username, callback) {
+    new Words({entryId: data.entryId})
         .save({
-            question: question,
-            answer: answer,
+            question: data.question,
+            answer: data.answer,
             updated_by: username
         })
         .then(function (result) {
@@ -70,7 +93,8 @@ var newUserSave = function (data, callback) {
                         new User({username: result.username})
                             .fetch()
                             .then(function (fetchResult) {
-                                callback(fetchResult);
+                                var parsedData = fetchResult.toJSON();
+                                callback(parsedData);
                             });
                     })
                     .catch(function (err) {
@@ -87,6 +111,8 @@ var newUserSave = function (data, callback) {
 module.exports = {
     User: User,
     Words: Words,
+    userCount: userCount,
+    groupCounter: groupCounter,
     fetcher: fetcher,
     rowDeleter: rowDeleter,
     rowEdit: rowEdit,

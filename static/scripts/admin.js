@@ -55,6 +55,7 @@ $(function () {
                                 '<td>' + res.created_at + '</td>' +
                                 '<td>' + res.access_level + '</td>' +
                                 '/tr>');
+                            $('.statswell p:contains("ADMIN") span').css({'color':'red'});
                             $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
                             $.bootstrapSortable(true);
                             $('#user-submit')[0].reset();

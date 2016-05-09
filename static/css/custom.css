@@ -5,6 +5,15 @@ body {
     font-size: medium;
 }
 
+/*//sign-in screen aligning middle*/
+html, body, .container-table {
+    height: 100%;
+}
+
+.container-table {
+    display: table;
+}
+
 .content-wraper {
     margin-left: 5%;
 }
@@ -165,14 +174,11 @@ body {
     margin-right: 10px;
 }
 
-/*//sign-in screen aligning middle*/
-html, body, .container-table {
-    height: 100%;
+.statswell {
+    /*margin-top: 35vh;*/
 }
 
-.container-table {
-    display: table;
-}
+
 
 .vertical-center-row {
     display: table-cell;
