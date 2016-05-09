@@ -109,7 +109,7 @@ $(function () {
 //                    alert('ajax call');
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:3000/editRow',
+                        url: url + '/editRow',
                         data: {
                             entryId: rowId,
                             question: newContentQ,
