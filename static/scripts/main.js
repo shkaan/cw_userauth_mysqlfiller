@@ -52,7 +52,7 @@ $(function () {
 
         $.ajax({
                 type: 'POST',
-                url: 'http://' + url + '/deleteRow',
+                url: 'https://' + url + '/deleteRow',
                 data: {
                     entryId: rowId
                 }
