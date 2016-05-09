@@ -52,7 +52,7 @@ $(function () {
 
         $.ajax({
                 type: 'POST',
-                url: 'http://localhost:3000/deleteRow',
+                url: 'http://' + url + '/deleteRow',
                 data: {
                     entryId: rowId
                 }
@@ -65,8 +65,8 @@ $(function () {
                 $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
-                alert('Error occured\n' + jqXHR.status+ '\n' + errorThrown +
-                '\n\n' + 'Try refreshing this page')
+                alert('Error occured\n' + jqXHR.status + '\n' + errorThrown +
+                    '\n\n' + 'Try refreshing this page')
             })
     });
 
