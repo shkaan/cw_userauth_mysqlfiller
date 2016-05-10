@@ -251,7 +251,7 @@ var adminUsersFetch = function (req, res, next) {
     // console.log(req.headers);
     var dbView = new Model.User().fetchAll().then(function (data) {
         dbView = data.toJSON();
-        Model.groupCounter('access_level','cwusers','access_level', function (result) {
+        Model.groupCounter('access_level','cwUsers','access_level', function (result) {
             console.log(result);
             var counter = result;
             res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter:counter});
@@ -273,7 +273,7 @@ var createUser = function (req, res, next) {
         var userData =(callback);
         console.log(userData);
         userData.created_at = fn.dateParser(userData.created_at);
-        Model.groupCounter('access_level as lvl','cwusers','access_level',function (result) {
+        Model.groupCounter('access_level as lvl','cwUsers','access_level',function (result) {
             res.end(JSON.stringify(userData));
 
         })
