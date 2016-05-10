@@ -24,9 +24,12 @@
             </table>
         </div>
         <div class="well col-md-2 statswell pull-right text-center">
-            <p><%= counter[0].access_level.toUpperCase() + ' : ' %> <span><%= counter[0].count %></span></p>
-            <p><%= counter[1].access_level.toUpperCase() + ' : ' %> <span><%= counter[1].count %></span></p>
-            <p><strong>TOTAL</strong> : <span><%= counter[0].count + counter[1].count %></span></p>
+            <p><%= counter[0].access_level.toUpperCase() + 'S' + ' : ' %> <span
+                        id="admincnt"><%= counter[0].count %></span></p>
+            <p><%= counter[1].access_level.toUpperCase() + 'S' + ' : ' %> <span
+                        id="usercnt"><%= counter[1].count %></span>
+            </p>
+            <p><strong>TOTAL</strong> : <span id="totalcnt"><%= counter[0].count + counter[1].count %></span></p>
         </div>
     </div>
 </div>

@@ -32,7 +32,7 @@ $(function () {
         })).done(function (res) {
             //alert(res);
             $('#table-container').html(res);
-            console.log('radi do jaja');
+            //console.log('radi do jaja');
             $.bootstrapSortable(true);
 
         }).fail(function (reason) {
@@ -51,14 +51,30 @@ $(function () {
                         if (res.status === 'exists') {
                             $('#ajaxfail').html('Username already exists').fadeIn(10).delay(1000).fadeOut(2000);
                         } else {
-                            console.log(res);
+                            //console.log(res);
                             $('.table tbody').append(
                                 '<tr>' +
                                 '<td>' + res.username + '</td>' +
                                 '<td>' + res.created_at + '</td>' +
                                 '<td>' + res.access_level + '</td>' +
                                 '/tr>');
-                            $('.statswell p:contains("ADMIN") span').css({'color': 'red'});
+                            function addOne(id) {
+                                var number = parseInt($(id).html());
+                                return number + 1;
+                            }
+
+                            if (res.access_level === 'admin') {
+                                $('#admincnt').text(addOne('#admincnt'));
+                                $('#totalcnt').text(addOne('#totalcnt'));
+
+                            } else if (res.access_level === 'user') {
+                                $('#usercnt').text(addOne('#usercnt'));
+                                $('#totalcnt').text(addOne('#totalcnt'));
+
+                            } else {
+                                console.error('nothing to add');
+                            }
+
                             $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
                             $.bootstrapSortable(true);
                             $('#user-submit')[0].reset();

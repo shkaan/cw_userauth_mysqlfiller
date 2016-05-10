@@ -226,7 +226,7 @@ var editRow = function (req, res, next) {
 //GET
 var adminView = function (req, res, next) {
     var user = req.user.toJSON();
-    Model.userCount(function(result){
+    Model.userCount(function (result) {
         console.log(result)
     });
     res.render('admin', {
@@ -251,10 +251,10 @@ var adminUsersFetch = function (req, res, next) {
     // console.log(req.headers);
     var dbView = new Model.User().fetchAll().then(function (data) {
         dbView = data.toJSON();
-        Model.groupCounter('access_level','cwUsers','access_level', function (result) {
-            console.log(result);
+        Model.groupCounter('access_level', 'cwUsers', 'access_level', function (result) {
+            //console.log(result);
             var counter = result;
-            res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter:counter});
+            res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter: counter});
 
         });
         //console.log(dbView);
@@ -270,13 +270,10 @@ var createUser = function (req, res, next) {
     var data = req.body;
     // console.log(typeof data);
     Model.newUserSave(data, function (callback) {
-        var userData =(callback);
-        console.log(userData);
+        var userData = (callback);
         userData.created_at = fn.dateParser(userData.created_at);
-        Model.groupCounter('access_level as lvl','cwUsers','access_level',function (result) {
-            res.end(JSON.stringify(userData));
+        res.end(JSON.stringify(userData));
 
-        })
     })
 };
 
