@@ -3,17 +3,20 @@
  */
 $(function () {
 
-    var url = $(location).attr('host');
+    var protocol = $(location).attr('protocol');
+    var host = $(location).attr('host');
+    var url = protocol + '//' + host;
     console.log(url);
+
     
     $('.wordsDB').on('click', function (e) {
         e.preventDefault();
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:3000/adminWordsFetch',
+            url: url + '/adminWordsFetch',
             dataType: 'html'
 
-        }).done (function (res) {
+        }).done(function (res) {
             //alert(res);
             $('#table-container').html(res);
             $.bootstrapSortable(true);
@@ -23,10 +26,10 @@ $(function () {
         e.preventDefault();
         $.when($.ajax({
             type: 'GET',
-            url: 'http://localhost:3000/adminUsersFetch',
+            url: url + '/adminUsersFetch',
             dataType: 'html'
 
-        })).done (function (res) {
+        })).done(function (res) {
             //alert(res);
             $('#table-container').html(res);
             console.log('radi do jaja');
@@ -40,7 +43,7 @@ $(function () {
                     e.preventDefault();
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:3000/createUser',
+                        url: url + '/createUser',
                         dataType: 'json',
                         data: $("#user-submit").serialize()
                     }).done(function (res) {
@@ -55,7 +58,7 @@ $(function () {
                                 '<td>' + res.created_at + '</td>' +
                                 '<td>' + res.access_level + '</td>' +
                                 '/tr>');
-                            $('.statswell p:contains("ADMIN") span').css({'color':'red'});
+                            $('.statswell p:contains("ADMIN") span').css({'color': 'red'});
                             $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
                             $.bootstrapSortable(true);
                             $('#user-submit')[0].reset();

@@ -3,6 +3,11 @@
  */
 $(function () {
 
+    var protocol = $(location).attr('protocol');
+    var host = $(location).attr('host');
+    var url = protocol + '//' + host;
+    console.log(url);
+
     $("#messages").delay(2500).fadeOut(800);
     $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
         $(this).delay(100).animate({opacity: 1}, 400);
@@ -49,7 +54,7 @@ $(function () {
 
         $.ajax({
                 type: 'POST',
-                url: 'http://localhost:3000/deleteRow',
+                url: url + '/deleteRow',
                 data: {
                     entryId: rowId
                 }
@@ -62,8 +67,8 @@ $(function () {
                 $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
-                alert('Error occured\n' + jqXHR.status+ '\n' + errorThrown +
-                '\n\n' + 'Try refreshing this page')
+                alert('Error occured\n' + jqXHR.status + '\n' + errorThrown +
+                    '\n\n' + 'Try refreshing this page')
             })
     });
 
@@ -105,7 +110,7 @@ $(function () {
 //                    alert('ajax call');
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:3000/editRow',
+                        url: url + '/editRow',
                         data: {
                             entryId: rowId,
                             question: newContentQ,
