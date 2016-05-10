@@ -1,5 +1,6 @@
 var knex = require('knex')({
     client: "mysql",
+
     //set to use env variable for connection in format: mysql://username:password@host:port/database
     connection: process.env.JAWSDB_URL || process.env.mysql_url
     //or old fashioned hardcoded info if everything fails
@@ -12,6 +13,9 @@ var knex = require('knex')({
     //     //debug: true
     //
     // }
+
+//    connection: process.env.JAWSDB_URL || process.env.mysql_url
+
 });
 var DB = require('bookshelf')(knex);
 

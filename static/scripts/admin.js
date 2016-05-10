@@ -8,7 +8,7 @@ $(function () {
     var url = protocol + '//' + host;
     console.log(url);
 
-    
+
     $('.wordsDB').on('click', function (e) {
         e.preventDefault();
         $.ajax({
