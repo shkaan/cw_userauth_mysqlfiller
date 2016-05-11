@@ -3,7 +3,8 @@ var bcrypt = require('bcrypt-nodejs');
 
 var User = DB.Model.extend({
     tableName: 'cwUsers',
-    idAttribute: 'userId'
+    idAttribute: 'userId',
+    hasTimestamps: true
 });
 
 var Words = DB.Model.extend({
