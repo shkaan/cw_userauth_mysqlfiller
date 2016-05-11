@@ -81,6 +81,7 @@ var rowEdit = function (data, username, callback) {
 
 
 var newUserSave = function (data, callback) {
+    console.log(data);
     new User({username: data.username})
         .fetch()
         .then(function (result) {

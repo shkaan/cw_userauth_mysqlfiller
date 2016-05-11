@@ -22,6 +22,7 @@ create table if not exists cwUsers (
     username varchar(100) unique,
     password varchar(100),
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    access_level varchar(10) DEFAULT 'user'
+    access_level varchar(10) DEFAULT 'user',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 
 )engine=innodb;
