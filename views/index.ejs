@@ -89,7 +89,7 @@
                                     <% for(var i = 0, len = query.length;i < len;i++){ %>
                                     <% if(query[i].sessionid === sess){ %>
                                     <tr class="blink">
-                                        <td class="keyid hide"><%= query[i].entryId %></td>
+                                        <td class="keyid hide"><%= query[i].entryid %></td>
                                         <td class="reverse"><%= i + 1 %></td>
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>
@@ -130,7 +130,7 @@
                                     <% if (query) { %>
                                     <% for(var i = 0, len = query.length;i < len;i++){ %>
                                     <tr class="blink">
-                                        <td class="keyid hide"><%= query[i].entryId %></td>
+                                        <td class="keyid hide"><%= query[i].entryid %></td>
                                         <td class="reverse"><%= len - i %></td>
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>

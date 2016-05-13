@@ -191,7 +191,7 @@ var deleteRow = function (req, res, next) {
     // console.log(req.body);
     // console.log(req.user);
 
-    var deleteRow = req.body.entryId;
+    var deleteRow = req.body.entryid;
     //console.log(deleteRow);
     Model.rowDeleter(deleteRow, result);
     function result(result) {
@@ -205,7 +205,7 @@ var deleteRow = function (req, res, next) {
 var editRow = function (req, res, next) {
     // console.log(req.body);
     var user = req.user.toJSON();
-    //console.log(user);
+    console.log(req.body);
     //console.log(entryId + "::" + question + "::" + answer);
     Model.rowEdit(req.body, user.username, result);
     function result(result) {
@@ -254,11 +254,10 @@ var adminUsersFetch = function (req, res, next) {
         Model.groupCounter('access_level', 'cwUsers', 'access_level', function (result) {
             //console.log(result);
             var counter = result;
+            console.log(counter);
             res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter: counter});
 
         });
-        //console.log(dbView);
-        //res.end('GG');
     })
 };
 
@@ -275,6 +274,21 @@ var createUser = function (req, res, next) {
         res.end(JSON.stringify(userData));
 
     })
+};
+
+var editUser = function (req, res, next) {
+    console.log(req.body);
+    if (req.body.password) {
+        console.log('JEEEEEJ PASVORD');
+        req.body.password = bcrypt.hashSync(req.body.password)
+    } else {
+        console.log('nema pasvorda diliting');
+        delete req.body.password;
+    }
+    Model.userEdit(req.body, function (callback) {
+       // console.log(callback.attributes);
+        res.end(JSON.stringify(callback.attributes));
+    });
 };
 
 
@@ -319,7 +333,10 @@ module.exports.adminWordsFetch = adminWordsFetch;
 //Ajax Users
 module.exports.adminUsersFetch = adminUsersFetch;
 
-//testRoute
+//Ajax create user
 module.exports.createUser = createUser;
+
+//Ajax edit user
+module.exports.editUser = editUser;
 
 

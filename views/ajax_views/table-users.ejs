@@ -1,39 +1,56 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-scroll col-md-9">
-            <table class="table sortable">
+            <table class="table sortable clearfix" id="usrtable">
                 <thead>
                 <tr>
+                    <th class="hide col-md-1" data-defaultsort="disabled"></th>
                     <th class="col-md-2">Username</th>
                     <!--<th class="col-md-6">Password</th>-->
                     <th class="col-md-2">Created at</th>
                     <th class="col-md-2">Access Level</th>
+                    <th class="col-md-1" data-defaultsort="disabled"></th>
+                    <th class="col-md-1" data-defaultsort="disabled"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <% if (dbView){ %>
                 <% for (var i = 0, len = dbView.length; i < len;i++) { %>
                 <tr>
+                    <td class="keyid hide"><%= dbView[i].userid %></td>
                     <td><%= dbView[i].username %></td>
                     <!--<td><%#= dbView[i].password %></td>-->
                     <td><%= dateParser(dbView[i].created_at) %></td>
                     <td><%= dbView[i].access_level %></td>
+                    <td>
+                        <button class="btn btn-default btn-xs editbtn pull-right"><span
+                                    class="glyphicon glyphicon-pencil"></span> edit user details
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-default btn-xs deletebtn pull-right"><span
+                                    class="glyphicon glyphicon-remove"></span> delete user
+                        </button>
+                    </td>
                 </tr>
                 <% }} %>
                 </tbody>
             </table>
         </div>
         <div class="well col-md-2 statswell pull-right text-center">
-            <% if (counter[0]){ %>
-            <p><%= counter[0].access_level.toUpperCase() + 'S' + ' : ' %> <span
-                        id="admincnt"><%= counter[0].count %></span></p>
+            <% var totalcnt = 0 %>
+            <% if (counter){ %>
+            <% for (var c in counter) { %>
+            <p><%= counter[c].access_level.toUpperCase() + 'S' + ' : ' %> <span
+                        class="usrcnt"><%= counter[c].count %></span></p>
+            <% totalcnt += counter[c].count %>
             <% } %>
-            <% if (counter[1]) { %>
-            <p><%= counter[1].access_level.toUpperCase() + 'S' + ' : ' %> <span
-                        id="usercnt"><%= counter[1].count %></span></p>
-            <% } %>
-            <% if (counter[0] && counter[1]) { %>
-            <p><strong>TOTAL</strong> : <span id="totalcnt"><%= counter[0].count + counter[1].count %></span></p>
+            <p><strong>TOTAL</strong> : <span id="ttlcnt"><%= totalcnt %></span></p>
+            <%# if (counter[1]) { %>
+            <!--<p><%#= counter[1].access_level.toUpperCase() + 'S' + ' : ' %> <span-->
+            <!--id="usercnt"><%#= counter[1].count %></span></p>-->
+            <%# } %>
+            <%# if (counter[0] && counter[1]) { %>
             <% } %>
         </div>
     </div>
@@ -50,41 +67,38 @@
 </div>
 
 
-<div class="collapse voffset2" id="newuser">
-    <div class="col-md-12">
-        <form method="post" action="/is a top secret" class="form-horizontal" id="user-submit" role="form">
+<div class="row collapse voffset2" id="newuser">
+    <!--<div class="col-md-12">-->
+    <form method="post" action="/is a top secret" class="form-horizontal" id="user-submit" role="form">
 
-            <div class="row">
-                <div class="form-group col-md-2">
-                    <input type="text" class="form-control" id="usrfocus" name="username" autofocus
-                           placeholder="Username" required autocomplete="off">
-                </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
+                <input type="text" class="form-control" id="usrfocus" name="username" autofocus
+                       placeholder="Username" required autocomplete="off">
             </div>
+        </div>
 
-            <div class="row">
-                <div class="form-group col-md-2">
-                    <input type="text" class="form-control" name="password" placeholder="Password" required
-                           autocomplete="off">
-                </div>
+        <div class="col-md-12">
+            <div class="form-group col-md-2">
+                <input type="text" class="form-control" name="password" placeholder="Password" required
+                       autocomplete="off">
             </div>
+        </div>
 
-            <div class="row">
-                <label><input type="checkbox" name="access_level" value="admin"> Create as ADMIN</label>
+        <div class="form-group col-md-12">
+            <div class="checkbox col-md-2">
+                <label><input type="checkbox" name="access_level" value="admin"> <strong>Create as
+                        ADMIN</strong></label>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <input type="submit" class="btn btn-primary" value="Submit">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="col-md-12"><input type="submit" class="btn btn-primary" value="Submit">
                     <span id="ajaxfail" class="loffset1"></span>
-                    <span id="ajaxsuccess" class="loffset1"></span>
-                </div>
+                    <span id="ajaxsuccess" class="loffset1"></span></div>
             </div>
-            <!--<div class="#adminmessages col-md-3 text-left">-->
-            <!--<p id="ajaxsuccess"></p>-->
-
-            <!--<p id="ajaxfail"></p>-->
-            <!--</div>-->
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 

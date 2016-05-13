@@ -73,9 +73,10 @@ var createRoot = function () {
                 .then(function () {
                     console.info('root created');
 
-                }).catch(function (err) {
-                console.error(err);
-            })
+                })
+                .catch(function (err) {
+                    console.error(err);
+                })
         }
     })
 };
@@ -159,6 +160,10 @@ app.get('/adminUsersFetch', fn.protectedAdmin, route.adminUsersFetch);
 //Create new user from admin panel
 //POST
 app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
+
+//Edit user info from admin panel
+//POST
+app.post('/editUser', fn.protectedAdmin, urlencodedParser, route.editUser);
 
 //Catch all err
 /********************************/

@@ -56,7 +56,7 @@ $(function () {
                 type: 'POST',
                 url: url + '/deleteRow',
                 data: {
-                    entryId: rowId
+                    entryid: rowId
                 }
             })
             .done(function (res) {
@@ -112,7 +112,7 @@ $(function () {
                         type: 'POST',
                         url: url + '/editRow',
                         data: {
-                            entryId: rowId,
+                            entryid: rowId,
                             question: newContentQ,
                             answer: newContentA
                         },
@@ -120,7 +120,7 @@ $(function () {
                             var data = JSON.parse(res);
 //                            alert(res.question);
                             var rowWrite = $('.keyid').filter(function () {
-                                return $(this).text() === data.entryId;
+                                return $(this).text() === data.entryid;
                             });
                             console.log(rowWrite);
 

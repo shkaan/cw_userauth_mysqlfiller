@@ -1,5 +1,4 @@
 
-
 body {
     font-family: 'Roboto', sans-serif;
     font-size: medium;
@@ -144,6 +143,10 @@ html, body, .container-table {
 
 }
 
+.smallinfo {
+    font-size: small;
+}
+
 .dbview {
     padding-top: 10px;
 }
@@ -178,8 +181,6 @@ html, body, .container-table {
     /*margin-top: 35vh;*/
 }
 
-
-
 .vertical-center-row {
     display: table-cell;
     vertical-align: middle;
@@ -187,9 +188,22 @@ html, body, .container-table {
 }
 
 #delete-modal-header {
-    padding:9px 15px;
-    border-bottom:1px solid #eee;
+    padding: 9px 15px;
+    border-bottom: 1px solid #eee;
     background-color: #cc1600;
+    color: #eee;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#edit-modal-header {
+    padding: 9px 15px;
+    border-bottom: 1px solid #eee;
+    background-color: #0066cc;
     color: #eee;
     -webkit-border-top-left-radius: 5px;
     -webkit-border-top-right-radius: 5px;

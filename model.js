@@ -3,20 +3,32 @@ var bcrypt = require('bcrypt-nodejs');
 
 var User = DB.Model.extend({
     tableName: 'cwUsers',
-    idAttribute: 'userId',
-    hasTimestamps: true
+    idAttribute: 'userid',
+    hasTimestamps: true,
+
+    initialize: function () {
+        this.on('saving', this.validateSave);
+        this.on('saved', this.saved);
+    },
+
+    validateSave: function () {
+        return console.log(this.attributes.password);
+    },
+    saved: function () {
+        return console.log('ALL SAVED')
+    }
 });
 
 var Words = DB.Model.extend({
     tableName: 'cwWords',
-    idAttribute: 'entryId',
+    idAttribute: 'entryid',
     hasTimestamps: true
 });
 
 
 //user counter
 var userCount = function (callback) {
-    new User().count('userID', 'password')
+    new User().count('userid', 'password')
         .then(function (count) {
             callback(count);
         })
@@ -52,7 +64,7 @@ var fetcher = function (columnName, columnValue, callback) {
 };
 
 var rowDeleter = function (columnId, callback) {
-    Words.where('entryId', columnId)
+    Words.where('entryid', columnId)
         .destroy()
         .then(function () {
             // console.log(result);
@@ -65,7 +77,7 @@ var rowDeleter = function (columnId, callback) {
 };
 
 var rowEdit = function (data, username, callback) {
-    new Words({entryId: data.entryId})
+    new Words({entryid: data.entryid})
         .save({
             question: data.question,
             answer: data.answer,
@@ -110,6 +122,20 @@ var newUserSave = function (data, callback) {
         })
 };
 
+var userEdit = function (data, callback) {
+    new User({userid: data.userid})
+        .save(data, {
+            require: false
+        })
+        .then(function (res) {
+            callback(res);
+        })
+        .catch(function (err) {
+            console.error(err);
+        })
+
+};
+
 module.exports = {
     User: User,
     Words: Words,
@@ -118,6 +144,7 @@ module.exports = {
     fetcher: fetcher,
     rowDeleter: rowDeleter,
     rowEdit: rowEdit,
-    newUserSave: newUserSave
+    newUserSave: newUserSave,
+    userEdit: userEdit
 };
 
