@@ -165,7 +165,7 @@ app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
 //POST
 app.post('/editUser', fn.protectedAdmin, urlencodedParser, route.editUser);
 
-//Catch all err
+//Catch all err hanadler
 /********************************/
 app.use(function (err, req, res, next) {
     console.log('error handler triggered!');
