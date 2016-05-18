@@ -19,6 +19,7 @@ var User = DB.Model.extend({
     }
 });
 
+
 var Words = DB.Model.extend({
     tableName: 'cwWords',
     idAttribute: 'entryid',
@@ -93,7 +94,7 @@ var rowEdit = function (data, username, callback) {
 
 
 var newUserSave = function (data, callback) {
-    console.log(data);
+    // console.log(data);
     new User({username: data.username})
         .fetch()
         .then(function (result) {
@@ -129,9 +130,30 @@ var userEdit = function (data, callback) {
         })
         .then(function (res) {
             callback(res);
+            //console.log(res)
         })
         .catch(function (err) {
             console.error(err);
+        })
+
+};
+
+var userDelete = function (data, callback) {
+    new User({userid: data.userid})
+        .fetch({require:true})
+        .then(function (result) {
+            result
+                .destroy()
+                .then(function () {
+                    callback(data);
+                })
+                .catch(function (err) {
+                    console.error(err);
+                });
+        })
+        .catch(function (err) {
+            console.error(err);
+            callback(err);
         })
 
 };
@@ -145,6 +167,7 @@ module.exports = {
     rowDeleter: rowDeleter,
     rowEdit: rowEdit,
     newUserSave: newUserSave,
-    userEdit: userEdit
+    userEdit: userEdit,
+    userDelete: userDelete
 };
 

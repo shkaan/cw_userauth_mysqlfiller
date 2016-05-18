@@ -5,10 +5,10 @@ var knex = require('knex')({
     connection: process.env.gd_mysql
     //or old fashioned hardcoded info if everything fails
     // connection:{
-    //     host: 'n1plcpnl0099.prod.ams1.secureserver.net',  // your host
-    //     user: 'sysop', // your database username
-    //     password: '1k{+r&T%bhh8', // your database password
-    //     database: 'crosswordsdb', //SCHEMA to use
+    //     host: '',  // your host
+    //     user: '', // your database username
+    //     password: '', // your database password
+    //     database: '', //SCHEMA to use
     //     charset: 'UTF8_GENERAL_CI'
     //     // debug: true
     //

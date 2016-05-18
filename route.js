@@ -264,12 +264,12 @@ var adminUsersFetch = function (req, res, next) {
 //Admin create user
 //POST
 var createUser = function (req, res, next) {
-    // console.log(req.headers);
+    //console.log(req.headers);
     //console.log(req.body);
     var data = req.body;
-    // console.log(typeof data);
+     console.log(req.body);
     Model.newUserSave(data, function (callback) {
-        var userData = (callback);
+        var userData = callback;
         userData.created_at = fn.dateParser(userData.created_at);
         res.end(JSON.stringify(userData));
 
@@ -279,15 +279,24 @@ var createUser = function (req, res, next) {
 var editUser = function (req, res, next) {
     console.log(req.body);
     if (req.body.password) {
-        console.log('JEEEEEJ PASVORD');
+        console.log('YAAAAAY PASSWORD - hashing');
         req.body.password = bcrypt.hashSync(req.body.password)
     } else {
-        console.log('nema pasvorda diliting');
+        console.log('NO PASSWORD - DELETING');
         delete req.body.password;
     }
     Model.userEdit(req.body, function (callback) {
-       // console.log(callback.attributes);
+        //console.log(callback.attributes);
         res.end(JSON.stringify(callback.attributes));
+    });
+};
+
+var deleteUser = function (req, res, next) {
+    console.log(req.body);
+    Model.userDelete(req.body, function (callback) {
+        console.log(callback);
+        res.end(JSON.stringify(callback));
+
     });
 };
 
@@ -338,5 +347,9 @@ module.exports.createUser = createUser;
 
 //Ajax edit user
 module.exports.editUser = editUser;
+
+//Ajax delete user
+module.exports.deleteUser = deleteUser;
+
 
 

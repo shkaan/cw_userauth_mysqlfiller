@@ -137,9 +137,13 @@ app.get('/signout', route.signOut);
 //POST
 app.post('/mainPost', fn.protectedUser, urlencodedParser, route.mainPost);
 
-//delete
-//POST (jQuery AJAX)
+//deleterow
+//POST AJAX
 app.post('/deleteRow', fn.protectedUser, urlencodedParser, route.deleteRow);
+
+//delete user
+//delete ajax
+app.delete('/deleteUser', fn.protectedAdmin, urlencodedParser, route.deleteUser);
 
 //edit
 //POST

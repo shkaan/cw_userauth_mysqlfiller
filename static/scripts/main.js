@@ -3,14 +3,21 @@
  */
 $(function () {
 
-    var protocol = $(location).attr('protocol');
-    var host = $(location).attr('host');
-    var url = protocol + '//' + host;
-    console.log(url);
+    var $protocol = $(location).attr('protocol');
+    var $host = $(location).attr('host');
+    var $url = $protocol + '//' + $host;
+    var $lng = $('#table-body-recent').find('tr').length;
+
+    console.log($url);
 
     $("#messages").delay(2500).fadeOut(800);
     $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
         $(this).delay(100).animate({opacity: 1}, 400);
+    });
+
+    $('.reverserec').each(function () {
+        $(this).text($lng);
+        $lng--
     });
 
 
@@ -53,12 +60,12 @@ $(function () {
         $('.deletemodal').modal('hide');
 
         $.ajax({
-                type: 'POST',
-                url: url + '/deleteRow',
-                data: {
-                    entryid: rowId
-                }
-            })
+            type: 'POST',
+            url: $url + '/deleteRow',
+            data: {
+                entryid: rowId
+            }
+        })
             .done(function (res) {
 //                    alert(res);
                 $('.keyid').filter(function () {
@@ -110,7 +117,7 @@ $(function () {
 //                    alert('ajax call');
                     $.ajax({
                         type: 'POST',
-                        url: url + '/editRow',
+                        url: $url + '/editRow',
                         data: {
                             entryid: rowId,
                             question: newContentQ,
