@@ -7,9 +7,16 @@ $(function () {
     var $host = $(location).attr('host');
     var $url = $protocol + '//' + $host;
     var $id;
-    var $handlerMount = $('.dbview');
+    var $handlerMount = $('#table-container');
 
-
+    function usrCounterUpdate() {
+        var $table = $('#usrtable');
+        var $admins = $($table).find('td:nth-child(4):contains("admin")');
+        var $users = $($table).find('td:nth-child(4):contains("user")');
+        $('p:contains("ADMIN") .usrcnt').text($admins.length);
+        $('p:contains("USER") .usrcnt').text($users.length);
+        $('#ttlcnt').text($admins.length + $users.length);
+    }
 
     $('.wordsDB').on('click', function (e) {
         e.preventDefault();
@@ -24,6 +31,7 @@ $(function () {
             $.bootstrapSortable(true);
         })
     });
+
     $('.usersDB').on('click', function (e) {
         e.preventDefault();
         $.ajax({
@@ -41,7 +49,6 @@ $(function () {
             console.log(reason)
         });
     });
-    // .then(function () {
 
     $($handlerMount).on('submit', '#user-submit', function (e) {
         e.preventDefault();
@@ -67,30 +74,13 @@ $(function () {
                     '<td><button class="btn btn-default btn-xs deletebtn pull-right">' +
                     '<span class="glyphicon glyphicon-remove"></span> delete user</button></td></tr>');
 
-                function addOne(id) {
-                    var number = parseInt($(id).html());
-                    return number + 1;
-                }
-
-                if (res.access_level === 'admin') {
-                    $('p:contains("ADMIN") .usrcnt').text(addOne('p:contains("ADMIN") .usrcnt'));
-                    $('#ttlcnt').text(addOne('#ttlcnt'));
-
-                } else if (res.access_level === 'user') {
+                if (res.access_level === 'user') {
                     var elemcheck = $('p:contains("USER") .usrcnt');
                     if (elemcheck.length === 0) {
                         $('<p>USERS : <span class="usrcnt">1</span></p>').insertAfter('p:contains("ADMIN")');
-                        $('#ttlcnt').text(addOne('#ttlcnt'));
-
-                    } else {
-
-                        $(elemcheck).text(addOne('p:contains("USER") .usrcnt'));
-                        $('#ttlcnt').text(addOne('#ttlcnt'));
                     }
-
-                } else {
-                    console.error('nothing to add');
                 }
+                usrCounterUpdate();
                 $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
                 $.bootstrapSortable(true);
                 $('#user-submit')[0].reset();
@@ -98,6 +88,8 @@ $(function () {
 
 
                 //$('.usersDB').trigger('click');
+
+
             }
         }).fail(function (reason) {
             console.error(reason)
@@ -111,7 +103,6 @@ $(function () {
         $id = $(this).closest('tr').find('td').first().text();
         console.log($id);
 
-
         $('.usreditmodal input[name="username"]').val($username);
 
         if (access === 'admin') {
@@ -122,6 +113,7 @@ $(function () {
         $('.usreditmodal').modal('show')
 
     });
+
     $('.usreditmodal').on('shown.bs.modal', function () {
         $('.usreditmodal input[name="username"]').focus();
     });
@@ -147,8 +139,9 @@ $(function () {
             });
             $(findRow).parent().find('td:nth-child(2)').text(res.username);
             $(findRow).parent().find('td:nth-child(4)').text(res.access_level);
+            usrCounterUpdate();
+            $.bootstrapSortable(true);
             $('#ajaxsuccess').html('User details updated').fadeIn(10).delay(2000).fadeOut(2000);
-
 
         }).fail(function (reason) {
             console.log(reason);
@@ -162,7 +155,6 @@ $(function () {
         $('.deleteusrmodal #modalusrname strong').text($username);
         $('.deleteusrmodal').modal('show');
         console.log($id);
-
     });
 
     $('#delete-confirmed').on('click', function () {
@@ -177,15 +169,92 @@ $(function () {
             $('.keyid').filter(function () {
                 return $(this).text() === res.userid;
             }).parent().remove();
+            usrCounterUpdate();
             $('#ajaxsuccess').text('User Deleted!').fadeIn(50).delay(2500).fadeOut(800);
         }).fail(function (reason) {
             console.log(reason)
         })
     });
 
+    $($handlerMount).on('click', '.editwords', function () {
+        var $question = $(this).closest('tr').find('td:nth-child(2)').text();
+        var $answer = $(this).closest('tr').find('td:nth-child(3)').text();
+        var $createdBy = $(this).closest('tr').find('td:nth-child(4)').text();
+        var $createdAt = $(this).closest('tr').find('td:nth-child(5)').text();
+        $id = $(this).closest('tr').find('td').first().text();
+        console.log($id);
 
-    // })
+        $('.wordseditmodal input[name="question"]').val($question);
+        $('.wordseditmodal input[name="answer"]').val($answer);
+        $('.wordseditmodal #createdby strong').text($createdBy);
+        $('.wordseditmodal #createdat').text($createdAt);
 
+        $('.wordseditmodal').modal('show')
+    });
+
+    $('.wordseditmodal').on('shown.bs.modal', function () {
+        $('.wordseditmodal input[name="question"]').focus();
+    });
+
+    $('.wordseditmodal .form-horizontal').on('submit', function (e) {
+        e.preventDefault();
+        var modal = $('.wordseditmodal');
+        var data = $(this).serialize() + '&entryid=' + $id;
+        $(modal).modal('hide');
+        $(modal).on('hidden.bs.modal', function () {
+            $(this).find('form').trigger('reset');
+        });
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: $url + '/editWords',
+            dataType: 'json',
+            data: data.toLowerCase()
+        }).done(function (res) {
+            console.log(res);
+            var findRow = $('.wordsid').filter(function () {
+                return $(this).text() === res.entryid;
+            });
+            $(findRow).parent().find('td:nth-child(2)').text(res.question);
+            $(findRow).parent().find('td:nth-child(3)').text(res.answer);
+            $(findRow).parent().find('td:nth-child(6)').text(res.updated_by);
+            $.bootstrapSortable(true);
+            $('#ajaxsuccess').html('Changes saved').fadeIn(10).delay(2000).fadeOut(2000);
+
+        }).fail(function (reason) {
+            console.log(reason);
+        })
+
+    });
+
+    $($handlerMount).on('click', '.deletewords', function () {
+        $id = $(this).closest('tr').find('td').first().text();
+        var $question = $(this).closest('tr').find('td:nth-child(2)').text();
+        var $answer = $(this).closest('tr').find('td:nth-child(3)').text();
+        $('.deletewordsmodal #modalwordsquestion strong').text($question);
+        $('.deletewordsmodal #modalwordsanswer strong').text($answer);
+        $('.deletewordsmodal').modal('show');
+        console.log($id);
+    });
+
+    $('#words-delete-confirmed').on('click', function () {
+        $('.deletewordsmodal').modal('hide');
+        $.ajax({
+            type: 'DELETE',
+            url: $url + '/deleteWords',
+            dataType: 'JSON',
+            data: {entryid: $id}
+        }).done(function (res) {
+            console.log(res);
+            $('.wordsid').filter(function () {
+                return $(this).text() === res.entryid;
+            }).parent().remove();
+            $('#ajaxsuccess').text('User Deleted!').fadeIn(50).delay(2500).fadeOut(800);
+
+        }).fail(function (reason) {
+            console.log(reason)
+        })
+    });
 
 });
 

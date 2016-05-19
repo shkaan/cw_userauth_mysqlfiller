@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="table-scroll col-md-9">
-            <table class="table sortable clearfix" id="usrtable">
+        <div class="row table-scroll col-md-9">
+            <table class="table table-hover sortable clearfix" id="usrtable">
                 <thead>
                 <tr>
                     <th class="hide col-md-1" data-defaultsort="disabled"></th>
@@ -17,7 +17,7 @@
                 <% if (dbView){ %>
                 <% for (var i = 0, len = dbView.length; i < len;i++) { %>
                 <tr>
-                    <td class="keyid hide"><%= dbView[i].userid %></td>
+                    <td class="keyid hide" id="usrid"><%= dbView[i].userid %></td>
                     <td><%= dbView[i].username %></td>
                     <!--<td><%#= dbView[i].password %></td>-->
                     <td><%= dateParser(dbView[i].created_at) %></td>
@@ -41,20 +41,18 @@
             <% var totalcnt = 0 %>
             <% if (counter){ %>
             <% for (var c in counter) { %>
+            <% if (counter.hasOwnProperty(c)){ %>
             <p><%= counter[c].access_level.toUpperCase() + 'S' + ' : ' %> <span
                         class="usrcnt"><%= counter[c].count %></span></p>
             <% totalcnt += counter[c].count %>
-            <% } %>
+            <% }} %>
             <p><strong>TOTAL</strong> : <span id="ttlcnt"><%= totalcnt %></span></p>
-            <%# if (counter[1]) { %>
-            <!--<p><%#= counter[1].access_level.toUpperCase() + 'S' + ' : ' %> <span-->
-            <!--id="usercnt"><%#= counter[1].count %></span></p>-->
-            <%# } %>
-            <%# if (counter[0] && counter[1]) { %>
-            <% } %>
+            <%  } %>
         </div>
+
     </div>
 </div>
+
 
 <div class="help-block"></div>
 

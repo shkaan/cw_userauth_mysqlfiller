@@ -15,7 +15,6 @@ var fn = require('./fn');
 var index = function (req, res, next) {
     //console.log("Cookies: ", req.headers.cookie);
     //console.log(req.cookies);
-
     var user = req.user;
     var sess = req.sessionID;
     //console.log(user);
@@ -178,7 +177,6 @@ var mainPost = function (req, res, next) {
                         }
                     }).catch(function (err) {
                     console.error(err);
-
                 });
             }
         })
@@ -190,7 +188,6 @@ var mainPost = function (req, res, next) {
 var deleteRow = function (req, res, next) {
     // console.log(req.body);
     // console.log(req.user);
-
     var deleteRow = req.body.entryid;
     //console.log(deleteRow);
     Model.rowDeleter(deleteRow, result);
@@ -226,9 +223,6 @@ var editRow = function (req, res, next) {
 //GET
 var adminView = function (req, res, next) {
     var user = req.user.toJSON();
-    Model.userCount(function (result) {
-        console.log(result)
-    });
     res.render('admin', {
         title: 'Admin Control Panel',
         user: user
@@ -238,10 +232,13 @@ var adminView = function (req, res, next) {
 //Admin Ajax Words Fetch
 //GET
 var adminWordsFetch = function (req, res, next) {
-    //console.log(req.headers);
+    // console.log(req.headers);
     var dbView = new Model.Words().fetchAll().then(function (data) {
         dbView = data.toJSON();
-        res.render('ajax_views/table-words', {dbView: dbView, dateParser: fn.dateParser});
+        res.render('ajax_views/table-words', {
+            dbView: dbView,
+            dateParser: fn.dateParser
+        });
     })
 };
 
@@ -255,8 +252,11 @@ var adminUsersFetch = function (req, res, next) {
             //console.log(result);
             var counter = result;
             console.log(counter);
-            res.render('ajax_views/table-users', {dbView: dbView, dateParser: fn.dateParser, counter: counter});
-
+            res.render('ajax_views/table-users', {
+                dbView: dbView,
+                dateParser: fn.dateParser,
+                counter: counter
+            });
         });
     })
 };
@@ -267,12 +267,11 @@ var createUser = function (req, res, next) {
     //console.log(req.headers);
     //console.log(req.body);
     var data = req.body;
-     console.log(req.body);
+    console.log(req.body);
     Model.newUserSave(data, function (callback) {
         var userData = callback;
         userData.created_at = fn.dateParser(userData.created_at);
         res.end(JSON.stringify(userData));
-
     })
 };
 
@@ -298,6 +297,29 @@ var deleteUser = function (req, res, next) {
         res.end(JSON.stringify(callback));
 
     });
+};
+
+var editWords = function (req, res, next) {
+    console.log(req.body);
+    if (req.body) {
+        req.body.updated_by = req.user.attributes.username;
+        Model.wordsEdit(req.body, function (callback) {
+            console.log(callback);
+            res.end(JSON.stringify(callback.attributes))
+        })
+    }
+
+
+};
+
+var deleteWords = function (req, res, next) {
+    console.log(req.body);
+    if (req.body) {
+        Model.wordsDelete(req.body, function (callback) {
+            res.end(JSON.stringify(callback))
+        })
+
+    }
 };
 
 
@@ -351,5 +373,10 @@ module.exports.editUser = editUser;
 //Ajax delete user
 module.exports.deleteUser = deleteUser;
 
+//Ajax edit words
+module.exports.editWords = editWords;
+
+//Ajax delete words
+module.exports.deleteWords = deleteWords;
 
 

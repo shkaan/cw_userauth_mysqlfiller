@@ -142,7 +142,7 @@ app.post('/mainPost', fn.protectedUser, urlencodedParser, route.mainPost);
 app.post('/deleteRow', fn.protectedUser, urlencodedParser, route.deleteRow);
 
 //delete user
-//delete ajax
+//DELETE ajax
 app.delete('/deleteUser', fn.protectedAdmin, urlencodedParser, route.deleteUser);
 
 //edit
@@ -168,6 +168,14 @@ app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
 //Edit user info from admin panel
 //POST
 app.post('/editUser', fn.protectedAdmin, urlencodedParser, route.editUser);
+
+//Edit words from admin panel
+//POST
+app.post('/editWords', fn.protectedAdmin, urlencodedParser, route.editWords);
+
+//Delete words from admin panel
+//DELETE ajax
+app.delete('/deleteWords', fn.protectedAdmin, urlencodedParser, route.deleteWords);
 
 //Catch all err hanadler
 /********************************/

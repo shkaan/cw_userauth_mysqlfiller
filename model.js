@@ -23,7 +23,16 @@ var User = DB.Model.extend({
 var Words = DB.Model.extend({
     tableName: 'cwWords',
     idAttribute: 'entryid',
-    hasTimestamps: true
+    hasTimestamps: true,
+
+    initialize: function () {
+        this.on('destroyed', this.destroyed);
+    },
+
+    destroyed:function () {
+        return console.info('Delete function completed')
+    }
+
 });
 
 
@@ -140,7 +149,7 @@ var userEdit = function (data, callback) {
 
 var userDelete = function (data, callback) {
     new User({userid: data.userid})
-        .fetch({require:true})
+        .fetch({require: true})
         .then(function (result) {
             result
                 .destroy()
@@ -158,6 +167,42 @@ var userDelete = function (data, callback) {
 
 };
 
+var wordsEdit = function (data, callback) {
+    new Words({entryid: data.entryid})
+        .fetch({require: true})
+        .then(function (result) {
+            result.save(data)
+                .then(function (result) {
+                    callback(result);
+                })
+                .catch(function (err) {
+                    console.error(err);
+                })
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
+};
+
+var wordsDelete = function (data, callback) {
+    new Words({entryid: data.entryid})
+        .fetch({require: true})
+        .then(function (result) {
+            result
+                .destroy()
+                .then(function () {
+                    callback(data);
+                })
+                .catch(function (err) {
+                    console.error(err);
+                });
+        })
+        .catch(function (err) {
+            console.error(err);
+            callback(err);
+        })
+};
+
 module.exports = {
     User: User,
     Words: Words,
@@ -168,6 +213,8 @@ module.exports = {
     rowEdit: rowEdit,
     newUserSave: newUserSave,
     userEdit: userEdit,
-    userDelete: userDelete
+    userDelete: userDelete,
+    wordsEdit: wordsEdit,
+    wordsDelete: wordsDelete
 };
 

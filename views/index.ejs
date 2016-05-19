@@ -72,12 +72,12 @@
                             <h3>Your recent entries:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive sortable">
+                                <table class="table table-responsive table-hover sortable">
                                     <thead class="thead-color">
                                     <tr>
                                         <th class="hide" data-defaultsort="disabled"></th>
                                         <th class="col-md-1">#</th>
-                                        <th class="col-md-5 az">Question</th>
+                                        <th class="col-md-4 az">Question</th>
                                         <th class="col-md-4 az">Answer</th>
                                         <th class="col-md-1" data-defaultsort="disabled"></th>
                                         <th class="col-md-1" data-defaultsort="disabled"></th>
@@ -95,12 +95,12 @@
                                         <td><%= query[i].answer %></td>
                                         <td>
                                             <button class="btn btn-default btn-xs editbtn"><span
-                                                        class="glyphicon glyphicon-pencil"></span> edit
+                                                        class="glyphicon glyphicon-pencil"></span> edit row
                                             </button>
                                         </td>
                                         <td>
                                             <button class="btn btn-default btn-xs deletebtn"><span
-                                                        class="glyphicon glyphicon-remove"></span> delete
+                                                        class="glyphicon glyphicon-remove"></span> delete row
                                             </button>
                                         </td>
                                     </tr>
@@ -114,12 +114,12 @@
                             <h3>All entries by you:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive sortable">
+                                <table class="table table-responsive table-hover sortable">
                                     <thead class="thead-color">
                                     <tr>
                                         <th class="hide" data-defaultsort="disabled"></th>
                                         <th class="col-md-1">#</th>
-                                        <th class="col-md-5 az">Question</th>
+                                        <th class="col-md-4 az">Question</th>
                                         <th class="col-md-4 az">Answer</th>
                                         <th class="col-md-1" data-defaultsort="disabled"></th>
                                         <th class="col-md-1" data-defaultsort="disabled"></th>
@@ -136,12 +136,12 @@
                                         <td><%= query[i].answer %></td>
                                         <td>
                                             <button class="btn btn-default btn-xs editbtn"><span
-                                                        class="glyphicon glyphicon-pencil"></span> edit
+                                                        class="glyphicon glyphicon-pencil"></span> edit row
                                             </button>
                                         </td>
                                         <td>
                                             <button class="btn btn-default btn-xs deletebtn"><span
-                                                        class="glyphicon glyphicon-remove"></span> delete
+                                                        class="glyphicon glyphicon-remove"></span> delete row
                                             </button>
                                         </td>
                                     </tr>
@@ -158,12 +158,12 @@
 </div>
 
 
-
 <div class="modal fade deletemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" id="delete-modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Delete row?</h4>
             </div>
             <div class="modal-body">
