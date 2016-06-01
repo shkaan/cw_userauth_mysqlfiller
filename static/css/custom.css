@@ -181,6 +181,18 @@ html, body, .container-table {
     /*margin-top: 35vh;*/
 }
 
+.glgood {
+    color: #097f02;
+}
+
+.glbad {
+    color: #cc1600;
+}
+
+/*.wrdstable td{*/
+    /*text-center:*/
+/*}*/
+
 .vertical-center-row {
     display: table-cell;
     vertical-align: middle;

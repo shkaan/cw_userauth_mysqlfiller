@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="row table-scroll col-md-9">
-            <table class="table table-hover sortable clearfix" id="usrtable">
+            <table class="table table-hover table-condensed sortable clearfix" id="usrtable">
                 <thead>
                 <tr>
                     <th class="hide col-md-1" data-defaultsort="disabled"></th>
@@ -9,8 +9,8 @@
                     <!--<th class="col-md-6">Password</th>-->
                     <th class="col-md-2">Created at</th>
                     <th class="col-md-2">Access Level</th>
-                    <th class="col-md-1" data-defaultsort="disabled"></th>
-                    <th class="col-md-1" data-defaultsort="disabled"></th>
+                    <th class="col-md-2" data-defaultsort="disabled"></th>
+                    <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -23,14 +23,15 @@
                     <td><%= dateParser(dbView[i].created_at) %></td>
                     <td><%= dbView[i].access_level %></td>
                     <td>
-                        <button class="btn btn-default btn-xs editbtn pull-right"><span
-                                    class="glyphicon glyphicon-pencil"></span> edit user details
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-default btn-xs deletebtn pull-right"><span
-                                    class="glyphicon glyphicon-remove"></span> delete user
-                        </button>
+                        <div class="btn-toolbar pull-right">
+                            <button class="btn btn-primary btn-xs editbtn"><span
+                                        class="glyphicon glyphicon-pencil"></span> edit user
+                            </button>
+
+                            <button class="btn btn-danger btn-xs deletebtn"><span
+                                        class="glyphicon glyphicon-remove"></span> delete user
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 <% }} %>
@@ -47,7 +48,7 @@
             <% totalcnt += counter[c].count %>
             <% }} %>
             <p><strong>TOTAL</strong> : <span id="ttlcnt"><%= totalcnt %></span></p>
-            <%  } %>
+            <% } %>
         </div>
 
     </div>
@@ -61,6 +62,12 @@
         <div data-target="#newuser" class="btn btn-primary" data-toggle="collapse">
             Add new user
         </div>
+    </div>
+    <div class="col-md-2">
+        <p>
+            <span id="ajaxfail"></span>
+            <span id="ajaxsuccess"></span>
+        </p>
     </div>
 </div>
 
@@ -93,8 +100,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="col-md-12"><input type="submit" class="btn btn-primary" value="Submit">
-                    <span id="ajaxfail" class="loffset1"></span>
-                    <span id="ajaxsuccess" class="loffset1"></span></div>
+                </div>
             </div>
         </div>
     </form>

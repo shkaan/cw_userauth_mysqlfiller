@@ -1,3 +1,4 @@
+'use strict';
 // vendor library
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
@@ -128,8 +129,9 @@ var signOut = function (req, res, next) {
     if (!req.isAuthenticated()) {
         notFound404(req, res, next);
     } else {
-        req.logout();
-        res.redirect('/signin');
+        // req.logout();
+        req.session.destroy()
+        res.redirect('/');
     }
 };
 
@@ -193,7 +195,7 @@ var deleteRow = function (req, res, next) {
     Model.rowDeleter(deleteRow, result);
     function result(result) {
         //console.log(result);
-        res.end(result);
+        res.send(result);
     }
 };
 
@@ -214,7 +216,7 @@ var editRow = function (req, res, next) {
         //console.log(jqres);
         //console.log(jpars);
         // res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end(jqres);
+        res.send(jqres);
     }
 
 };
@@ -235,6 +237,7 @@ var adminWordsFetch = function (req, res, next) {
     // console.log(req.headers);
     var dbView = new Model.Words().fetchAll().then(function (data) {
         dbView = data.toJSON();
+        // console.log(dbView);
         res.render('ajax_views/table-words', {
             dbView: dbView,
             dateParser: fn.dateParser
@@ -251,7 +254,7 @@ var adminUsersFetch = function (req, res, next) {
         Model.groupCounter('access_level', 'cwUsers', 'access_level', function (result) {
             //console.log(result);
             var counter = result;
-            console.log(counter);
+            // console.log(counter);
             res.render('ajax_views/table-users', {
                 dbView: dbView,
                 dateParser: fn.dateParser,
@@ -261,22 +264,34 @@ var adminUsersFetch = function (req, res, next) {
     })
 };
 
+var adminApprovedFetch = function (req, res, next) {
+    var dbView = new Model.Approved().fetchAll().then(function (data) {
+        dbView = data.toJSON();
+        // console.log(dbView);
+        res.render('ajax_views/table-approved', {
+            dbView: dbView,
+            dateParser: fn.dateParser
+        });
+    })
+
+};
+
 //Admin create user
 //POST
 var createUser = function (req, res, next) {
     //console.log(req.headers);
     //console.log(req.body);
     var data = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     Model.newUserSave(data, function (callback) {
         var userData = callback;
         userData.created_at = fn.dateParser(userData.created_at);
-        res.end(JSON.stringify(userData));
+        res.send(JSON.stringify(userData));
     })
 };
 
 var editUser = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body.password) {
         console.log('YAAAAAY PASSWORD - hashing');
         req.body.password = bcrypt.hashSync(req.body.password)
@@ -286,26 +301,26 @@ var editUser = function (req, res, next) {
     }
     Model.userEdit(req.body, function (callback) {
         //console.log(callback.attributes);
-        res.end(JSON.stringify(callback.attributes));
+        res.send(JSON.stringify(callback.attributes));
     });
 };
 
 var deleteUser = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     Model.userDelete(req.body, function (callback) {
-        console.log(callback);
-        res.end(JSON.stringify(callback));
+        // console.log(callback);
+        res.send(JSON.stringify(callback));
 
     });
 };
 
 var editWords = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body) {
         req.body.updated_by = req.user.attributes.username;
         Model.wordsEdit(req.body, function (callback) {
-            console.log(callback);
-            res.end(JSON.stringify(callback.attributes))
+            // console.log(callback);
+            res.send(JSON.stringify(callback.attributes))
         })
     }
 
@@ -313,12 +328,22 @@ var editWords = function (req, res, next) {
 };
 
 var deleteWords = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body) {
         Model.wordsDelete(req.body, function (callback) {
-            res.end(JSON.stringify(callback))
+            res.send(JSON.stringify(callback))
         })
 
+    }
+};
+
+var approveWords = function (req, res, next) {
+    // console.log(req.body);
+    if (req.body) {
+        Model.wordsApprove(req.body, req.user.attributes.username, function (callback) {
+            // console.log(callback);
+            res.send(JSON.stringify(callback));
+        })
     }
 };
 
@@ -364,6 +389,9 @@ module.exports.adminWordsFetch = adminWordsFetch;
 //Ajax Users
 module.exports.adminUsersFetch = adminUsersFetch;
 
+//Ajax approved words
+module.exports.adminApprovedFetch = adminApprovedFetch;
+
 //Ajax create user
 module.exports.createUser = createUser;
 
@@ -378,5 +406,8 @@ module.exports.editWords = editWords;
 
 //Ajax delete words
 module.exports.deleteWords = deleteWords;
+
+//Ajax approve words
+module.exports.approveWords = approveWords;
 
 

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="table-scroll">
-            <table class="table table-hover sortable">
+            <table class="table table-hover table-condensed sortable">
                 <thead>
                 <tr>
                     <th class="hide col-md-1" data-defaultsort="disabled"></th>
@@ -10,9 +10,10 @@
                     <th class="col-md-1">Created by</th>
                     <th class="col-md-2">Created at</th>
                     <th class="col-md-1">Updated by</th>
-                    <th class="col-md-2">Updated at</th>
-                    <th class="col-md-1" data-defaultsort="disabled"></th>
-                    <th class="col-md-1" data-defaultsort="disabled"></th>
+                    <!--<th class="col-md-2">Updated at</th>-->
+                    <th class="col-md-1 text-center" data-defaultsort="disabled">Approved?</th>
+                    <th class="col-md-2" data-defaultsort="disabled"></th>
+                    <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -25,18 +26,78 @@
                     <td><%= dbView[i].created_by %></td>
                     <td><%= dateParser(dbView[i].created_at) %></td>
                     <td><%= dbView[i].updated_by %></td>
-                    <td><%= dateParser(dbView[i].updated_at) %></td>
-                    <td>
-                        <button class="btn btn-default btn-xs editwords pull-right"><span
-                                    class="glyphicon glyphicon-pencil"></span> edit row
-                        </button>
+                    <!--<td><%= dateParser(dbView[i].updated_at) %></td>-->
+                    <% if (dbView[i].is_approved === 1){ %>
+                    <td class="text-center" data-real-value="<%= dbView[i].is_approved %>"><span
+                                class="glgood glyphicon glyphicon-ok"></span></td>
+                    <% }else if(dbView[i].is_approved === 0){ %>
+                    <td class="text-center" data-real-value="<%= dbView[i].is_approved %>"><span
+                                class="glbad glyphicon glyphicon-remove"></span>
                     </td>
+                    <% } else { %>
+                    <td class="text-center" data-real-value="<%= dbView[i].is_approved %>"><span></span></td>
+                    <% } %>
+                    <% if (dbView[i].is_approved === 1){ %>
                     <td>
-                        <button class="btn btn-default btn-xs deletewords pull-right"><span
-                                    class="glyphicon glyphicon-remove"></span> delete row
-                        </button>
-                    </td>
+                        <div class="btn-toolbar pull-right">
+                            <button class="btn btn-success btn-xs approveword" <%= 'disabled="disabled"' %>><span
+                                        class="glyphicon glyphicon-thumbs-up"></span> approve
+                            </button>
 
+                            <button class="btn btn-warning btn-xs declineword"><span
+                                        class="glyphicon glyphicon-thumbs-down"></span> decline
+                            </button>
+
+                            <button class="btn btn-primary btn-xs editwords" <%= 'disabled="disabled"' %>><span
+                                        class="glyphicon glyphicon-pencil"></span> edit
+                            </button>
+
+                            <button class="btn btn-danger btn-xs deletewords" <%= 'disabled = "disabled"' %>><span
+                                        class="glyphicon glyphicon-remove"></span> delete
+                            </button>
+                        </div>
+                    </td>
+                    <% } else if (dbView[i].is_approved === 0) { %>
+                    <td>
+                        <div class="btn-toolbar pull-right">
+                            <button class="btn btn-success btn-xs approveword"><span
+                                        class="glyphicon glyphicon-thumbs-up"></span> approve
+                            </button>
+
+                            <button class="btn btn-warning btn-xs declineword" <%= 'disabled="disabled"' %>><span
+                                        class="glyphicon glyphicon-thumbs-down"></span> decline
+                            </button>
+
+                            <button class="btn btn-primary btn-xs editwords"><span
+                                        class="glyphicon glyphicon-pencil"></span> edit
+                            </button>
+
+                            <button class="btn btn-danger btn-xs deletewords"><span
+                                        class="glyphicon glyphicon-remove"></span> delete
+                            </button>
+                        </div>
+                    </td>
+                    <% }else { %>
+                    <td>
+                        <div class="btn-toolbar pull-right">
+                            <button class="btn btn-success btn-xs approveword"><span
+                                        class="glyphicon glyphicon-thumbs-up"></span> approve
+                            </button>
+
+                            <button class="btn btn-warning btn-xs declineword"><span
+                                        class="glyphicon glyphicon-thumbs-down"></span> decline
+                            </button>
+
+                            <button class="btn btn-primary btn-xs editwords"><span
+                                        class="glyphicon glyphicon-pencil"></span> edit
+                            </button>
+
+                            <button class="btn btn-danger btn-xs deletewords"><span
+                                        class="glyphicon glyphicon-remove"></span> delete
+                            </button>
+                        </div>
+                    </td>
+                    <% } %>
                 </tr>
                 <% }} %>
                 </tbody>
@@ -45,4 +106,12 @@
 
         </div>
     </div>
+
+</div>
+<div class="help-block"></div>
+<div class="row col-md-2">
+    <p>
+        <span id="ajaxfail"></span>
+        <span id="ajaxsuccess"></span>
+    </p>
 </div>

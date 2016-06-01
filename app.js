@@ -11,6 +11,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var morgan = require('morgan');
 var favicon = require('serve-favicon');
 var compression = require('compression');
+var RedisStore = require('connect-redis')(session);
+var redisClient = require('redis').createClient(process.env.REDIS_URL);
 
 
 // custom libraries
@@ -91,8 +93,12 @@ app.use(cookieParser());
 app.use(session({
     secret: 'noobs and boobs',
     name: "milojca.ssn",
+    store: new RedisStore({client: redisClient, ttl: 21600}),
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 604800
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -161,6 +167,10 @@ app.get('/adminWordsFetch', fn.protectedAdmin, route.adminWordsFetch);
 //GET
 app.get('/adminUsersFetch', fn.protectedAdmin, route.adminUsersFetch);
 
+//admin Ajax approved words fetch
+//GET
+app.get('/adminApprovedFetch', fn.protectedAdmin, route.adminApprovedFetch);
+
 //Create new user from admin panel
 //POST
 app.post('/createUser', fn.protectedAdmin, urlencodedParser, route.createUser);
@@ -176,6 +186,16 @@ app.post('/editWords', fn.protectedAdmin, urlencodedParser, route.editWords);
 //Delete words from admin panel
 //DELETE ajax
 app.delete('/deleteWords', fn.protectedAdmin, urlencodedParser, route.deleteWords);
+
+//Approved words check
+//POST
+app.post('/approveWords', fn.protectedAdmin, urlencodedParser, route.approveWords);
+
+//bot handler
+app.get('/robots.txt', function (req, res) {
+    res.type('text/plain');
+    res.send("User-agent: *\nDisallow: /");
+});
 
 //Catch all err hanadler
 /********************************/

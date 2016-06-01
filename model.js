@@ -29,10 +29,21 @@ var Words = DB.Model.extend({
         this.on('destroyed', this.destroyed);
     },
 
-    destroyed:function () {
+    destroyed: function () {
         return console.info('Delete function completed')
+    },
+    approvedTbl: function () {
+        return this.hasMany(Approved);
     }
 
+});
+
+var Approved = DB.Model.extend({
+    tableName: 'cwApprovedWords',
+    idAttribute: 'entryid',
+    wordsTbl: function () {
+        return this.belongsTo(Words, 'entryid');
+    }
 });
 
 
@@ -203,9 +214,53 @@ var wordsDelete = function (data, callback) {
         })
 };
 
+var wordsApprove = function (data, username, callback) {
+    if (data.is_approved === '1' || data.is_approved === '0') {
+        new Words({entryid: data.entryid})
+            .fetch({require: true})
+            .then(function (result) {
+                return result.save(data)
+            })
+            .then(function (saved) {
+                saved.set({approved_by: username});
+                var data = saved.toJSON();
+                delete data.sessionid;
+                if (data.is_approved === '1') {
+                    delete data.is_approved;
+                    console.log(data);
+                    new Approved()
+                        .save(data)
+                        .then(function (approvedModel) {
+                            callback(approvedModel)
+                        })
+                        .catch(function (err) {
+                            console.error(err)
+                        });
+                } else if (data.is_approved === '0') {
+                    new Approved({entryid: data.entryid})
+                        .destroy()
+                        .then(function () {
+                            callback(data)
+                        })
+                        .catch(function (err) {
+                            console.error(err)
+                        })
+                }
+            })
+            .catch(function (err) {
+                console.error(err)
+            })
+
+
+    } else {
+        callback('invalid data')
+    }
+};
+
 module.exports = {
     User: User,
     Words: Words,
+    Approved: Approved,
     userCount: userCount,
     groupCounter: groupCounter,
     fetcher: fetcher,
@@ -215,6 +270,7 @@ module.exports = {
     userEdit: userEdit,
     userDelete: userDelete,
     wordsEdit: wordsEdit,
-    wordsDelete: wordsDelete
+    wordsDelete: wordsDelete,
+    wordsApprove: wordsApprove
 };
 

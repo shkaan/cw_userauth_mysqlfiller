@@ -20,6 +20,7 @@ $(function () {
 
     $('.wordsDB').on('click', function (e) {
         e.preventDefault();
+        localStorage.setItem('adminCurrentView', $(e.target).text());
         $.ajax({
             type: 'GET',
             url: $url + '/adminWordsFetch',
@@ -29,14 +30,37 @@ $(function () {
             //alert(res);
             $('#table-container').html(res);
             $.bootstrapSortable(true);
+            
+        }).fail(function (reason) {
+            console.log(reason)
         })
     });
 
     $('.usersDB').on('click', function (e) {
         e.preventDefault();
+        localStorage.setItem('adminCurrentView', $(e.target).text());
         $.ajax({
             type: 'GET',
             url: $url + '/adminUsersFetch',
+            dataType: 'html'
+
+        }).done(function (res) {
+            //alert(res);
+            $('#table-container').html(res);
+            //console.log('radi do jaja');
+            $.bootstrapSortable(true);
+
+        }).fail(function (reason) {
+            console.log(reason)
+        });
+    });
+
+    $('.approvedDB').on('click', function (e) {
+        e.preventDefault();
+        localStorage.setItem('adminCurrentView', $(e.target).text());
+        $.ajax({
+            type: 'GET',
+            url: $url + '/adminApprovedFetch',
             dataType: 'html'
 
         }).done(function (res) {
@@ -69,10 +93,10 @@ $(function () {
                     '<td>' + res.username + '</td>' +
                     '<td>' + res.created_at + '</td>' +
                     '<td>' + res.access_level + '</td>' +
-                    '<td><button class="btn btn-default btn-xs editbtn pull-right">' +
-                    '<span class="glyphicon glyphicon-pencil"></span> edit user details</button></td>' +
-                    '<td><button class="btn btn-default btn-xs deletebtn pull-right">' +
-                    '<span class="glyphicon glyphicon-remove"></span> delete user</button></td></tr>');
+                    '<td><div class="btn-toolbar pull-right"><button class="btn btn-primary btn-xs editbtn">' +
+                    '<span class="glyphicon glyphicon-pencil"></span> edit user</button>' +
+                    '<button class="btn btn-danger btn-xs deletebtn">' +
+                    '<span class="glyphicon glyphicon-remove"></span> delete user</button></div></td></tr>');
 
                 if (res.access_level === 'user') {
                     var elemcheck = $('p:contains("USER") .usrcnt');
@@ -92,7 +116,7 @@ $(function () {
 
             }
         }).fail(function (reason) {
-            console.error(reason)
+            console.log(reason)
         });
 
     });
@@ -101,7 +125,7 @@ $(function () {
         var $username = $(this).closest('tr').find('td:nth-child(2)').text();
         var access = $(this).closest('tr').find('td:nth-child(4)').text();
         $id = $(this).closest('tr').find('td').first().text();
-        console.log($id);
+        // console.log($id);
 
         $('.usreditmodal input[name="username"]').val($username);
 
@@ -133,7 +157,7 @@ $(function () {
             dataType: 'json',
             data: data.toLowerCase()
         }).done(function (res) {
-            console.log(res);
+            // console.log(res);
             var findRow = $('.keyid').filter(function () {
                 return $(this).text() === res.userid;
             });
@@ -154,7 +178,7 @@ $(function () {
         var $username = $(this).closest('tr').find('td:nth-child(2)').text();
         $('.deleteusrmodal #modalusrname strong').text($username);
         $('.deleteusrmodal').modal('show');
-        console.log($id);
+        // console.log($id);
     });
 
     $('#delete-confirmed').on('click', function () {
@@ -165,7 +189,7 @@ $(function () {
             dataType: 'JSON',
             data: {userid: $id}
         }).done(function (res) {
-            console.log(res);
+            // console.log(res);
             $('.keyid').filter(function () {
                 return $(this).text() === res.userid;
             }).parent().remove();
@@ -182,7 +206,7 @@ $(function () {
         var $createdBy = $(this).closest('tr').find('td:nth-child(4)').text();
         var $createdAt = $(this).closest('tr').find('td:nth-child(5)').text();
         $id = $(this).closest('tr').find('td').first().text();
-        console.log($id);
+        // console.log($id);
 
         $('.wordseditmodal input[name="question"]').val($question);
         $('.wordseditmodal input[name="answer"]').val($answer);
@@ -204,14 +228,14 @@ $(function () {
         $(modal).on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         });
-        console.log(data);
+        // console.log(data);
         $.ajax({
             type: 'POST',
             url: $url + '/editWords',
             dataType: 'json',
             data: data.toLowerCase()
         }).done(function (res) {
-            console.log(res);
+            // console.log(res);
             var findRow = $('.wordsid').filter(function () {
                 return $(this).text() === res.entryid;
             });
@@ -234,7 +258,7 @@ $(function () {
         $('.deletewordsmodal #modalwordsquestion strong').text($question);
         $('.deletewordsmodal #modalwordsanswer strong').text($answer);
         $('.deletewordsmodal').modal('show');
-        console.log($id);
+        // console.log($id);
     });
 
     $('#words-delete-confirmed').on('click', function () {
@@ -245,16 +269,78 @@ $(function () {
             dataType: 'JSON',
             data: {entryid: $id}
         }).done(function (res) {
-            console.log(res);
+            // console.log(res);
             $('.wordsid').filter(function () {
                 return $(this).text() === res.entryid;
             }).parent().remove();
-            $('#ajaxsuccess').text('User Deleted!').fadeIn(50).delay(2500).fadeOut(800);
+            $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
 
         }).fail(function (reason) {
             console.log(reason)
         })
     });
 
+    $($handlerMount).on('click', '.approveword', function () {
+        $id = $(this).closest('tr').find('td').first().text();
+        $(this).blur();
+        // console.log($id);
+        $.ajax({
+            type: 'POST',
+            url: $url + '/approveWords',
+            dataType: 'JSON',
+            data: {
+                entryid: $id,
+                is_approved: 1
+            }
+        }).done(function (res) {
+            // console.log(res);
+            var findRow = $('.wordsid').filter(function () {
+                return $(this).text() === res.entryid;
+            });
+            $(findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glgood glyphicon glyphicon-ok");
+            $(findRow).closest('tr').find('.approveword, .deletewords, .editwords').attr('disabled', 'disabled');
+            $(findRow).closest('tr').find('.declineword').removeAttr('disabled');
+
+            $('#ajaxsuccess').text('Words Approved!').fadeIn(50).delay(2500).fadeOut(800);
+        }).fail(function (reason) {
+            console.log(reason)
+        });
+
+    });
+
+    $($handlerMount).on('click', '.declineword', function () {
+        $id = $(this).closest('tr').find('td').first().text();
+        $(this).blur();
+        // console.log($id);
+        $.ajax({
+            type: 'POST',
+            url: $url + '/approveWords',
+            dataType: 'JSON',
+            data: {
+                entryid: $id,
+                is_approved: 0
+            }
+        }).done(function (res) {
+            // console.log(res);
+            var findRow = $('.wordsid').filter(function () {
+                return $(this).text() === res.entryid;
+            });
+            var activeTab = localStorage.getItem('adminCurrentView');
+            $(findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glbad glyphicon glyphicon-remove");
+            $(findRow).closest('tr').find('.approveword, .deletewords, .editwords').removeAttr('disabled');
+            if (activeTab === 'Approved Words View') {
+                $(findRow).parent().remove()
+            }
+            $(findRow).closest('tr').find('.declineword').attr('disabled', 'disabled');
+
+            $('#ajaxsuccess').text('Words Declined!').fadeIn(50).delay(2500).fadeOut(800);
+
+        }).fail(function (reason) {
+            console.log(reason)
+        });
+
+    })
+
 });
+
 

@@ -13,35 +13,42 @@
 <div class="container-fluid">
     <% include partials/topheader.ejs %>
 
-    <div class="content-wraper col-md-10">
+    <div class="content-wraper col-md-11">
         <div class="row">
             <div class="main-form">
                 <form method="post" action="/mainPost">
-                    <div class="col-xs-10 col-md-5">
+                    <div class="col-md-4">
                         <input type="text" name="question" class="form-control" placeholder="Question"
                                required autofocus="autofocus">
                     </div>
 
-                    <div class="col-xs-10 col-md-5">
+                    <div class="col-md-4">
                         <input type="text" name="answer" class="form-control " placeholder="Answer" required>
                     </div>
 
-                    <div class="col-xs-5 col-md-1">
-                        <input type="submit" class="btn btn-primary" value="Save to DB">
-                    </div>
-                    <% if (user.access_level === 'admin'){ %>
-                    <div class="col-xs-5 col-md-1">
-                        <a href="/adminView" class="admbtn <%= 'btn btn-danger' %>"><%= 'Admin mode' %></a>
+                    <div class="col-md-3 btn-toolbar">
+                        <button type="submit" class="btn btn-primary" value="Save to DB">Save to DB</button>
+                        <% if (user.access_level === 'admin'){ %>
+                        <!--<div class="col-xs-1 col-md-1">-->
+                            <a href="/adminView" class="admbtn <%= 'btn btn-danger' %>"><%= 'Admin mode' %></a>
 
+                        <!--</div>-->
+                        <% } %>
                     </div>
-                    <% } %>
+
                 </form>
             </div>
+            <!--<%# if (user.access_level === 'admin'){ %>-->
+            <!--<div class="col-xs-1 col-md-1">-->
+            <!--<a href="/adminView" class="admbtn <%#= 'btn btn-danger' %>"><%#= 'Admin mode' %></a>-->
+
+            <!--</div>-->
+            <!--<%# } %>-->
         </div>
 
         <div class="row">
             <div class="msg-container col-md-12">
-                <div class="text-left col-md-5 col-md-offset-5">
+                <div class="text-left col-md-5 col-md-offset-4">
                     <p id="messages">
                         <% if (errorMessage) { %>
                         <span id="error"><%= errorMessage %></span>
@@ -79,8 +86,8 @@
                                         <th class="col-md-1">#</th>
                                         <th class="col-md-4 az">Question</th>
                                         <th class="col-md-4 az">Answer</th>
-                                        <th class="col-md-1" data-defaultsort="disabled"></th>
-                                        <th class="col-md-1" data-defaultsort="disabled"></th>
+                                        <th class="col-md-2" data-defaultsort="disabled"></th>
+                                        <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                                     </tr>
                                     </thead>
 
@@ -94,14 +101,16 @@
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>
                                         <td>
-                                            <button class="btn btn-default btn-xs editbtn"><span
-                                                        class="glyphicon glyphicon-pencil"></span> edit row
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-default btn-xs deletebtn"><span
-                                                        class="glyphicon glyphicon-remove"></span> delete row
-                                            </button>
+                                            <div class="pull-right">
+                                                <button class="btn btn-default btn-xs editbtn"><span
+                                                            class="glyphicon glyphicon-pencil"></span> edit row
+                                                </button>
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                <button class="btn btn-default btn-xs deletebtn"><span
+                                                            class="glyphicon glyphicon-remove"></span> delete row
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     <% }}} %>
@@ -121,8 +130,8 @@
                                         <th class="col-md-1">#</th>
                                         <th class="col-md-4 az">Question</th>
                                         <th class="col-md-4 az">Answer</th>
-                                        <th class="col-md-1" data-defaultsort="disabled"></th>
-                                        <th class="col-md-1" data-defaultsort="disabled"></th>
+                                        <th class="col-md-2" data-defaultsort="disabled"></th>
+                                        <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                                     </tr>
                                     </thead>
 
@@ -135,14 +144,16 @@
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>
                                         <td>
-                                            <button class="btn btn-default btn-xs editbtn"><span
-                                                        class="glyphicon glyphicon-pencil"></span> edit row
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-default btn-xs deletebtn"><span
-                                                        class="glyphicon glyphicon-remove"></span> delete row
-                                            </button>
+                                            <div class="btn-toolbar pull-right">
+                                                <button class="btn btn-default btn-xs editbtn"><span
+                                                            class="glyphicon glyphicon-pencil"></span> edit row
+                                                </button>
+                                                <!--</td>-->
+                                                <!--<td>-->
+                                                <button class="btn btn-default btn-xs deletebtn"><span
+                                                            class="glyphicon glyphicon-remove"></span> delete row
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                     <% }} %>
