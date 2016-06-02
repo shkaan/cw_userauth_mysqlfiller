@@ -55,6 +55,8 @@ var userCount = function (callback) {
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 };
 
@@ -66,6 +68,8 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 };
 
@@ -80,7 +84,9 @@ var fetcher = function (columnName, columnValue, callback) {
             }
         )
         .catch(function (err) {
-            console.error(err)
+            console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 };
 
@@ -93,6 +99,8 @@ var rowDeleter = function (columnId, callback) {
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 
 };
@@ -109,6 +117,8 @@ var rowEdit = function (data, username, callback) {
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 };
 
@@ -134,11 +144,14 @@ var newUserSave = function (data, callback) {
                     })
                     .catch(function (err) {
                         console.error(err);
+                        callback(({error: true, message: err.message}));
+
                     })
             }
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
 
         })
 };
@@ -154,6 +167,8 @@ var userEdit = function (data, callback) {
         })
         .catch(function (err) {
             console.error(err);
+            callback(({error: true, message: err.message}));
+
         })
 
 };
@@ -169,11 +184,14 @@ var userDelete = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
+                    callback(({error: true, message: err.message}));
+
                 });
         })
         .catch(function (err) {
             console.error(err);
-            callback(err);
+            callback(({error: true, message: err.message}));
+
         })
 
 };
@@ -188,10 +206,14 @@ var wordsEdit = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
+                    callback(({error: true, message: err.message}));
+
                 })
         })
         .catch(function (err) {
             console.log(err);
+            callback(({error: true, message: err.message}));
+
         })
 };
 
@@ -206,11 +228,12 @@ var wordsDelete = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
+                    callback(({error: true, message: err.message}));
                 });
         })
         .catch(function (err) {
             console.error(err);
-            callback(err);
+            callback(({error: true, message: err.message}));
         })
 };
 
@@ -234,7 +257,8 @@ var wordsApprove = function (data, username, callback) {
                             callback(approvedModel)
                         })
                         .catch(function (err) {
-                            console.error(err)
+                            console.error(err);
+                            callback(({error: true, message: err.message}));
                         });
                 } else if (data.is_approved === '0') {
                     new Approved({entryid: data.entryid})
@@ -243,17 +267,20 @@ var wordsApprove = function (data, username, callback) {
                             callback(data)
                         })
                         .catch(function (err) {
-                            console.error(err)
+                            console.error(err);
+                            callback(({error: true, message: err.message}));
                         })
                 }
             })
             .catch(function (err) {
-                console.error(err)
+                console.error(err);
+                callback(({error: true, message: err.message}));
             })
 
 
     } else {
-        callback('invalid data')
+        throw new Error('Invalid data!')
+
     }
 };
 

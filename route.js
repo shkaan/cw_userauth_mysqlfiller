@@ -253,12 +253,11 @@ var adminUsersFetch = function (req, res, next) {
         dbView = data.toJSON();
         Model.groupCounter('access_level', 'cwUsers', 'access_level', function (result) {
             //console.log(result);
-            var counter = result;
             // console.log(counter);
             res.render('ajax_views/table-users', {
                 dbView: dbView,
                 dateParser: fn.dateParser,
-                counter: counter
+                counter: result
             });
         });
     })
@@ -284,6 +283,7 @@ var createUser = function (req, res, next) {
     var data = req.body;
     // console.log(req.body);
     Model.newUserSave(data, function (callback) {
+        if (callback.error === true) {res.status(500)}
         var userData = callback;
         userData.created_at = fn.dateParser(userData.created_at);
         res.send(JSON.stringify(userData));
@@ -300,8 +300,8 @@ var editUser = function (req, res, next) {
         delete req.body.password;
     }
     Model.userEdit(req.body, function (callback) {
-        //console.log(callback.attributes);
-        res.send(JSON.stringify(callback.attributes));
+        if (callback.error === true) {res.status(500)}
+        res.send(JSON.stringify(callback));
     });
 };
 
@@ -309,6 +309,7 @@ var deleteUser = function (req, res, next) {
     // console.log(req.body);
     Model.userDelete(req.body, function (callback) {
         // console.log(callback);
+        if (callback.error === true) {res.status(500)}
         res.send(JSON.stringify(callback));
 
     });
@@ -320,7 +321,8 @@ var editWords = function (req, res, next) {
         req.body.updated_by = req.user.attributes.username;
         Model.wordsEdit(req.body, function (callback) {
             // console.log(callback);
-            res.send(JSON.stringify(callback.attributes))
+            if (callback.error === true) {res.status(500)}
+            res.send(JSON.stringify(callback))
         })
     }
 
@@ -331,6 +333,7 @@ var deleteWords = function (req, res, next) {
     // console.log(req.body);
     if (req.body) {
         Model.wordsDelete(req.body, function (callback) {
+            if (callback.error === true) {res.status(500)}
             res.send(JSON.stringify(callback))
         })
 
@@ -342,6 +345,7 @@ var approveWords = function (req, res, next) {
     if (req.body) {
         Model.wordsApprove(req.body, req.user.attributes.username, function (callback) {
             // console.log(callback);
+            if (callback.error === true) {res.status(500)}
             res.send(JSON.stringify(callback));
         })
     }

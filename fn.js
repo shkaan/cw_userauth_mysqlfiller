@@ -27,6 +27,7 @@ var protectedAdmin = function (req, res, next) {
         var user = req.user.toJSON();
         if (!req.isAuthenticated() || user.access_level !== 'admin') {
             console.log(user.username + ' tried to access ' + route + '\n404 rendered!');
+            res.status(404);
             return res.render('404', {title: '404 Not Found'});
         } else {
             next();

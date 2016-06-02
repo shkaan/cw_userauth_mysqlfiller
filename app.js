@@ -93,9 +93,9 @@ app.use(cookieParser());
 app.use(session({
     secret: 'noobs and boobs',
     name: "milojca.ssn",
-    store: new RedisStore({client: redisClient, ttl: 21600}),
+    store: new RedisStore({client: redisClient, ttl: 12 * 60 * 60}),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         maxAge: 24 * 60 * 60 * 1000
     }
@@ -202,7 +202,8 @@ app.get('/robots.txt', function (req, res) {
 app.use(function (err, req, res, next) {
     console.log('error handler triggered!');
     console.error(err.stack);
-    res.status(500).send('Nesto se iskundachilo!');
+    // res.status(500).send(err.message);
+    res.status(500).json({error: true, message: err.message});
 });
 /********************************/
 // 404 not found
