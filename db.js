@@ -2,7 +2,8 @@ var knex = require('knex')({
     client: "mysql",
 
     //set to use env variable for connection in format: mysql://username:password@host:port/database
-    connection: process.env.gd_mysql
+    connection: process.env.gd_mysql //-go daddy mysql
+    // process.env.mysql_url // --local mysql
     //or old fashioned hardcoded info if everything fails
     // connection:{
     //     host: '',  // your host

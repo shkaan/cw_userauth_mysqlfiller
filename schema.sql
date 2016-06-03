@@ -2,19 +2,19 @@ create database if not exists crosswordsdb;
 
 use crosswordsdb;
 
---drop table if exists cwUsers;
+drop table if exists cwUsers;
 
 create table if not exists cwUsers (
     userid integer primary key auto_increment unique,
     username varchar(50) unique,
-    password varchar(50),
+    password varchar(100),
     created_at DATETIME NOT NULL,
     access_level varchar(10) DEFAULT 'user',
     updated_at DATETIME NOT NULL
 
-)engine=innodb;
+)engine=innodb DEFAULT CHARACTER SET=utf8;
 
---drop table if exists cwWords;
+drop table if exists cwWords;
 
 create table if not exists cwWords(
     entryid integer primary key auto_increment unique,
@@ -26,9 +26,9 @@ create table if not exists cwWords(
     updated_at DATETIME NOT NULL,
     sessionid varchar(50),
     is_approved tinyint(1) DEFAULT NULL
-)engine=innodb;
+)engine=innodb DEFAULT CHARACTER SET=utf8;
 
---drop table if exists cwApprovedWords;
+drop table if exists cwApprovedWords;
 
 create table if not exists cwApprovedWords(
     entryid integer primary key unique,
@@ -39,4 +39,4 @@ create table if not exists cwApprovedWords(
     updated_by varchar(50),
     updated_at DATETIME NOT NULL,
     approved_by varchar(50) NOT NULL
-)engine=innodb;
+)engine=innodb DEFAULT CHARACTER SET=utf8;

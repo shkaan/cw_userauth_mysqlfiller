@@ -204,7 +204,7 @@ var deleteRow = function (req, res, next) {
 var editRow = function (req, res, next) {
     // console.log(req.body);
     var user = req.user.toJSON();
-    console.log(req.body);
+    // console.log(req.body);
     //console.log(entryId + "::" + question + "::" + answer);
     Model.rowEdit(req.body, user.username, result);
     function result(result) {

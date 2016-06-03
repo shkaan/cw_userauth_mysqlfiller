@@ -31,8 +31,10 @@ $(function () {
             $('#table-container').html(res);
             $.bootstrapSortable(true);
             
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         })
     });
 
@@ -50,8 +52,10 @@ $(function () {
             //console.log('radi do jaja');
             $.bootstrapSortable(true);
 
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         });
     });
 
@@ -69,8 +73,10 @@ $(function () {
             //console.log('radi do jaja');
             $.bootstrapSortable(true);
 
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         });
     });
 
@@ -115,8 +121,10 @@ $(function () {
 
 
             }
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         });
 
     });
@@ -167,8 +175,10 @@ $(function () {
             $.bootstrapSortable(true);
             $('#ajaxsuccess').html('User details updated').fadeIn(10).delay(2000).fadeOut(2000);
 
-        }).fail(function (reason) {
-            console.log(reason);
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         })
 
     });
@@ -195,8 +205,10 @@ $(function () {
             }).parent().remove();
             usrCounterUpdate();
             $('#ajaxsuccess').text('User Deleted!').fadeIn(50).delay(2500).fadeOut(800);
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         })
     });
 
@@ -245,8 +257,10 @@ $(function () {
             $.bootstrapSortable(true);
             $('#ajaxsuccess').html('Changes saved').fadeIn(10).delay(2000).fadeOut(2000);
 
-        }).fail(function (reason) {
-            console.log(reason);
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         })
 
     });
@@ -275,8 +289,10 @@ $(function () {
             }).parent().remove();
             $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
 
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         })
     });
 
@@ -302,8 +318,10 @@ $(function () {
             $(findRow).closest('tr').find('.declineword').removeAttr('disabled');
 
             $('#ajaxsuccess').text('Words Approved!').fadeIn(50).delay(2500).fadeOut(800);
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         });
 
     });
@@ -335,8 +353,10 @@ $(function () {
 
             $('#ajaxsuccess').text('Words Declined!').fadeIn(50).delay(2500).fadeOut(800);
 
-        }).fail(function (reason) {
-            console.log(reason)
+        }).fail(function (xhr, status, error) {
+            console.log(xhr);
+            alert(xhr.responseText + '\n\nClick OK to redirect');
+            window.location.href = '/'
         });
 
     })

@@ -197,10 +197,10 @@ app.get('/robots.txt', function (req, res) {
     res.send("User-agent: *\nDisallow: /");
 });
 
-//Catch all err hanadler
+//Catch all error handler
 /********************************/
 app.use(function (err, req, res, next) {
-    console.log('error handler triggered!');
+    console.error('error handler triggered!');
     console.error(err.stack);
     // res.status(500).send(err.message);
     res.status(500).json({error: true, message: err.message});

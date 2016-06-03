@@ -33,7 +33,7 @@ var protectedAdmin = function (req, res, next) {
             next();
         }
     } else {
-        return next(new Error("Protected route hit, user undefined"));
+        return next(new Error("Protected route hit, user undefined!"));
     }
 };
 

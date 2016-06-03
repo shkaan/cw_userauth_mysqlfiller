@@ -211,7 +211,7 @@ var wordsEdit = function (data, callback) {
                 })
         })
         .catch(function (err) {
-            console.log(err);
+            console.error(err);
             callback(({error: true, message: err.message}));
 
         })
@@ -250,7 +250,7 @@ var wordsApprove = function (data, username, callback) {
                 delete data.sessionid;
                 if (data.is_approved === '1') {
                     delete data.is_approved;
-                    console.log(data);
+                    // console.log(data);
                     new Approved()
                         .save(data)
                         .then(function (approvedModel) {
