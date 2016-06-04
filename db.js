@@ -2,9 +2,10 @@ var knex = require('knex')({
     client: "mysql",
 
     //set to use env variable for connection in format: mysql://username:password@host:port/database
-    connection: process.env.gd_mysql //-go daddy mysql
+    connection: process.env.aruba_mysql //--mysql on arubacloud
+    // process.env.gd_mysql //--go daddy mysql
     // process.env.mysql_url // --local mysql
-    //or old fashioned hardcoded info if everything fails
+    // or old fashioned hardcoded info if everything fails
     // connection:{
     //     host: '',  // your host
     //     user: '', // your database username
@@ -22,4 +23,3 @@ var DB = require('bookshelf')(knex);
 
 
 module.exports.DB = DB;
-//mysql://sysop:1k{+r&T%bhh8@n1plcpnl0099.prod.ams1.secureserver.net:3306/crosswordsdb
