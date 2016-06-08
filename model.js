@@ -55,7 +55,7 @@ var userCount = function (callback) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -68,7 +68,7 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -85,7 +85,7 @@ var fetcher = function (columnName, columnValue, callback) {
         )
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -99,7 +99,7 @@ var rowDeleter = function (columnId, callback) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 
@@ -117,7 +117,7 @@ var rowEdit = function (data, username, callback) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -144,14 +144,14 @@ var newUserSave = function (data, callback) {
                     })
                     .catch(function (err) {
                         console.error(err);
-                        callback({error: true, message: err.message});
+                        callback({error: true, message: 'Database Error!'});
 
                     })
             }
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -167,7 +167,7 @@ var userEdit = function (data, callback) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 
@@ -184,13 +184,13 @@ var userDelete = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
-                    callback({error: true, message: err.message});
+                    callback({error: true, message: 'Database Error!'});
 
                 });
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 
@@ -206,13 +206,13 @@ var wordsEdit = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
-                    callback({error: true, message: err.message});
+                    callback({error: true, message: 'Database Error!'});
 
                 })
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
 
         })
 };
@@ -228,12 +228,12 @@ var wordsDelete = function (data, callback) {
                 })
                 .catch(function (err) {
                     console.error(err);
-                    callback({error: true, message: err.message});
+                    callback({error: true, message: 'Database Error!'});
                 });
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: err.message});
+            callback({error: true, message: 'Database Error!'});
         })
 };
 
@@ -258,7 +258,7 @@ var wordsApprove = function (data, username, callback) {
                         })
                         .catch(function (err) {
                             console.error(err);
-                            callback({error: true, message: err.message});
+                            callback({error: true, message: 'Database Error!'});
                         });
                 } else if (data.is_approved === '0') {
                     new Approved({entryid: data.entryid})
@@ -268,13 +268,13 @@ var wordsApprove = function (data, username, callback) {
                         })
                         .catch(function (err) {
                             console.error(err);
-                            callback({error: true, message: err.message});
+                            callback({error: true, message: 'Database Error!'});
                         })
                 }
             })
             .catch(function (err) {
                 console.error(err);
-                callback({error: true, message: err.message});
+                callback({error: true, message: 'Database Error!'});
             })
 
 

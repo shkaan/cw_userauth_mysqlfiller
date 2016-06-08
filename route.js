@@ -286,7 +286,7 @@ var adminApprovedFetch = function (req, res, next) {
 //POST
 var createUser = function (req, res, next) {
     //console.log(req.headers);
-    //console.log(req.body);
+    console.log(req.body);
     var data = req.body;
     // console.log(req.body);
     Model.newUserSave(data, function (callback) {
@@ -300,7 +300,7 @@ var createUser = function (req, res, next) {
 };
 
 var editUser = function (req, res, next) {
-    // console.log(req.body);
+     console.log(req.body);
     if (req.body.password) {
         console.log('YAAAAAY PASSWORD - hashing');
         req.body.password = bcrypt.hashSync(req.body.password)
@@ -329,7 +329,7 @@ var deleteUser = function (req, res, next) {
 };
 
 var editWords = function (req, res, next) {
-    // console.log(req.body);
+     console.log(req.body);
     if (req.body) {
         req.body.updated_by = req.user.attributes.username;
         Model.wordsEdit(req.body, function (callback) {

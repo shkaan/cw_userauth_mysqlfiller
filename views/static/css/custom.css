@@ -4,7 +4,7 @@ body {
     font-size: medium;
 }
 
-/*//sign-in screen aligning middle*/
+/*//sign-in screen align middle*/
 html, body, .container-table {
     height: 100%;
 }
@@ -34,10 +34,16 @@ html, body, .container-table {
     word-wrap: break-word;
 }
 
-.header-font {
+a.header-font {
     font-family: 'Permanent Marker', cursive;
     color: #f4e9e9;
-    margin-left: 13%;
+    font-size: xx-large;
+    text-decoration: none;
+    /*margin-left: 13%;*/
+}
+
+.home-button {
+    color: white;
 }
 
 .edit-cell input[type=text] {
@@ -46,24 +52,20 @@ html, body, .container-table {
     background-color: rgb(228, 228, 234);
 }
 
-.signin-container {
-    /*min-height: 100%;  !* Fallback for browsers do NOT support vh unit *!*/
-    /*min-height: 100vh; !* These two lines are counted as one :-)       *!*/
-    /*width: 100%;*/
-
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*height: 100vh;*/
-    /*position: absolute;*/
-    /*margin-top: 15%;*/
-    /*left: 33%;*/
-    /*transform: translateY(-50%);*/
-}
-
 .table-scroll {
     max-height: 50vh;
+    /*overflow: auto;*/
     overflow: auto;
     /*background-color: #bae3ff;*/
+}
+
+.wrds-table-x {
+    min-height: 25vh;
+}
+
+.dropdown ul li a {
+    height: auto !important;
+    overflow: visible !important;
 }
 
 .thead-color {
@@ -71,43 +73,22 @@ html, body, .container-table {
 }
 
 #topbox {
-    /*position: absolute;*/
-    /*width: 90%;*/
-    /*height: 10%;*/
-    /*border: 3px solid #237aff;*/
-    /*left: 0;*/
     background-color: #237aff;
 }
 
 #welcome {
-    /*position: absolute;*/
-    /*left: 90%;*/
-    /*width: 10%;*/
-    /*height: 100%;*/
     border: 1px solid #237aff;
     background-color: #fffafe;
-    /*padding: 10px;*/
-    /*font-size: small;*/
 }
 
 .msg-container {
-    /*position: relative;*/
-    /*left: 48.5%;*/
-    /*top: 7px;*/
-    /*width: 300px;*/
-    /*padding-top: 2%;*/
-
-    /*min-height: 10%;*/
     height: 20px;
-    /*border: 1px solid red;*/
     margin-top: 0.5%;
-    /*font-size: large;*/
 
 }
 
 .text-left {
     text-align: left;
-    /*border: 1px solid blue;*/
 }
 
 .text-center {
@@ -116,6 +97,11 @@ html, body, .container-table {
 
 .text-right {
     text-align: right;
+}
+
+.vert-center {
+    display: flex;
+    align-items: center;
 }
 
 #messages {
@@ -189,9 +175,6 @@ html, body, .container-table {
     color: #cc1600;
 }
 
-/*.wrdstable td{*/
-    /*text-center:*/
-/*}*/
 
 .vertical-center-row {
     display: table-cell;

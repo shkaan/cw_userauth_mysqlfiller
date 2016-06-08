@@ -30,7 +30,7 @@ $(function () {
             //alert(res);
             $('#table-container').html(res);
             $.bootstrapSortable(true);
-            
+
         }).fail(function (xhr, status, error) {
             console.log(xhr);
             alert(xhr.responseText + '\n\nClick OK to redirect');
@@ -138,9 +138,9 @@ $(function () {
         $('.usreditmodal input[name="username"]').val($username);
 
         if (access === 'admin') {
-            $('.usreditmodal .admradio input[value="Admin"]').prop('checked', true);
+            $('.usreditmodal .admradio input[value="admin"]').prop('checked', true);
         } else if (access === 'user') {
-            $('.usreditmodal .usrradio input[value="User"]').prop('checked', true);
+            $('.usreditmodal .usrradio input[value="user"]').prop('checked', true);
         }
         $('.usreditmodal').modal('show')
 
@@ -158,12 +158,11 @@ $(function () {
         $(modal).on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         });
-        console.log(data);
         $.ajax({
             type: 'POST',
             url: $url + '/editUser',
             dataType: 'json',
-            data: data.toLowerCase()
+            data: data
         }).done(function (res) {
             // console.log(res);
             var findRow = $('.keyid').filter(function () {
@@ -240,12 +239,12 @@ $(function () {
         $(modal).on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         });
-        // console.log(data);
+        console.log(data);
         $.ajax({
             type: 'POST',
             url: $url + '/editWords',
             dataType: 'json',
-            data: data.toLowerCase()
+            data: data
         }).done(function (res) {
             // console.log(res);
             var findRow = $('.wordsid').filter(function () {
@@ -310,12 +309,14 @@ $(function () {
             }
         }).done(function (res) {
             // console.log(res);
-            var findRow = $('.wordsid').filter(function () {
+            var $findRow = $('.wordsid').filter(function () {
                 return $(this).text() === res.entryid;
             });
-            $(findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glgood glyphicon glyphicon-ok");
-            $(findRow).closest('tr').find('.approveword, .deletewords, .editwords').attr('disabled', 'disabled');
-            $(findRow).closest('tr').find('.declineword').removeAttr('disabled');
+            var $tr = $($findRow).closest('tr');
+            $($tr).find('td:nth-child(7)').attr('data-real-value', '1');
+            $($tr).find('td:nth-child(7) span').removeClass().addClass("glgood glyphicon glyphicon-ok");
+            $($tr).find('.approveword, .deletewords, .editwords').attr('disabled', 'disabled');
+            $($tr).find('.declineword').removeAttr('disabled');
 
             $('#ajaxsuccess').text('Words Approved!').fadeIn(50).delay(2500).fadeOut(800);
         }).fail(function (xhr, status, error) {
@@ -340,16 +341,17 @@ $(function () {
             }
         }).done(function (res) {
             // console.log(res);
-            var findRow = $('.wordsid').filter(function () {
+            var $findRow = $('.wordsid').filter(function () {
                 return $(this).text() === res.entryid;
             });
             var activeTab = localStorage.getItem('adminCurrentView');
-            $(findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glbad glyphicon glyphicon-remove");
-            $(findRow).closest('tr').find('.approveword, .deletewords, .editwords').removeAttr('disabled');
+            $($findRow).closest('tr').find('td:nth-child(7)').attr('data-real-value', '0');
+            $($findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glbad glyphicon glyphicon-remove");
+            $($findRow).closest('tr').find('.approveword, .deletewords, .editwords').removeAttr('disabled');
             if (activeTab === 'Approved Words View') {
-                $(findRow).parent().remove()
+                $($findRow).parent().remove()
             }
-            $(findRow).closest('tr').find('.declineword').attr('disabled', 'disabled');
+            $($findRow).closest('tr').find('.declineword').attr('disabled', 'disabled');
 
             $('#ajaxsuccess').text('Words Declined!').fadeIn(50).delay(2500).fadeOut(800);
 
@@ -359,6 +361,39 @@ $(function () {
             window.location.href = '/'
         });
 
+    });
+
+    var filterApproved = function (fieldValue) {
+        return $('.wordsid').closest('tr').find('td:nth-child(7)').filter(function () {
+            return $(this).attr('data-real-value') === fieldValue
+        }).parent();
+    };
+
+    $($handlerMount).on('click', '.dropdown li a', function () {
+        console.log($(this).text());
+        localStorage.setItem('last_Field', $(this).text());
+        var $tbody = $('table tbody');
+        var $dropButton = $(this).parent().parent().siblings();
+        $($tbody).find('tr').hide();
+
+        if (/All/.test($(this).text())) {
+            $($tbody).find('tr').show();
+            $($dropButton).html('All<span class="caret"></span>')
+
+        } else if (/Approved/.test($(this).text())) {
+            $($tbody).find(filterApproved('1')).show();
+            $($dropButton).html('Approved<span class="caret"></span>')
+
+        } else if (/Declined/.test($(this).text())) {
+            $($tbody).find(filterApproved('0')).show()
+            $($dropButton).html('Declined<span class="caret"></span>')
+
+
+        } else if (/Unmarked/.test($(this).text())) {
+            $($tbody).find(filterApproved('unmarked')).show()
+            $($dropButton).html('Unmarked<span class="caret"></span>')
+
+        }
     })
 
 });

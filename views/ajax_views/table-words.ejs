@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <div class="table-scroll">
+        <div class="table-scroll wrds-table-x">
             <table class="table table-hover table-condensed sortable">
                 <thead>
                 <tr>
@@ -8,10 +8,27 @@
                     <th class="col-md-2">Question</th>
                     <th class="col-md-2">Answer</th>
                     <th class="col-md-1">Created by</th>
-                    <th class="col-md-2">Created at</th>
+                    <th class="col-md-2" data-defaultsort="desc">Created at</th>
                     <th class="col-md-1">Updated by</th>
                     <!--<th class="col-md-2">Updated at</th>-->
-                    <th class="col-md-1 text-center" data-defaultsort="disabled">Approved?</th>
+
+                    <th class="text-center col-md-2" data-defaultsort="disabled">
+                        <div class="dropdown">
+                            Approved?
+                            <button
+                                    class="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">All
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="#">Show All</a></li>
+                                <li><a href="#">Show Approved only</a></li>
+                                <li><a href="#">Show Declined only</a></li>
+                                <!--<li role="separator" class="divider"></li>-->
+                                <li><a href="#">Show Unmarked</a></li>
+                            </ul>
+                        </div>
+                    </th>
                     <th class="col-md-2" data-defaultsort="disabled"></th>
                     <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                 </tr>
@@ -35,7 +52,8 @@
                                 class="glbad glyphicon glyphicon-remove"></span>
                     </td>
                     <% } else { %>
-                    <td class="text-center" data-real-value="<%= dbView[i].is_approved %>"><span></span></td>
+                    <td class="text-center" data-real-value="<%= dbView[i].is_approved || 'unmarked' %>"><span></span>
+                    </td>
                     <% } %>
                     <% if (dbView[i].is_approved === 1){ %>
                     <td>

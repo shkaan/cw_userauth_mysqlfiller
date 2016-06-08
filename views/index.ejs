@@ -5,7 +5,7 @@
     <title><%= title %></title>
     <!--jQuery script-->
     <script src="scripts/main.js"></script>
-
+    <% include partials/ga.ejs %>
 </head>
 
 <body>
@@ -30,7 +30,7 @@
                         <button type="submit" class="btn btn-primary" value="Save to DB">Save to DB</button>
                         <% if (user.access_level === 'admin'){ %>
                         <!--<div class="col-xs-1 col-md-1">-->
-                            <a href="/adminView" class="admbtn <%= 'btn btn-danger' %>"><%= 'Admin mode' %></a>
+                        <a href="/adminView" class="admbtn <%= 'btn btn-danger' %>"><%= 'Admin mode' %></a>
 
                         <!--</div>-->
                         <% } %>
@@ -189,6 +189,7 @@
 </div>
 
 </body>
+
 </html>
 
 
