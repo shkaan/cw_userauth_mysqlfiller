@@ -15,7 +15,7 @@ var User = DB.Model.extend({
         return console.log(this.attributes.password);
     },
     saved: function () {
-        return console.log('ALL SAVED')
+        return console.log('ALL SAVED');
     }
 });
 
@@ -30,7 +30,7 @@ var Words = DB.Model.extend({
     },
 
     destroyed: function () {
-        return console.info('Delete function completed')
+        return console.info('Delete function completed');
     },
     approvedTbl: function () {
         return this.hasMany(Approved);
@@ -57,7 +57,7 @@ var userCount = function (callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 //words counter
@@ -70,7 +70,7 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 
@@ -87,7 +87,7 @@ var fetcher = function (columnName, columnValue, callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 var rowDeleter = function (columnId, callback) {
@@ -101,7 +101,7 @@ var rowDeleter = function (columnId, callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 
 };
 
@@ -119,7 +119,7 @@ var rowEdit = function (data, username, callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 
@@ -146,14 +146,14 @@ var newUserSave = function (data, callback) {
                         console.error(err);
                         callback({error: true, message: 'Database Error!'});
 
-                    })
+                    });
             }
         })
         .catch(function (err) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 var userEdit = function (data, callback) {
@@ -169,7 +169,7 @@ var userEdit = function (data, callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 
 };
 
@@ -192,7 +192,7 @@ var userDelete = function (data, callback) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 
 };
 
@@ -208,13 +208,13 @@ var wordsEdit = function (data, callback) {
                     console.error(err);
                     callback({error: true, message: 'Database Error!'});
 
-                })
+                });
         })
         .catch(function (err) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
 
-        })
+        });
 };
 
 var wordsDelete = function (data, callback) {
@@ -234,7 +234,7 @@ var wordsDelete = function (data, callback) {
         .catch(function (err) {
             console.error(err);
             callback({error: true, message: 'Database Error!'});
-        })
+        });
 };
 
 var wordsApprove = function (data, username, callback) {
@@ -242,7 +242,7 @@ var wordsApprove = function (data, username, callback) {
         new Words({entryid: data.entryid})
             .fetch({require: true})
             .then(function (result) {
-                return result.save(data)
+                return result.save(data);
             })
             .then(function (saved) {
                 saved.set({approved_by: username});
@@ -254,7 +254,7 @@ var wordsApprove = function (data, username, callback) {
                     new Approved()
                         .save(data)
                         .then(function (approvedModel) {
-                            callback(approvedModel)
+                            callback(approvedModel);
                         })
                         .catch(function (err) {
                             console.error(err);
@@ -264,22 +264,22 @@ var wordsApprove = function (data, username, callback) {
                     new Approved({entryid: data.entryid})
                         .destroy()
                         .then(function () {
-                            callback(data)
+                            callback(data);
                         })
                         .catch(function (err) {
                             console.error(err);
                             callback({error: true, message: 'Database Error!'});
-                        })
+                        });
                 }
             })
             .catch(function (err) {
                 console.error(err);
                 callback({error: true, message: 'Database Error!'});
-            })
+            });
 
 
     } else {
-        throw new Error('Invalid data!')
+        throw new Error('Invalid data!');
 
     }
 };

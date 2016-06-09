@@ -78,9 +78,9 @@ var createRoot = function () {
                 })
                 .catch(function (err) {
                     console.error(err);
-                })
+                });
         }
-    })
+    });
 };
 createRoot();
 

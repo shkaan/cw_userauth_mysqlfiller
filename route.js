@@ -1,4 +1,3 @@
-'use strict';
 // vendor library
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
@@ -37,7 +36,7 @@ var index = function (req, res, next) {
             title: 'Home', user: user,
             errorMessage: errorMessage, infoMessage: infoMessage,
             query: arr, sess: sess
-        })
+        });
     }
 
 };
@@ -130,7 +129,13 @@ var signOut = function (req, res, next) {
         notFound404(req, res, next);
     } else {
         // req.logout();
-        req.session.destroy()
+        req.session.destroy(function (err) {
+            if (err) {
+                console.error(err);
+            } else {
+                console.info('Session destroyed!');
+            }
+        });
         res.redirect('/');
     }
 };
@@ -188,7 +193,7 @@ var mainPost = function (req, res, next) {
             console.error(err);
             return res.status(500).send({error: true, message: err.message});
 
-        })
+        });
 
 };
 
@@ -249,7 +254,7 @@ var adminWordsFetch = function (req, res, next) {
             dbView: dbView,
             dateParser: fn.dateParser
         });
-    })
+    });
 };
 
 //Admin Ajax Users Fetch
@@ -267,7 +272,7 @@ var adminUsersFetch = function (req, res, next) {
                 counter: result
             });
         });
-    })
+    });
 };
 
 var adminApprovedFetch = function (req, res, next) {
@@ -278,7 +283,7 @@ var adminApprovedFetch = function (req, res, next) {
             dbView: dbView,
             dateParser: fn.dateParser
         });
-    })
+    });
 
 };
 
@@ -291,26 +296,26 @@ var createUser = function (req, res, next) {
     // console.log(req.body);
     Model.newUserSave(data, function (callback) {
         if (callback.error === true) {
-            res.status(500)
+            res.status(500);
         }
         var userData = callback;
         userData.created_at = fn.dateParser(userData.created_at);
         res.send(JSON.stringify(userData));
-    })
+    });
 };
 
 var editUser = function (req, res, next) {
-     console.log(req.body);
+    console.log(req.body);
     if (req.body.password) {
         console.log('YAAAAAY PASSWORD - hashing');
-        req.body.password = bcrypt.hashSync(req.body.password)
+        req.body.password = bcrypt.hashSync(req.body.password);
     } else {
         console.log('NO PASSWORD - DELETING');
         delete req.body.password;
     }
     Model.userEdit(req.body, function (callback) {
         if (callback.error === true) {
-            res.status(500)
+            res.status(500);
         }
         res.send(JSON.stringify(callback));
     });
@@ -321,7 +326,7 @@ var deleteUser = function (req, res, next) {
     Model.userDelete(req.body, function (callback) {
         // console.log(callback);
         if (callback.error === true) {
-            res.status(500)
+            res.status(500);
         }
         res.send(JSON.stringify(callback));
 
@@ -329,16 +334,16 @@ var deleteUser = function (req, res, next) {
 };
 
 var editWords = function (req, res, next) {
-     console.log(req.body);
+    console.log(req.body);
     if (req.body) {
         req.body.updated_by = req.user.attributes.username;
         Model.wordsEdit(req.body, function (callback) {
             // console.log(callback);
             if (callback.error === true) {
-                res.status(500)
+                res.status(500);
             }
-            res.send(JSON.stringify(callback))
-        })
+            res.send(JSON.stringify(callback));
+        });
     }
 
 
@@ -349,10 +354,10 @@ var deleteWords = function (req, res, next) {
     if (req.body) {
         Model.wordsDelete(req.body, function (callback) {
             if (callback.error === true) {
-                res.status(500)
+                res.status(500);
             }
-            res.send(JSON.stringify(callback))
-        })
+            res.send(JSON.stringify(callback));
+        });
 
     }
 };
@@ -363,10 +368,10 @@ var approveWords = function (req, res, next) {
         Model.wordsApprove(req.body, req.user.attributes.username, function (callback) {
             // console.log(callback);
             if (callback.error === true) {
-                res.status(500)
+                res.status(500);
             }
             res.send(JSON.stringify(callback));
-        })
+        });
     }
 };
 
