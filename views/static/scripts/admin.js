@@ -224,7 +224,7 @@ $(function () {
         $('.wordseditmodal #createdby strong').text($createdBy);
         $('.wordseditmodal #createdat').text($createdAt);
 
-        $('.wordseditmodal').modal('show')
+        $('.wordseditmodal').modal('show');
     });
 
     $('.wordseditmodal').on('shown.bs.modal', function () {
@@ -259,7 +259,7 @@ $(function () {
         }).fail(function (xhr, status, error) {
             console.log(xhr);
             alert(xhr.responseText + '\n\nClick OK to redirect');
-            window.location.href = '/'
+            window.location.href = '/';
         })
 
     });
@@ -366,7 +366,7 @@ $(function () {
     var filterApproved = function (fieldValue) {
         return $('.wordsid').closest('tr').find('td:nth-child(7)').filter(function () {
             return $(this).attr('data-real-value') === fieldValue
-        }).parent();
+        }).parent()
     };
 
     $($handlerMount).on('click', '.dropdown li a', function () {
@@ -378,20 +378,20 @@ $(function () {
 
         if (/All/.test($(this).text())) {
             $($tbody).find('tr').show();
-            $($dropButton).html('All<span class="caret"></span>')
+            $($dropButton).html('All<span class="caret"></span>');
 
         } else if (/Approved/.test($(this).text())) {
             $($tbody).find(filterApproved('1')).show();
             $($dropButton).html('Approved<span class="caret"></span>')
 
         } else if (/Declined/.test($(this).text())) {
-            $($tbody).find(filterApproved('0')).show()
-            $($dropButton).html('Declined<span class="caret"></span>')
+            $($tbody).find(filterApproved('0')).show();
+            $($dropButton).html('Declined<span class="caret"></span>');
 
 
         } else if (/Unmarked/.test($(this).text())) {
-            $($tbody).find(filterApproved('unmarked')).show()
-            $($dropButton).html('Unmarked<span class="caret"></span>')
+            $($tbody).find(filterApproved('unmarked')).show();
+            $($dropButton).html('Unmarked<span class="caret"></span>');
 
         }
     })

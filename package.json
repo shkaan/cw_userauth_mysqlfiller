@@ -15,6 +15,9 @@
     "express-session": "*",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "1.0.1",
     "grunt-contrib-uglify": "1.0.1",
     "knex": "^0.10.0",
     "moment": "^2.12.0",
@@ -27,19 +30,14 @@
   },
   "devDependencies": {
     "faker": "^3.1.0",
-    "grunt": "^1.0.1",
-    "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify": "^1.0.1",
-    "jshint-stylish": "^2.2.0",
-    "matchdep": "^1.0.1"
+    "grunt-contrib-watch": "^1.0.0"
   },
   "engines": {
     "node": "~5.10.0",
     "npm": " ~3.8.6"
   },
   "scripts": {
-    "postinstall": "grunt uglify",
+    "postinstall": "grunt production",
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -116,8 +116,8 @@ app.use(compression({threshold: 1024}));
 //        console.log(ct);
 //    }
 //}));
-app.use(express.static(path.join(__dirname, 'views/static')));
-app.use(favicon(path.join(__dirname, '/views/static/favicon.ico')));
+app.use(express.static(path.join(__dirname, 'dist/static')));
+app.use(favicon(path.join(__dirname, '/dist/static/favicon.ico')));
 
 
 // GET
