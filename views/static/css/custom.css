@@ -29,10 +29,10 @@ html, body, .container-table {
     /*margin-left: 8%;*/
 }
 
-.table {
-    table-layout: fixed;
-    word-wrap: break-word;
-}
+/*.table {*/
+/*table-layout: fixed;*/
+/*word-wrap: break-word;*/
+/*}*/
 
 a.header-font {
     font-family: 'Permanent Marker', cursive;
@@ -52,16 +52,16 @@ a.header-font {
     background-color: rgb(228, 228, 234);
 }
 
-.table-scroll {
-    max-height: 50vh;
-    /*overflow: auto;*/
-    overflow: auto;
-    /*background-color: #bae3ff;*/
-}
+/*.table-scroll {*/
+/*max-height: 50vh;*/
+/*!*overflow: auto;*!*/
+/*overflow: auto;*/
+/*!*background-color: #bae3ff;*!*/
+/*}*/
 
-.wrds-table-x {
-    min-height: 25vh;
-}
+/*.wrds-table-x {*/
+    /*min-height: 25vh;*/
+/*}*/
 
 .dropdown ul li a {
     height: auto !important;
@@ -175,7 +175,6 @@ a.header-font {
     color: #cc1600;
 }
 
-
 .vertical-center-row {
     display: table-cell;
     vertical-align: middle;
@@ -210,4 +209,18 @@ a.header-font {
 
 .btn:focus, .btn:active {
     outline: none;
+}
+
+/*.table {*/
+    /*margin: 0px !important;*/
+    /*table-layout: fixed;*/
+/*}*/
+
+/*.table td {*/
+    /*padding-bottom: 0px !important;*/
+    /*overflow: hidden;*/
+/*}*/
+
+tbody > tr > td {
+    white-space: nowrap;
 }

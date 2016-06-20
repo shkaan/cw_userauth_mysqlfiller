@@ -8,6 +8,135 @@ $(function () {
     var $url = $protocol + '//' + $host;
     var $id;
     var $handlerMount = $('#table-container');
+    var $dTable;
+    var $dTableSearchBox;
+    var $dTableOptionsDefault = {
+        fixedHeader: true,
+        scrollY: '49.5vh',
+        // scrollCollapse: true,
+        ordering: true,
+        info: true,
+        columnDefs: [{
+            targets: 'no-sort',
+            orderable: false
+        }]
+
+    };
+    var $wordsTableOptions = {
+        order: [4, 'desc'],
+        processing: true,
+        serverSide: true,
+        paging: true,
+        deferRender: true,
+        // dom: 'frtiS',
+        scroller: {
+            boundaryScale: 0.3,
+            displayBuffer: 10,
+            loadingIndicator: true
+        },
+
+        ajax: {
+            url: $url + '/dataRefresh',
+            dataSrc: "aaData"
+        },
+        columns: [
+            {
+                data: 'entryid',
+                className: 'wordsid hide'
+            },
+            {data: 'question'},
+            {data: 'answer'},
+            {data: 'created_by'},
+            {data: 'created_at'},
+            {data: 'updated_by'},
+            {
+                data: 'is_approved',
+                className: "text-center",
+                // defaultContent: '<span class="glgood glyphicon glyphicon-ok"></span>'
+                render: function (data, type, full, meta) {
+                    "use strict";
+                    if (data === 1) {
+                        return '<span class="glgood glyphicon glyphicon-ok"></span>'
+                    } else if (data === 0) {
+                        return '<span class="glbad glyphicon glyphicon-remove"></span>'
+                    } else {
+                        return '<span></span>'
+                    }
+                }
+            },
+            {
+                data: 'is_approved',
+                // defaultContent: 'gg'
+                // defaultContent: '<button class="btn btn-default btn-xs">dugmesce</button>'
+                render: function (data, type, full, meta) {
+                    if (data === 1) {
+                        return '<div class="btn-toolbar pull-right">' +
+                            '<button class="btn btn-success btn-xs approveword" disabled ="disabled">' +
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> approve' +
+                            '</button>' +
+
+                            '<button class="btn btn-warning btn-xs declineword">' +
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> decline' +
+                            '</button>' +
+
+                            '<button class="btn btn-primary btn-xs editwords" disabled ="disabled">' +
+                            '<span class="glyphicon glyphicon-pencil"></span> edit' +
+                            '</button>' +
+
+                            '<button class="btn btn-danger btn-xs deletewords" disabled ="disabled">' +
+                            '<span class="glyphicon glyphicon-remove"></span> delete' +
+                            '</button>' +
+                            '</div>'
+                    } else if (data === 0) {
+                        return '<div class="btn-toolbar pull-right">' +
+                            '<button class="btn btn-success btn-xs approveword">' +
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> approve' +
+                            '</button>' +
+
+                            '<button class="btn btn-warning btn-xs declineword" disabled ="disabled">' +
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> decline' +
+                            '</button>' +
+
+                            '<button class="btn btn-primary btn-xs editwords">' +
+                            '<span class="glyphicon glyphicon-pencil"></span> edit' +
+                            '</button>' +
+
+                            '<button class="btn btn-danger btn-xs deletewords">' +
+                            '<span class="glyphicon glyphicon-remove"></span> delete' +
+                            '</button>' +
+                            '</div>'
+                    } else {
+                        return '<div class="btn-toolbar pull-right">' +
+                            '<button class="btn btn-success btn-xs approveword">' +
+                            '<span class="glyphicon glyphicon-thumbs-up"></span> approve' +
+                            '</button>' +
+
+                            '<button class="btn btn-warning btn-xs declineword">' +
+                            '<span class="glyphicon glyphicon-thumbs-down"></span> decline' +
+                            '</button>' +
+
+                            '<button class="btn btn-primary btn-xs editwords">' +
+                            '<span class="glyphicon glyphicon-pencil"></span> edit' +
+                            '</button>' +
+
+                            '<button class="btn btn-danger btn-xs deletewords">' +
+                            '<span class="glyphicon glyphicon-remove"></span> delete' +
+                            '</button>' +
+                            '</div>'
+                    }
+                }
+            }
+
+
+        ]
+    };
+    var $userTableOptions = {};
+    var $approvedTableOptions = {order: [4, 'desc']};
+
+    function joinOptObjects(options1, options2) {
+        "use strict";
+        return $.extend({}, options1, options2);
+    }
 
     function usrCounterUpdate() {
         var $table = $('#usrtable');
@@ -16,6 +145,24 @@ $(function () {
         $('p:contains("ADMIN") .usrcnt').text($admins.length);
         $('p:contains("USER") .usrcnt').text($users.length);
         $('#ttlcnt').text($admins.length + $users.length);
+    }
+
+    function dataTableInit(table, options) {
+        "use strict";
+        //DataTables initialization
+        $dTable = $(table).DataTable(options);
+
+        //Limiting search box until at least 3 letters typed
+        $dTableSearchBox = $(table + '_filter input');
+        $dTableSearchBox.unbind();
+        $dTableSearchBox.bind('input', function (e) {
+            if (this.value.length >= 3) {
+                $dTable.search(this.value).draw();
+            }
+            if (this.value == '') {
+                $dTable.search('').draw();
+            }
+        });
     }
 
     $('.wordsDB').on('click', function (e) {
@@ -27,12 +174,18 @@ $(function () {
             dataType: 'html'
 
         }).done(function (res) {
+            // console.log(res);
             //alert(res);
             $('#table-container').html(res);
-            $.bootstrapSortable(true);
+            dataTableInit('#wrdstbl', joinOptObjects($dTableOptionsDefault, $wordsTableOptions));
+            // console.log($('thead tr:first').find('th').length);
+            // console.log($('tbody tr:first').find('td').length);
+            // setTimeout(function () {
+            //     $dTable.ajax.url('/dataRefresh').load();
+            // }, 1500)
 
         }).fail(function (xhr, status, error) {
-            console.log(xhr);
+            // console.log(xhr);
             alert(xhr.responseText + '\n\nClick OK to redirect');
             window.location.href = '/'
         })
@@ -49,8 +202,7 @@ $(function () {
         }).done(function (res) {
             //alert(res);
             $('#table-container').html(res);
-            //console.log('radi do jaja');
-            $.bootstrapSortable(true);
+            dataTableInit('#usrtable', joinOptObjects($dTableOptionsDefault, $userTableOptions));
 
         }).fail(function (xhr, status, error) {
             console.log(xhr);
@@ -58,6 +210,7 @@ $(function () {
             window.location.href = '/'
         });
     });
+
 
     $('.approvedDB').on('click', function (e) {
         e.preventDefault();
@@ -68,10 +221,8 @@ $(function () {
             dataType: 'html'
 
         }).done(function (res) {
-            //alert(res);
             $('#table-container').html(res);
-            //console.log('radi do jaja');
-            $.bootstrapSortable(true);
+            dataTableInit('#approvedtbl', joinOptObjects($dTableOptionsDefault, $approvedTableOptions))
 
         }).fail(function (xhr, status, error) {
             console.log(xhr);
@@ -79,6 +230,7 @@ $(function () {
             window.location.href = '/'
         });
     });
+
 
     $($handlerMount).on('submit', '#user-submit', function (e) {
         e.preventDefault();
@@ -92,7 +244,7 @@ $(function () {
             if (res.status === 'exists') {
                 $('#ajaxfail').html('Username already exists').fadeIn(10).delay(1000).fadeOut(2000);
             } else {
-                //console.log(res);
+                console.log(res);
                 $('.table tbody').append(
                     '<tr>' +
                     '<td class="keyid hide">' + res.userid + '</td>' +
@@ -103,7 +255,7 @@ $(function () {
                     '<span class="glyphicon glyphicon-pencil"></span> edit user</button>' +
                     '<button class="btn btn-danger btn-xs deletebtn">' +
                     '<span class="glyphicon glyphicon-remove"></span> delete user</button></div></td></tr>');
-
+                // $('#table-container').load('/adminUsersFetch' );
                 if (res.access_level === 'user') {
                     var elemcheck = $('p:contains("USER") .usrcnt');
                     if (elemcheck.length === 0) {
@@ -112,7 +264,7 @@ $(function () {
                 }
                 usrCounterUpdate();
                 $('#ajaxsuccess').html('New User Created').fadeIn(10).delay(2000).fadeOut(2000);
-                $.bootstrapSortable(true);
+                // $.bootstrapSortable(true);
                 $('#user-submit')[0].reset();
                 $('#usrfocus').focus();
 
@@ -171,7 +323,7 @@ $(function () {
             $(findRow).parent().find('td:nth-child(2)').text(res.username);
             $(findRow).parent().find('td:nth-child(4)').text(res.access_level);
             usrCounterUpdate();
-            $.bootstrapSortable(true);
+            // $.bootstrapSortable(true);
             $('#ajaxsuccess').html('User details updated').fadeIn(10).delay(2000).fadeOut(2000);
 
         }).fail(function (xhr, status, error) {
@@ -253,7 +405,7 @@ $(function () {
             $(findRow).parent().find('td:nth-child(2)').text(res.question);
             $(findRow).parent().find('td:nth-child(3)').text(res.answer);
             $(findRow).parent().find('td:nth-child(6)').text(res.updated_by);
-            $.bootstrapSortable(true);
+            // $.bootstrapSortable(true);
             $('#ajaxsuccess').html('Changes saved').fadeIn(10).delay(2000).fadeOut(2000);
 
         }).fail(function (xhr, status, error) {
@@ -318,7 +470,7 @@ $(function () {
             $($tr).find('.approveword, .deletewords, .editwords').attr('disabled', 'disabled');
             $($tr).find('.declineword').removeAttr('disabled');
 
-            $('#ajaxsuccess').text('Words Approved!').fadeIn(50).delay(2500).fadeOut(800);
+            $('#ajaxsuccess').text('Words Approved!').show(0).fadeIn(50).delay(2500).fadeOut(800).hide(0);
         }).fail(function (xhr, status, error) {
             console.log(xhr);
             alert(xhr.responseText + '\n\nClick OK to redirect');
@@ -353,7 +505,7 @@ $(function () {
             }
             $($findRow).closest('tr').find('.declineword').attr('disabled', 'disabled');
 
-            $('#ajaxsuccess').text('Words Declined!').fadeIn(50).delay(2500).fadeOut(800);
+            $('#ajaxsuccess').text('Words Declined!').show(0).fadeIn(50).delay(2500).fadeOut(800).hide(0);
 
         }).fail(function (xhr, status, error) {
             console.log(xhr);

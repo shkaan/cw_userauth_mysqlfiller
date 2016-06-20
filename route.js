@@ -31,7 +31,7 @@ var index = function (req, res, next) {
     Model.fetcher('created_by', user.username, result);
     function result(result) {
         arr = result;
-        arr.reverse();
+        // arr.reverse();
         res.render('index', {
             title: 'Home', user: user,
             errorMessage: errorMessage, infoMessage: infoMessage,
@@ -247,14 +247,19 @@ var adminView = function (req, res, next) {
 //GET
 var adminWordsFetch = function (req, res, next) {
     // console.log(req.headers);
-    var dbView = new Model.Words().fetchAll().then(function (data) {
-        dbView = data.toJSON();
-        // console.log(dbView);
-        res.render('ajax_views/table-words', {
-            dbView: dbView,
-            dateParser: fn.dateParser
-        });
+    // var dbView = new Model.Words().fetchAll().then(function (data) {
+    //     dbView = data.toJSON();
+    // for (var i in dbView){
+    //     dbView[i].created_at=fn.dateParser(dbView[i].created_at);
+    // }
+    // console.log(dbView);
+
+
+    res.render('ajax_views/table-words-plain', {
+        // dbView: dbView,
+        // dateParser: fn.dateParser
     });
+    // });
 };
 
 //Admin Ajax Users Fetch
@@ -286,6 +291,63 @@ var adminApprovedFetch = function (req, res, next) {
     });
 
 };
+
+var dataRefresh = function (req, res, next) {
+    console.log(req.query);
+    var rowCount;
+    var filteredRowCount;
+    var tableData;
+    var dbColumn = {1: 'question', 2: 'answer', 3: 'created_by', 4: 'created_at', 5: 'updated_by'};
+    // console.log(dbColumn[req.query.order[0].column]);
+
+    var finished = function () {
+        if (rowCount != null && tableData != null && filteredRowCount != null) {
+            var dataObject = {
+                draw: req.query.draw,
+                recordsTotal: rowCount,
+                recordsFiltered: filteredRowCount,
+                aaData: tableData
+            };
+            // console.log(tableData)
+            res.json(dataObject);
+        }
+    };
+
+    Model.rowCount(function (cnt) {
+        // console.log(data);
+        rowCount = cnt;
+        finished();
+    });
+
+    Model.filteredRowCount(req.query.search.value, function (cnt) {
+        filteredRowCount = cnt;
+        finished();
+    });
+    // console.log(data);
+
+    if (req.query.search.value || req.query.order[0].column) {
+        Model.Words.query(function (qb) {
+            qb.where('question', 'LIKE', req.query.search.value + '%').orWhere('answer', 'LIKE', req.query.search.value + '%')
+                .limit(parseInt(req.query.length, 10)).offset(parseInt(req.query.start, 10))
+                .orderBy(dbColumn[req.query.order[0].column], req.query.order[0].dir)
+        }).fetchAll()
+            .then(function (model) {
+                tableData = model;
+                finished();
+            })
+            .catch(function (err) {
+                console.error(err);
+                res.send({error: true, message: 'Database Error!'});
+            })
+    }
+    else {
+        new Model.Words().fetchAll().then(function (model) {
+            tableData = model;
+            finished();
+        });
+    }
+};
+
 
 //Admin create user
 //POST
@@ -437,5 +499,8 @@ module.exports.deleteWords = deleteWords;
 
 //Ajax approve words
 module.exports.approveWords = approveWords;
+
+//Refresher
+module.exports.dataRefresh = dataRefresh;
 
 

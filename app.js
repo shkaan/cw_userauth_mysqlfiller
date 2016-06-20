@@ -163,6 +163,9 @@ app.get('/adminView', fn.protectedAdmin, route.adminView);
 //GET
 app.get('/adminWordsFetch', fn.protectedAdmin, route.adminWordsFetch);
 
+//ajax refresh data
+app.get('/dataRefresh', fn.protectedAdmin,urlencodedParser, route.dataRefresh);
+
 //admin Ajax Users Fetch
 //GET
 app.get('/adminUsersFetch', fn.protectedAdmin, route.adminUsersFetch);

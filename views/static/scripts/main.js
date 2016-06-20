@@ -6,19 +6,35 @@ $(function () {
     var $protocol = $(location).attr('protocol');
     var $host = $(location).attr('host');
     var $url = $protocol + '//' + $host;
-    var $lng = $('#table-body-recent').find('tr').length;
+    // var $lng = $('#table-body-recent').find('tr').length;
+    var $dTableOptionsDefault = {
+        fixedHeader: false,
+        paging: false,
+        scrollY: '50vh',
+        scrollCollapse: true,
+        ordering: true,
+        info: false,
+        order: [1, 'desc'],
+        columnDefs: [{
+            targets: 'no-sort',
+            orderable: false
+        }]
+    };
+    
+    var $dTableInit = $('.table-scroll table').DataTable($dTableOptionsDefault);
+
 
     console.log($url);
 
-    $("#messages").delay(2500).fadeOut(800);
+    $("#messages").show(0).delay(2500).fadeOut(800).hide(0);
     $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
         $(this).delay(100).animate({opacity: 1}, 400);
     });
 
-    $('.reverserec').each(function () {
-        $(this).text($lng);
-        $lng--
-    });
+    // $('.reverserec').each(function () {
+    //     $(this).text($lng);
+    //     $lng--
+    // });
 
 
 //        To prevent the page flashing on the first tab and then the tab that was saved by the cookie
@@ -33,6 +49,9 @@ $(function () {
 
     $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         //save the latest tab using a cookie:
+        $.fn.dataTable
+            .tables( { visible: true, api: true } )
+            .columns.adjust();
         localStorage.setItem('last_tab', $(e.target).attr('href'));
     });
     //activate latest tab, if it exists:

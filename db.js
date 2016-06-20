@@ -12,7 +12,7 @@ var knex = require('knex')({
     //     password: '', // your database password
     //     database: '', //SCHEMA to use
     //     charset: 'UTF8_GENERAL_CI'
-    //     // debug: true
+    //     debug: true
     //
     // }
 

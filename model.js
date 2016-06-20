@@ -1,5 +1,6 @@
 var DB = require('./db').DB;
 var bcrypt = require('bcrypt-nodejs');
+var moment = require('moment');
 
 var User = DB.Model.extend({
     tableName: 'cwUsers',
@@ -17,6 +18,7 @@ var User = DB.Model.extend({
     saved: function () {
         return console.log('ALL SAVED');
     }
+
 });
 
 
@@ -27,23 +29,62 @@ var Words = DB.Model.extend({
 
     initialize: function () {
         this.on('destroyed', this.destroyed);
+        // this.on('fetching', this.trt);
     },
 
     destroyed: function () {
         return console.info('Delete function completed');
     },
-    approvedTbl: function () {
-        return this.hasMany(Approved);
+
+    // toJSON: function () {
+    //     var attrs = DB.Model.prototype.toJSON.apply(this, arguments);
+    //     attrs.created_at = attrs.created_at.toISOString();
+    //     // console.log(attrs);
+    //     return attrs;
+    // }
+
+    parse: function (attrs) {
+        "use strict";
+        // JSON.stringify(attrs);
+        // console.log(attrs);
+        attrs.created_at = moment(attrs.created_at).format('YYYY-MM-DD  HH:mm:ss');
+        return attrs;
     }
 
+    // count: function (cb) {
+    //     DB.knex('example')
+    //         .count('id')
+    //         .then(function (count) {
+    //             cb(null, count)
+    //         })
+    //         .catch(function (err) {
+    //             cb(err)
+    //         })
+    // }
+//
+// // console.log(attrs.created_at);
+// // attrs.updated_at = attrs.updated_at.toISOString();
+// // attrs.updated_at = moment(attrs.updated_at).format('DD-MMM-YYYY  HH:mm:ss');
+//
+//         },
+//     toJSON: function () {
+//         var attrs = DB.Model.prototype.toJSON.apply(this, arguments);
+//         attrs.stojadin = this.get('created_at').toISOString();
+//         return attrs;
+//     }
+// get:function (attrs) {
+//     return attrs.mudo = this.get(attrs.created_at);
+// }
+});
+
+var WordsCollection = DB.Collection.extend({
+    model: Words
 });
 
 var Approved = DB.Model.extend({
     tableName: 'cwApprovedWords',
-    idAttribute: 'entryid',
-    wordsTbl: function () {
-        return this.belongsTo(Words, 'entryid');
-    }
+    idAttribute: 'entryid'
+
 });
 
 
@@ -71,6 +112,29 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
             callback({error: true, message: 'Database Error!'});
 
         });
+};
+
+var rowCount = function (cb) {
+    // var total;
+    new Words().count()
+        .then(function (count) {
+            // total = count;
+            // console.log(count);
+            cb(count);
+        })
+        .catch(function (err) {
+            console.error(err);
+            cb({error: true, message: 'Database Error!'});
+        })
+};
+
+var filteredRowCount = function (cond, cb) {
+    new Words().query(function (qb) {
+        qb.where('question', 'LIKE', cond + '%').orWhere('answer', 'LIKE', cond + '%')
+    }).count().then(function (result) {
+        cb(result);
+        console.log(result);
+    })
 };
 
 
@@ -221,15 +285,21 @@ var wordsDelete = function (data, callback) {
     new Words({entryid: data.entryid})
         .fetch({require: true})
         .then(function (result) {
-            result
-                .destroy()
-                .then(function () {
-                    callback(data);
-                })
-                .catch(function (err) {
-                    console.error(err);
-                    callback({error: true, message: 'Database Error!'});
-                });
+            if (result.attributes.is_approved === 1) {
+                callback({error: true, message: 'Row is locked, uneditable and undeletable!'});
+            } else {
+                console.log(result);
+                result
+                    .destroy()
+                    .then(function () {
+                        callback(data);
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        callback({error: true, message: 'Database Error!'});
+                    })
+            }
+
         })
         .catch(function (err) {
             console.error(err);
@@ -287,6 +357,7 @@ var wordsApprove = function (data, username, callback) {
 module.exports = {
     User: User,
     Words: Words,
+    WordsCollection: WordsCollection,
     Approved: Approved,
     userCount: userCount,
     groupCounter: groupCounter,
@@ -298,6 +369,8 @@ module.exports = {
     userDelete: userDelete,
     wordsEdit: wordsEdit,
     wordsDelete: wordsDelete,
-    wordsApprove: wordsApprove
+    wordsApprove: wordsApprove,
+    rowCount: rowCount,
+    filteredRowCount: filteredRowCount
 };
 

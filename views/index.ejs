@@ -79,14 +79,14 @@
                             <h3>Your recent entries:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive table-hover sortable">
+                                <table class="table table-responsive table-hover">
                                     <thead class="thead-color">
                                     <tr>
-                                        <th class="hide" data-defaultsort="disabled"></th>
+                                        <th class="hide no-sort"></th>
                                         <th class="col-md-1">#</th>
-                                        <th class="col-md-4 az">Question</th>
-                                        <th class="col-md-4 az">Answer</th>
-                                        <th class="col-md-2" data-defaultsort="disabled"></th>
+                                        <th class="col-md-4">Question</th>
+                                        <th class="col-md-4">Answer</th>
+                                        <th class="col-md-2 no-sort"></th>
                                         <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                                     </tr>
                                     </thead>
@@ -97,7 +97,7 @@
                                     <% if(query[i].sessionid === sess){ %>
                                     <tr class="blink">
                                         <td class="keyid hide"><%= query[i].entryid %></td>
-                                        <td class="reverserec"><%= i + 1 %></td>
+                                        <td class=""><%= i + 1 %></td>
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>
                                         <td>
@@ -123,14 +123,14 @@
                             <h3>All entries by you:</h3>
 
                             <div class="table-scroll">
-                                <table class="table table-responsive table-hover sortable">
+                                <table class="table table-responsive table-hover">
                                     <thead class="thead-color">
                                     <tr>
-                                        <th class="hide" data-defaultsort="disabled"></th>
+                                        <th class="hide no-sort"></th>
                                         <th class="col-md-1">#</th>
-                                        <th class="col-md-4 az">Question</th>
-                                        <th class="col-md-4 az">Answer</th>
-                                        <th class="col-md-2" data-defaultsort="disabled"></th>
+                                        <th class="col-md-4">Question</th>
+                                        <th class="col-md-4">Answer</th>
+                                        <th class="col-md-2 no-sort"></th>
                                         <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
                                     </tr>
                                     </thead>
@@ -140,7 +140,7 @@
                                     <% for(var i = 0, len = query.length;i < len;i++){ %>
                                     <tr class="blink">
                                         <td class="keyid hide"><%= query[i].entryid %></td>
-                                        <td class="reverse"><%= len - i %></td>
+                                        <td class="reverse"><%= i + 1 %></td>
                                         <td><%= query[i].question %></td>
                                         <td><%= query[i].answer %></td>
                                         <td>

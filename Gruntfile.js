@@ -9,9 +9,14 @@ module.exports = function (grunt) {
             dist: {
                 src: ['dist']
             },
-
             source: {
                 src: ['dist/**/*.js', 'dist/**/*.css', '!dist/**/*.min.css', '!dist/**/*.min.js']
+            },
+            minjs: {
+                src: ['dist/**/*.min.js']
+            },
+            mincss: {
+                src: ['dist/**/*.min.css']
             }
         },
 
@@ -20,7 +25,13 @@ module.exports = function (grunt) {
             views: {
                 expand: true,
                 cwd: 'views',
-                src: ['static/**'],
+                src: ['static/'],
+                dest: 'dist'
+            },
+            favicon: {
+                expand: true,
+                cwd: 'views',
+                src: ['static/*.ico'],
                 dest: 'dist'
             }
         },
@@ -32,7 +43,7 @@ module.exports = function (grunt) {
             },
             build: {
                 expand: true,
-                cwd: 'dist',
+                cwd: 'views',
                 src: ['**/*.js'],
                 dest: 'dist',
                 ext: '.min.js'
@@ -45,7 +56,7 @@ module.exports = function (grunt) {
             },
             build: {
                 expand: true,
-                cwd: 'dist',
+                cwd: 'views',
                 src: ['**/*.css'],
                 dest: 'dist',
                 ext: '.min.css'
@@ -54,11 +65,16 @@ module.exports = function (grunt) {
 
         watch: {
             options: {
-                spawn: true
+                // spawn: true,
+                livereload: true
             },
-            static: {
-                files: ['views/static/scripts/*.js', 'views/static/css/*.css'],
-                tasks: ['dev']
+            js: {
+                files: ['views/static/scripts/*.js'],
+                tasks: ['devjs']
+            },
+            css: {
+                files: ['views/static/css/*.css'],
+                tasks: ['devcss']
             }
         }
     });
@@ -68,17 +84,19 @@ module.exports = function (grunt) {
 
     });
 
+    require('jit-grunt')(grunt);
     // Load plugins to use
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    // grunt.loadNpmTasks('grunt-contrib-uglify');
+    // grunt.loadNpmTasks('grunt-contrib-cssmin');
+    // grunt.loadNpmTasks('grunt-contrib-clean');
+    // grunt.loadNpmTasks('grunt-contrib-copy');
+    // grunt.loadNpmTasks('grunt-contrib-watch');
     // grunt.loadNpmTasks('grunt-contrib-jshint');
     // Default task(s)
 
-    grunt.registerTask('default', ['clean:dist', 'copy', 'uglify', 'cssmin', 'clean:source', 'watch']);
-    grunt.registerTask('dev', ['clean:dist', 'copy', 'uglify', 'cssmin', 'clean:source']);
-    grunt.registerTask('production', ['clean:dist', 'copy', 'uglify', 'cssmin', 'clean:source']);
+    grunt.registerTask('default', ['clean:dist', 'uglify', 'cssmin','copy:favicon', 'watch']);
+    grunt.registerTask('devjs', ['clean:minjs', 'uglify']);
+    grunt.registerTask('devcss', ['clean:mincss', 'cssmin']);
+    grunt.registerTask('production', ['clean:dist', 'uglify','copy:favicon', 'cssmin']);
 
 };
