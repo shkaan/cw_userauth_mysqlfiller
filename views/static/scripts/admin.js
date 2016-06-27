@@ -34,7 +34,7 @@ $(function () {
             displayBuffer: 10,
             loadingIndicator: true
         },
-
+        stateSave: true,
         ajax: {
             url: $url + '/dataRefresh',
             dataSrc: "aaData"
@@ -48,7 +48,7 @@ $(function () {
             {data: 'answer'},
             {data: 'created_by'},
             {data: 'created_at'},
-            {data: 'updated_by'},
+            // {data: 'updated_by'},
             {
                 data: 'is_approved',
                 className: "text-center",
@@ -178,6 +178,9 @@ $(function () {
             //alert(res);
             $('#table-container').html(res);
             dataTableInit('#wrdstbl', joinOptObjects($dTableOptionsDefault, $wordsTableOptions));
+            // setInterval(function () {
+            //     $dTable.ajax.reload(null, false); // user paging is not reset on reload
+            // }, 5000);
             // console.log($('thead tr:first').find('th').length);
             // console.log($('tbody tr:first').find('td').length);
             // setTimeout(function () {

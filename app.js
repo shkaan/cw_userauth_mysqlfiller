@@ -121,7 +121,16 @@ app.use(favicon(path.join(__dirname, '/dist/static/favicon.ico')));
 
 
 // GET
+//Default route
 app.get('/', fn.protectedUser, route.index);
+
+//POST
+//IndexPost
+app.post('/', fn.protectedUser, urlencodedParser, route.indexPost);
+
+//GET
+//indexData
+app.get('/indexData', fn.protectedUser, route.indexData);
 
 // signin
 // GET
@@ -164,7 +173,7 @@ app.get('/adminView', fn.protectedAdmin, route.adminView);
 app.get('/adminWordsFetch', fn.protectedAdmin, route.adminWordsFetch);
 
 //ajax refresh data
-app.get('/dataRefresh', fn.protectedAdmin,urlencodedParser, route.dataRefresh);
+app.get('/dataRefresh', fn.protectedAdmin, urlencodedParser, route.dataRefresh);
 
 //admin Ajax Users Fetch
 //GET

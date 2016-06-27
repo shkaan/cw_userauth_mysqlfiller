@@ -211,15 +211,18 @@ a.header-font {
     outline: none;
 }
 
-/*.table {*/
-    /*margin: 0px !important;*/
-    /*table-layout: fixed;*/
-/*}*/
+.table {
+    margin: 0px !important;
+    table-layout: fixed;
 
-/*.table td {*/
+
+}
+
+.table td {
     /*padding-bottom: 0px !important;*/
-    /*overflow: hidden;*/
-/*}*/
+    overflow: hidden;
+
+}
 
 tbody > tr > td {
     white-space: nowrap;

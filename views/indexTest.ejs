@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head.ejs %>
+    <title><%= title %></title>
+    <!--jQuery script-->
+    <script src="scripts/main.min.js"></script>
+    <% include partials/ga.ejs %>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <% include partials/topheader.ejs %>
+
+    <div class="content-wraper col-md-11">
+        <div class="row">
+            <div class="main-form">
+                <form method="post" id="idx-form" action="/">
+                    <div class="col-md-4">
+                        <input type="text" name="question" class="form-control" id="question-input" placeholder="Question"
+                               required autofocus="autofocus">
+                    </div>
+
+                    <div class="col-md-4">
+                        <input type="text" name="answer" class="form-control " placeholder="Answer" required>
+                    </div>
+
+                    <div class="col-md-3 btn-toolbar">
+                        <button type="submit" class="btn btn-primary" value="Save to DB">Save to DB</button>
+                        <% if (user.access_level === 'admin'){ %>
+                        <!--<div class="col-xs-1 col-md-1">-->
+                        <a href="/adminView" class="admbtn <%= 'btn btn-danger' %>"><%= 'Admin mode' %></a>
+
+                        <!--</div>-->
+                        <% } %>
+                    </div>
+
+                </form>
+            </div>
+            <!--<%# if (user.access_level === 'admin'){ %>-->
+            <!--<div class="col-xs-1 col-md-1">-->
+            <!--<a href="/adminView" class="admbtn <%#= 'btn btn-danger' %>"><%#= 'Admin mode' %></a>-->
+
+            <!--</div>-->
+            <!--<%# } %>-->
+        </div>
+
+        <div class="row">
+            <div class="msg-container col-md-12">
+                <div class="text-left col-md-5 col-md-offset-4">
+                    <p id="messages">
+                        <%# if (errorMessage) { %>
+                        <span id="error">
+                            <%#= errorMessage %>
+                        </span>
+                        <%# }else{ %>
+                        <span id="info">
+                            <%#= infoMessage %>
+                        </span>
+                        <%# } %>
+                    </p>
+
+                    <div>
+                        <span id="ajaxsuccess"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="col-md-10">
+                <!--<div class="row">-->
+                <!--<ul class="nav nav-pills mytab">-->
+                <!--<li role="presentation"><a href="#recent" data-toggle="pill">Recent</a></li>-->
+                <!--<li role="presentation"><a href="#alltime" data-toggle="pill">All time</a></li>-->
+                <!--</ul>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                <!--<div class="tab-content">-->
+                <!--<div role="tabpanel" class="tab-pane" id="recent">-->
+                <!--<h3>Your recent entries:</h3>-->
+
+                <!--<div class="table-scroll">-->
+                <!--<table class="table table-responsive table-hover">-->
+                <!--<thead class="thead-color">-->
+                <!--<tr>-->
+                <!--<th class="hide no-sort"></th>-->
+                <!--<th class="col-md-1 no-sort">#</th>-->
+                <!--<th class="col-md-4">Question</th>-->
+                <!--<th class="col-md-4">Answer</th>-->
+                <!--<th class="col-md-2">Created at</th>-->
+                <!--<th class="col-md-2 no-sort"></th>-->
+                <!--&lt;!&ndash;<th class="col-md-1" data-defaultsort="disabled"></th>&ndash;&gt;-->
+                <!--</tr>-->
+                <!--</thead>-->
+
+
+                <!--</table>-->
+                <!--</div>-->
+                <!--</div>-->
+
+                <!--<div role="tabpanel" class="tab-pane" id="alltime">-->
+                <h3>All entries by you:</h3>
+
+                <div class="table-scroll">
+                    <table class="table table-responsive table-hover" id="index-table">
+                        <thead class="thead-color">
+                        <tr>
+                            <th class="hide no-sort"></th>
+                            <th class="col-md-1 no-sort">#</th>
+                            <th class="col-md-4">Question</th>
+                            <th class="col-md-3">Answer</th>
+                            <th class="col-md-2">Created at</th>
+                            <th class="col-md-2 no-sort"></th>
+                            <!--<th class="col-md-1" data-defaultsort="disabled"></th>-->
+                        </tr>
+                        </thead>
+
+
+                    </table>
+                </div>
+            </div>
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade deletemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="delete-modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Delete row?</h4>
+            </div>
+            <div class="modal-body">
+                Click delete to permanently delete row, anywhere else to cancel
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-ok" id="delete-confirmed">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
+
+

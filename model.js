@@ -77,15 +77,20 @@ var Words = DB.Model.extend({
 // }
 });
 
-var WordsCollection = DB.Collection.extend({
-    model: Words
-});
-
 var Approved = DB.Model.extend({
     tableName: 'cwApprovedWords',
     idAttribute: 'entryid'
 
 });
+
+var WordsCollection = DB.Collection.extend({
+    model: Words
+});
+var ApprovedCollection = DB.Collection.extend({
+    model: Approved
+});
+
+
 
 
 //user counter
@@ -114,18 +119,28 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
         });
 };
 
-var rowCount = function (cb) {
-    // var total;
-    new Words().count()
-        .then(function (count) {
-            // total = count;
-            // console.log(count);
-            cb(count);
-        })
-        .catch(function (err) {
-            console.error(err);
-            cb({error: true, message: 'Database Error!'});
-        })
+var rowCount = function (cond, cb) {
+    if (cond) {
+        new Words().where(cond).count()
+            .then(function (count) {
+                // console.log(count);
+                cb(count);
+            })
+            .catch(function (err) {
+                console.error(err);
+                cb({error: true, message: 'Database Error!'});
+            })
+    } else {
+        new Words().count()
+            .then(function (count) {
+                // console.log(count);
+                cb(count);
+            })
+            .catch(function (err) {
+                console.error(err);
+                cb({error: true, message: 'Database Error!'});
+            })
+    }
 };
 
 var filteredRowCount = function (cond, cb) {
@@ -134,6 +149,19 @@ var filteredRowCount = function (cond, cb) {
     }).count().then(function (result) {
         cb(result);
         console.log(result);
+    })
+};
+
+var newWordsSave = function (data, cb) {
+    console.log(data);
+    new Words({question: data.question, answer: data.answer}).fetch().then(function (model) {
+        if (model) {
+            cb('Entry already exists')
+        } else {
+            new Words(data).save().then(function (saved) {
+                cb('Saved succesfully')
+            })
+        }
     })
 };
 
@@ -359,9 +387,11 @@ module.exports = {
     Words: Words,
     WordsCollection: WordsCollection,
     Approved: Approved,
+    ApprovedCollection: ApprovedCollection,
     userCount: userCount,
     groupCounter: groupCounter,
     fetcher: fetcher,
+    newWordsSave: newWordsSave,
     rowDeleter: rowDeleter,
     rowEdit: rowEdit,
     newUserSave: newUserSave,

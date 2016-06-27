@@ -6,29 +6,94 @@ $(function () {
     var $protocol = $(location).attr('protocol');
     var $host = $(location).attr('host');
     var $url = $protocol + '//' + $host;
+    var $handlerMount = $('.table-scroll');
     // var $lng = $('#table-body-recent').find('tr').length;
     var $dTableOptionsDefault = {
-        fixedHeader: false,
-        paging: false,
-        scrollY: '50vh',
-        scrollCollapse: true,
-        ordering: true,
-        info: false,
-        order: [1, 'desc'],
-        columnDefs: [{
-            targets: 'no-sort',
-            orderable: false
-        }]
-    };
-    
-    var $dTableInit = $('.table-scroll table').DataTable($dTableOptionsDefault);
+            fixedHeader: false,
+            paging: true,
+            scrollY: '50vh',
+            // scrollCollapse: true,
+            ordering: true,
+            info: true,
+            order: [4, 'desc'],
+            columnDefs: [{
+                targets: 'no-sort',
+                orderable: false
+            }],
+            processing: true,
+            serverSide: true,
+            deferRender: true,
+            stateSave: true,
+            scroller: {
+                boundaryScale: 0.3,
+                displayBuffer: 10,
+                loadingIndicator: true
+            },
+            ajax: {
+                url: $url + '/indexData',
+                dataSrc: "aaData"
+            },
+            columns: [
+                {
+                    data: 'entryid',
+                    className: 'keyid hide'
+                },
+                {data: 'indexField'},
+                {data: 'question'},
+                {data: 'answer'},
+                {data: 'created_at'},
+                {
+                    defaultContent: '<div class="btn-toolbar pull-right">' +
+                    '<button class="btn btn-default btn-xs editbtn">' +
+                    '<span class="glyphicon glyphicon-pencil">' +
+                    '</span> edit row</button>' +
+                    '<button class = "btn btn-default btn-xs deletebtn" >' +
+                    '<span class = "glyphicon glyphicon-remove">' +
+                    '</span > delete row</button ></div >'
+                }
+            ]
+        }
+        ;
 
+    var $dTblInit = $('#index-table').DataTable($dTableOptionsDefault);
+
+    // setInterval(function () {
+    //     $dTblInit.ajax.url($url + '/indexData').load(); // user paging is not reset on reload
+    // }, 5000);
+
+    $('.table').on('draw.dt', function () {
+        $(this).find('tr').addClass('blink');
+        console.log('Redraw occurred at: ' + new Date().getTime());
+
+        $('tbody .blink:first-child').animate({opacity: 0.40}, 150, 'linear', function () {
+            $(this).delay(100).animate({opacity: 1}, 400);
+        });
+    });
+
+    // $dTblInit.on('order.dt search.dt', function () {
+    //     $dTblInit.column(1, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
+    //         cell.innerHTML = i + 1;
+    //     });
+    // }).draw();
 
     console.log($url);
 
-    $("#messages").show(0).delay(2500).fadeOut(800).hide(0);
-    $('.blink:first-child').animate({opacity: 0.40}, 150, "linear", function () {
-        $(this).delay(100).animate({opacity: 1}, 400);
+    $('#messages').show(0).delay(2500).fadeOut(800).hide(0);
+
+
+    $('#idx-form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: $url + '/',
+            dataType: 'JSON',
+            data: $('#idx-form').serialize()
+        }).done(function (res) {
+            console.log(res);
+            $dTblInit.ajax.reload();
+            $('#idx-form')[0].reset();
+            $('#question-input').focus();
+        })
     });
 
     // $('.reverserec').each(function () {
@@ -50,7 +115,7 @@ $(function () {
     $('a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
         //save the latest tab using a cookie:
         $.fn.dataTable
-            .tables( { visible: true, api: true } )
+            .tables({visible: true, api: true})
             .columns.adjust();
         localStorage.setItem('last_tab', $(e.target).attr('href'));
     });
@@ -67,7 +132,7 @@ $(function () {
 
     //    DELETE AJAX EVENT
     //    AJAX post data when delete button is clicked, remove row after response
-    $('.deletebtn').on('click', function () {
+    $($handlerMount).on('click', '.deletebtn', function () {
         var deleteRowId = $(this).closest('tr').find('td:first').text();
         $('#delete-confirmed').attr('data-id', deleteRowId);
         $('.deletemodal').modal('show')
@@ -87,9 +152,10 @@ $(function () {
         })
             .done(function (res) {
 //                    alert(res);
-                $('.keyid').filter(function () {
-                    return $(this).text() === res;
-                }).parent().remove();
+//                 $('.keyid').filter(function () {
+//                     return $(this).text() === res;
+//                 }).parent().remove();
+                $dTblInit.ajax.reload(null, false);
                 $('#ajaxsuccess').text('Row Deleted!').fadeIn(50).delay(2500).fadeOut(800);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -111,7 +177,7 @@ $(function () {
     //and if anything changed send via ajax
     //update table data on response
 
-    $('.editbtn').on('click', function adder() {
+    $($handlerMount).on('click', '.editbtn', function adder() {
         var handlerActive = true;
         var rowId = $(this).closest('tr').find('td:first').text();
         var originalQuestion = $(this).closest('tr').find('td:nth-child(3)').text();
@@ -124,7 +190,7 @@ $(function () {
         $(selectQ).html("<input type='text' value='" + originalQuestion + "' />");
         $(selectA).html("<input type='text' value='" + originalAnswer + "' />");
         $(selectQ).children().first().focus();
-        $('.editbtn').off('click', adder);
+        $($handlerMount).off('click', '.editbtn', adder);
 
 
         $('.edit-cell').children().keypress(function (e) {
@@ -153,7 +219,7 @@ $(function () {
                             $(rowWrite).parent().find('td:nth-child(3)').text(data.question);
                             $(rowWrite).parent().find('td:nth-child(4)').text(data.answer);
                             $(selectQ).add(selectA).removeClass("edit-cell");
-                            $('.editbtn').on('click', adder);
+                            $($handlerMount).on('click', '.editbtn', adder);
                             handlerActive = false;
                             $('#ajaxsuccess').text('Update Successful').fadeIn(50).delay(2500).fadeOut(800);
 
@@ -163,7 +229,7 @@ $(function () {
                     $(selectQ).text(newContentQ);
                     $(selectA).text(newContentA);
                     $(selectQ).add(selectA).removeClass("edit-cell");
-                    $('.editbtn').on('click', adder);
+                    $($handlerMount).on('click', '.editbtn', adder);
                     handlerActive = false;
                     $('#ajaxsuccess').text('Nothing changed').fadeIn(50).delay(2500).fadeOut(800);
                 }
@@ -179,13 +245,13 @@ $(function () {
                         $(selectA).text(originalAnswer);
                         $(selectQ).add(selectA).removeClass("edit-cell");
                         $(document).off('click', remover);
-                        $('.editbtn').on('click', adder);
+                        $($handlerMount).on('click', '.editbtn', adder);
                     }
                 }, 5);
             }
 
-        })
-
+        });
+//
     });
 
 

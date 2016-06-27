@@ -31,9 +31,16 @@ function createPosts(total) {
 console.log('> seeding...');
 
 // create # posts
-var myposts = Wordscol.forge(createPosts(5000))
+var myposts = createPosts(50000);
+
+
+Wordscol.forge(myposts)
     .invokeThen('save')
     .then(function () {
         console.log('Seeding Complete!');
         process.exit()
+    })
+    .catch(function (err) {
+        console.error(err);
+        process.exit();
     });

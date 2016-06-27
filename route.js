@@ -18,26 +18,106 @@ var index = function (req, res, next) {
     var user = req.user;
     var sess = req.sessionID;
     //console.log(user);
-    var errorMessage = req.session.exists;
-    var infoMessage = req.session.success;
-    var arr = [];
+    // var errorMessage = req.session.exists;
+    // var infoMessage = req.session.success;
+    // var arr = [];
     if (user) {
         user = user.toJSON();
     }
-    delete req.session.exists;
-    delete req.session.success;
+    // delete req.session.exists;
+    // delete req.session.success;
     //console.log(infoMessage);
     //console.log(req.session);
-    Model.fetcher('created_by', user.username, result);
-    function result(result) {
-        arr = result;
-        // arr.reverse();
-        res.render('index', {
-            title: 'Home', user: user,
-            errorMessage: errorMessage, infoMessage: infoMessage,
-            query: arr, sess: sess
-        });
+    // Model.fetcher('created_by', user.username, result);
+    // function result(result) {
+    //     arr = result;
+    // arr.reverse();
+    res.render('indexTest', {
+        title: 'Home', user: user
+        // errorMessage: errorMessage, infoMessage: infoMessage,
+        // query: arr, sess: sess
+        // });
+    })
+
+};
+
+var indexPost = function (req, res, next) {
+    console.log(req.body);
+    var user = req.user.toJSON();
+    req.body.created_by = user.username;
+    req.body.sessionid = req.sessionID;
+
+    Model.newWordsSave(req.body, function (result) {
+        console.log(result);
+        res.json(result);
+    });
+
+};
+
+var indexData = function (req, res, next) {
+    "use strict";
+    // console.log(req.query);
+    var tableData;
+    var rowCount;
+    var filteredRowCount;
+    var user = req.user;
+    var dbColumn = {2: 'question', 3: 'answer', 4: 'created_at'};
+    if (user) {
+        user = user.toJSON();
     }
+
+    var finished = function () {
+        if (rowCount != null && tableData != null && filteredRowCount != null) {
+            var dataObject = {
+                draw: req.query.draw,
+                recordsTotal: rowCount,
+                recordsFiltered: filteredRowCount,
+                aaData: tableData
+            };
+            res.json(dataObject);
+        }
+    };
+
+
+    Model.rowCount({created_by: user.username}, function (cnt) {
+        rowCount = cnt;
+        finished();
+    });
+
+    new Model.Words().query(function (qb) {
+        qb.where(function () {
+            this.where('answer', 'LIKE', req.query.search.value + '%').orWhere('question', 'LIKE', req.query.search.value + '%')
+        }).andWhere('created_by', user.username)
+    }).count().then(function (result) {
+        filteredRowCount = result;
+        finished();
+        // console.log(result);
+    });
+
+    Model.WordsCollection.query(function (qb) {
+        qb.where(function () {
+            this.where('question', 'LIKE', req.query.search.value + '%').orWhere('answer', 'LIKE', req.query.search.value + '%')
+        }).andWhere('created_by', user.username).limit(parseInt(req.query.length, 10)).offset(parseInt(req.query.start, 10))
+            .orderBy(dbColumn[req.query.order[0].column], req.query.order[0].dir)
+    }).fetch()
+        .then(function (model) {
+            var jModel = model.toJSON();
+            var len = jModel.length;
+            for (var i = 0; i < len; i++) {
+                if (req.query.order[0].dir === 'asc') {
+                    jModel[i].indexField = i + parseInt(req.query.start, 10) + 1;
+                } else {
+                    jModel[i].indexField = rowCount - (i + parseInt(req.query.start, 10));
+                }
+            }
+            tableData = jModel;
+            finished();
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.send({error: true, message: 'Database Error!'});
+        })
+
 
 };
 
@@ -313,7 +393,7 @@ var dataRefresh = function (req, res, next) {
         }
     };
 
-    Model.rowCount(function (cnt) {
+    Model.rowCount(null, function (cnt) {
         // console.log(data);
         rowCount = cnt;
         finished();
@@ -442,6 +522,13 @@ var approveWords = function (req, res, next) {
 /**************************************/
 // index
 module.exports.index = index;
+
+//indexPost
+module.exports.indexPost = indexPost;
+
+//indexData
+//GET ajax index table
+module.exports.indexData = indexData;
 
 // sigin in
 // GET
