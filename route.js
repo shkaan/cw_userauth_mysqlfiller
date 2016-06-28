@@ -117,8 +117,6 @@ var indexData = function (req, res, next) {
             console.error(err);
             res.send({error: true, message: 'Database Error!'});
         })
-
-
 };
 
 

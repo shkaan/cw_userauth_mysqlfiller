@@ -130,7 +130,8 @@ $(function () {
 
         ]
     };
-    var $userTableOptions = {};
+    var $userTableOptions = {         //scrollCollapse: true
+    };
     var $approvedTableOptions = {order: [4, 'desc']};
 
     function joinOptObjects(options1, options2) {
