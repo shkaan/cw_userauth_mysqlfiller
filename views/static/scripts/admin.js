@@ -130,9 +130,13 @@ $(function () {
 
         ]
     };
-    var $userTableOptions = {         //scrollCollapse: true
+    var $userTableOptions = {
+        scrollCollapse: true
     };
-    var $approvedTableOptions = {order: [4, 'desc']};
+    var $approvedTableOptions = {
+        scrollCollapse: true,
+        order: [4, 'desc']
+    };
 
     function joinOptObjects(options1, options2) {
         "use strict";
@@ -469,8 +473,8 @@ $(function () {
                 return $(this).text() === res.entryid;
             });
             var $tr = $($findRow).closest('tr');
-            $($tr).find('td:nth-child(7)').attr('data-real-value', '1');
-            $($tr).find('td:nth-child(7) span').removeClass().addClass("glgood glyphicon glyphicon-ok");
+            $($tr).find('td:nth-child(6)').attr('data-real-value', '1');
+            $($tr).find('td:nth-child(6) span').removeClass().addClass("glgood glyphicon glyphicon-ok");
             $($tr).find('.approveword, .deletewords, .editwords').attr('disabled', 'disabled');
             $($tr).find('.declineword').removeAttr('disabled');
 
@@ -501,8 +505,8 @@ $(function () {
                 return $(this).text() === res.entryid;
             });
             var activeTab = localStorage.getItem('adminCurrentView');
-            $($findRow).closest('tr').find('td:nth-child(7)').attr('data-real-value', '0');
-            $($findRow).closest('tr').find('td:nth-child(7) span').removeClass().addClass("glbad glyphicon glyphicon-remove");
+            $($findRow).closest('tr').find('td:nth-child(6)').attr('data-real-value', '0');
+            $($findRow).closest('tr').find('td:nth-child(6) span').removeClass().addClass("glbad glyphicon glyphicon-remove");
             $($findRow).closest('tr').find('.approveword, .deletewords, .editwords').removeAttr('disabled');
             if (activeTab === 'Approved Words View') {
                 $($findRow).parent().remove()
