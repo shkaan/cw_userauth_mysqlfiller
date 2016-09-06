@@ -2,6 +2,7 @@
  * Created by Wish Kaan on 04-Apr-16.
  */
 var moment = require('moment');
+var jwt = require('jsonwebtoken');
 
 
 //parsing dates to more readable format in views
@@ -38,10 +39,26 @@ var protectedAdmin = function (req, res, next) {
     }
 };
 
+var verifyUserTOken = function (req, res, next) {
+    var token = (req.body) || (req.query) || req.headers['x-access-token'];
+    jwt.verify(token.token, 'supaSecretTokenDzenerejtor', function (err, decoded) {
+        if (err) {
+            console.error('invalid token');
+            console.error(err);
+            res.json({success: false, message: err.message});
+        } else {
+            //console.log(decoded);
+            req.user = decoded;
+            next();
+        }
+    });
+};
+
 
 module.exports = {
     dateParser: dateParser,
     protectedUser: protectedUser,
-    protectedAdmin: protectedAdmin
+    protectedAdmin: protectedAdmin,
+    verifyUserTOken: verifyUserTOken
 };
 

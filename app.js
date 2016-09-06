@@ -27,6 +27,7 @@ var urlencodedParser = bodyParser.urlencoded({extended: false});
 //var jsonParser = bodyParser.json();
 
 var app = express();
+var apiRouter = express.Router();
 
 passport.use(new LocalStrategy(function (username, password, done) {
     new Model.User({username: username}).fetch().then(function (data) {
@@ -208,6 +209,20 @@ app.get('/robots.txt', function (req, res) {
     res.type('text/plain');
     res.send("User-agent: *\nDisallow: /");
 });
+
+//REST API routes:
+//default route
+apiRouter.get('/', route.api);
+
+//User Auth
+apiRouter.post('/auth', urlencodedParser, route.auth);
+
+//get all user created entries
+apiRouter.get('/userEntries', fn.verifyUserTOken, urlencodedParser, route.userEntries);
+
+
+app.use('/api', apiRouter);
+
 
 //Catch all error handler
 /********************************/

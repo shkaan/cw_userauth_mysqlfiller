@@ -2,6 +2,7 @@
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var moment = require('moment');
+var jwt = require('jsonwebtoken');
 
 
 // custom library
@@ -16,7 +17,7 @@ var index = function (req, res, next) {
     //console.log("Cookies: ", req.headers.cookie);
     //console.log(req.cookies);
     var user = req.user;
-    var sess = req.sessionID;
+    //var sess = req.sessionID;
     //console.log(user);
     // var errorMessage = req.session.exists;
     // var infoMessage = req.session.success;
@@ -515,6 +516,60 @@ var approveWords = function (req, res, next) {
     }
 };
 
+//REST API ROUTES:
+
+var api = function (req, res, next) {
+    "use strict";
+    console.log(req.headers);
+    res.json({message: 'Welcome to the coolest API on earth!'});
+};
+
+var auth = function (req, res, next) {
+    "use strict";
+    //console.log(req.body);
+    new Model.User({username: req.body.username})
+        .fetch()
+        .then(function (modelData) {
+            "use strict";
+            //console.log(modelData);
+            if (modelData === null) {
+                res.json({success: false, message: "Invalid username or password"})
+            } else {
+                var userData = modelData.toJSON();
+                //console.log(userData);
+                if (!bcrypt.compareSync(req.body.password, userData.password)) {
+                    res.json({success: false, message: 'Invalid username or password'});
+                } else {
+                    jwt.sign({
+                        userid: userData.userid,
+                        username: userData.username,
+                        access_level: userData.access_level
+                    }, "supaSecretTokenDzenerejtor", {
+                        expiresIn: '1440m' // expires in 24 hours
+                    }, function (err, token) {
+                        res.json({success: true, message: "GG", token: token})
+                    });
+                }
+            }
+        })
+        .catch(function (err) {
+            console.error(err);
+        })
+
+};
+
+var userEntries = function (req, res, next) {
+    console.log(req.user);
+    Model.WordsCollection.forge().query(function (qb) {
+        //qb is knex query builder, use knex function here
+        qb.offset(0).limit(10);
+    })
+        .fetch().then(function (result) {
+        //console.log(result);
+        res.json({success: true, apiData: result})
+    });
+};
+
 
 // export functions
 /**************************************/
@@ -587,5 +642,14 @@ module.exports.approveWords = approveWords;
 
 //Refresher
 module.exports.dataRefresh = dataRefresh;
+
+//REST API DEFAULT
+module.exports.api = api;
+
+//REST API Auth
+module.exports.auth = auth;
+
+//REST API return user entries
+module.exports.userEntries = userEntries;
 
 
