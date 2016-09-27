@@ -91,8 +91,6 @@ var ApprovedCollection = DB.Collection.extend({
 });
 
 
-
-
 //user counter
 var userCount = function (callback) {
     new User().count('userid', 'password')
@@ -114,7 +112,7 @@ var groupCounter = function (selectColumn, table, groupBycolumn, cb) {
         })
         .catch(function (err) {
             console.error(err);
-            callback({error: true, message: 'Database Error!'});
+            cb({error: true, message: 'Database Error!'});
 
         });
 };
@@ -153,16 +151,37 @@ var filteredRowCount = function (cond, cb) {
 };
 
 var newWordsSave = function (data, cb) {
-    console.log(data);
-    new Words({question: data.question, answer: data.answer}).fetch().then(function (model) {
-        if (model) {
-            cb('Entry already exists')
-        } else {
-            new Words(data).save().then(function (saved) {
-                cb('Saved succesfully')
-            })
-        }
-    })
+    //console.log(data);
+    new Words({question: data.question, answer: data.answer})
+        .fetch()
+        .then(function (model) {
+            if (model) {
+                cb({error: true, message: 'Entry already exists!'})
+            } else {
+                new Words(data)
+                    .save()
+                    .then(function (model) {
+                        console.log(model);
+                        cb({error: false, message: 'Saved succesfully!', xData: model.attributes.entryid});
+
+
+                    })
+                    .catch(function (err) {
+                        if (err) {
+                            console.error(err);
+                            cb({error: true, message: 'Database Error!'});
+
+                        }
+                    })
+            }
+        })
+        .catch(function (err) {
+            if (err) {
+                console.error(err);
+                cb({error: true, message: 'Database Error!'});
+
+            }
+        })
 };
 
 
@@ -213,8 +232,6 @@ var rowEdit = function (data, username, callback) {
 
         });
 };
-
-
 
 
 var newUserSave = function (data, callback) {

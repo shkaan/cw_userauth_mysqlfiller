@@ -3,6 +3,7 @@ var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var moment = require('moment');
 var jwt = require('jsonwebtoken');
+var xssFilters = require('xss-filters');
 
 
 // custom library
@@ -43,7 +44,9 @@ var index = function (req, res, next) {
 };
 
 var indexPost = function (req, res, next) {
-    console.log(req.body);
+    req.body.question = xssFilters.inHTMLData(req.body.question);
+    req.body.answer = xssFilters.inHTMLData(req.body.answer);
+    //console.log(req.body);
     var user = req.user.toJSON();
     req.body.created_by = user.username;
     req.body.sessionid = req.sessionID;
@@ -68,7 +71,7 @@ var indexData = function (req, res, next) {
     }
 
     var finished = function () {
-        if (rowCount != null && tableData != null && filteredRowCount != null) {
+        if (rowCount && tableData && filteredRowCount) {
             var dataObject = {
                 draw: req.query.draw,
                 recordsTotal: rowCount,
@@ -112,6 +115,8 @@ var indexData = function (req, res, next) {
                 }
             }
             tableData = jModel;
+            console.log(rowCount);
+            console.log(jModel[0].indexField);
             finished();
         })
         .catch(function (err) {
@@ -225,56 +230,56 @@ var notFound404 = function (req, res, next) {
     res.render('404', {title: '404 Not Found'});
 };
 
-//main
+//main -- deprecated
 //POST
-var mainPost = function (req, res, next) {
-
-    var words = req.body;
-    var user = req.user.toJSON();
-    //console.log(user);
-    //console.log(req.sessionID);
-    var wordsCheck = new Model.Words({
-        question: words.question,
-        answer: words.answer
-    }).fetch();
-    //console.log(req.body);
-    return wordsCheck
-        .then(function (exists) {
-            //console.log(wordsCheck);
-            //console.log(exists);
-            if (exists) {
-                //res.render('index', {title: 'Home', errorMessage: 'already exists'});
-                req.session.exists = "Entry already exists";
-                return res.redirect('/');
-            } else {
-                var wordsWrite = new Model.Words({
-                    question: words.question,
-                    answer: words.answer,
-                    created_by: user.username,
-                    sessionid: req.sessionID
-                });
-                wordsWrite.save()
-                    .then(function (success) {
-                        if (success) {
-                            //console.log(success);
-                            req.session.success = "Epic Success!!!";
-                            //console.log(req.session);
-                            return res.redirect('/');
-                        }
-                    })
-                    .catch(function (err) {
-                        console.error(err);
-                        return res.status(500).send({error: true, message: err.message});
-                    });
-            }
-        })
-        .catch(function (err) {
-            console.error(err);
-            return res.status(500).send({error: true, message: err.message});
-
-        });
-
-};
+// var mainPost = function (req, res, next) {
+//
+//     var words = req.body;
+//     var user = req.user.toJSON();
+//     //console.log(user);
+//     //console.log(req.sessionID);
+//     var wordsCheck = new Model.Words({
+//         question: words.question,
+//         answer: words.answer
+//     }).fetch();
+//     //console.log(req.body);
+//     return wordsCheck
+//         .then(function (exists) {
+//             //console.log(wordsCheck);
+//             //console.log(exists);
+//             if (exists) {
+//                 //res.render('index', {title: 'Home', errorMessage: 'already exists'});
+//                 req.session.exists = "Entry already exists";
+//                 return res.redirect('/');
+//             } else {
+//                 var wordsWrite = new Model.Words({
+//                     question: words.question,
+//                     answer: words.answer,
+//                     created_by: user.username,
+//                     sessionid: req.sessionID
+//                 });
+//                 wordsWrite.save()
+//                     .then(function (success) {
+//                         if (success) {
+//                             //console.log(success);
+//                             req.session.success = "Epic Success!!!";
+//                             //console.log(req.session);
+//                             return res.redirect('/');
+//                         }
+//                     })
+//                     .catch(function (err) {
+//                         console.error(err);
+//                         return res.status(500).send({error: true, message: err.message});
+//                     });
+//             }
+//         })
+//         .catch(function (err) {
+//             console.error(err);
+//             return res.status(500).send({error: true, message: err.message});
+//
+//         });
+//
+// };
 
 //deleteRow
 //POST
@@ -540,15 +545,22 @@ var auth = function (req, res, next) {
                 if (!bcrypt.compareSync(req.body.password, userData.password)) {
                     res.json({success: false, message: 'Invalid username or password'});
                 } else {
-                    jwt.sign({
-                        userid: userData.userid,
-                        username: userData.username,
-                        access_level: userData.access_level
-                    }, "supaSecretTokenDzenerejtor", {
-                        expiresIn: '1440m' // expires in 24 hours
-                    }, function (err, token) {
-                        res.json({success: true, message: "GG", token: token})
-                    });
+                    jwt.sign(
+                        {
+                            userid: userData.userid,
+                            username: userData.username,
+                            access_level: userData.access_level
+                        }, "supaSecretTokenDzenerejtor",
+                        {
+                            expiresIn: '1440m' // expires in 24 hours
+                        }, function (err, token) {
+                            if (err) {
+                                console.error(err);
+                                res.json({success: false, message: err.message});
+                            } else {
+                                res.json({success: true, message: "GG", token: token})
+                            }
+                        });
                 }
             }
         })
@@ -601,8 +613,8 @@ module.exports.signOut = signOut;
 // 404 not found
 module.exports.notFound404 = notFound404;
 
-//home POST
-module.exports.mainPost = mainPost;
+//home POST -- deprecated
+//module.exports.mainPost = mainPost;
 
 //deleteRow
 module.exports.deleteRow = deleteRow;

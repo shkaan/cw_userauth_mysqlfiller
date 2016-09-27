@@ -6,54 +6,54 @@ $(function () {
     var $protocol = $(location).attr('protocol');
     var $host = $(location).attr('host');
     var $url = $protocol + '//' + $host;
+    var $id;
     var $handlerMount = $('.table-scroll');
     // var $lng = $('#table-body-recent').find('tr').length;
     var $dTableOptionsDefault = {
-            fixedHeader: false,
-            paging: true,
-            scrollY: '50vh',
-            // scrollCollapse: true,
-            ordering: true,
-            info: true,
-            order: [4, 'desc'],
-            columnDefs: [{
-                targets: 'no-sort',
-                orderable: false
-            }],
-            processing: true,
-            serverSide: true,
-            deferRender: true,
-            stateSave: true,
-            scroller: {
-                boundaryScale: 0.3,
-                displayBuffer: 10,
-                loadingIndicator: true
+        fixedHeader: false,
+        paging: true,
+        scrollY: '50vh',
+        // scrollCollapse: true,
+        ordering: true,
+        info: true,
+        order: [4, 'desc'],
+        columnDefs: [{
+            targets: 'no-sort',
+            orderable: false
+        }],
+        processing: true,
+        serverSide: true,
+        deferRender: true,
+        stateSave: true,
+        scroller: {
+            boundaryScale: 0.3,
+            displayBuffer: 10,
+            loadingIndicator: true
+        },
+        ajax: {
+            url: $url + '/indexData',
+            dataSrc: "aaData"
+        },
+        columns: [
+            {
+                data: 'entryid',
+                className: 'keyid hide'
             },
-            ajax: {
-                url: $url + '/indexData',
-                dataSrc: "aaData"
-            },
-            columns: [
-                {
-                    data: 'entryid',
-                    className: 'keyid hide'
-                },
-                {data: 'indexField'},
-                {data: 'question'},
-                {data: 'answer'},
-                {data: 'created_at'},
-                {
-                    defaultContent: '<div class="btn-toolbar pull-right">' +
-                    '<button class="btn btn-default btn-xs editbtn">' +
-                    '<span class="glyphicon glyphicon-pencil">' +
-                    '</span> edit row</button>' +
-                    '<button class = "btn btn-default btn-xs deletebtn" >' +
-                    '<span class = "glyphicon glyphicon-remove">' +
-                    '</span > delete row</button ></div >'
-                }
-            ]
-        }
-        ;
+            {data: 'indexField'},
+            {data: 'question'},
+            {data: 'answer'},
+            {data: 'created_at'},
+            {
+                defaultContent: '<div class="btn-toolbar pull-right">' +
+                '<button class="btn btn-default btn-xs editbtn">' +
+                '<span class="glyphicon glyphicon-pencil">' +
+                '</span> edit row</button>' +
+                '<button class = "btn btn-default btn-xs deletebtn" >' +
+                '<span class = "glyphicon glyphicon-remove">' +
+                '</span > delete row</button ></div >'
+            }
+        ]
+    };
 
     var $dTblInit = $('#index-table').DataTable($dTableOptionsDefault);
 
@@ -61,14 +61,14 @@ $(function () {
     //     $dTblInit.ajax.url($url + '/indexData').load(); // user paging is not reset on reload
     // }, 5000);
 
-    $('.table').on('draw.dt', function () {
-        $(this).find('tr').addClass('blink');
-        console.log('Redraw occurred at: ' + new Date().getTime());
-
-        $('tbody .blink:first-child').animate({opacity: 0.40}, 150, 'linear', function () {
-            $(this).delay(100).animate({opacity: 1}, 400);
-        });
-    });
+    // $('.table').on('draw.dt', function () {
+    //     $(this).find('tr').addClass('blink');
+    //     console.log('Redraw occurred at: ' + new Date().getTime());
+    //
+    //     $('tbody .blink:first-child').animate({opacity: 0.40}, 150, 'linear', function () {
+    //         $(this).delay(100).animate({opacity: 1}, 400);
+    //     });
+    // });
 
     // $dTblInit.on('order.dt search.dt', function () {
     //     $dTblInit.column(1, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
@@ -80,6 +80,18 @@ $(function () {
 
     $('#messages').show(0).delay(2500).fadeOut(800).hide(0);
 
+    $('.table').on('draw.dt', function () {
+        "use strict";
+        if ($id) {
+            $('.keyid').filter(function () {
+                return $(this).text() === $id.toString();
+            }).parent().animate({opacity: 0.40}, 150, 'linear', function () {
+                $(this).delay(100).animate({opacity: 1}, 400);
+                $id = null;
+            });
+        }
+    });
+
 
     $('#idx-form').on('submit', function (e) {
         e.preventDefault();
@@ -89,10 +101,21 @@ $(function () {
             dataType: 'JSON',
             data: $('#idx-form').serialize()
         }).done(function (res) {
-            console.log(res);
+            //console.log(res);
             $dTblInit.ajax.reload();
             $('#idx-form')[0].reset();
             $('#question-input').focus();
+            if (res.error === false) {
+                $('#messages').show(0).delay(2500);
+                $('#info').html(res.message).fadeIn(10).delay(1500).fadeOut(2000);
+                $id = res.xData;
+            } else {
+                $('#messages').show(0).delay(2500);
+                $('#error').html(res.message).fadeIn(10).delay(1500).fadeOut(2000);
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert('Error occured\n' + jqXHR.status + '\n' + errorThrown +
+                '\n\n' + 'Try refreshing this page')
         })
     });
 

@@ -82,8 +82,8 @@ var createRoot = function () {
                 });
         }
     });
-};
-createRoot();
+}();
+// createRoot();
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -149,9 +149,9 @@ app.post('/signin', urlencodedParser, route.signInPost);
 // GET
 app.get('/signout', route.signOut);
 
-//mainPost
+//mainPost -- deprecated
 //POST
-app.post('/mainPost', fn.protectedUser, urlencodedParser, route.mainPost);
+//app.post('/mainPost', fn.protectedUser, urlencodedParser, route.mainPost);
 
 //deleterow
 //POST AJAX
