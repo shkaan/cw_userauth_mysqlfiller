@@ -24,7 +24,7 @@ var Model = require('./model');
 var fn = require('./fn');
 
 var urlencodedParser = bodyParser.urlencoded({extended: false});
-//var jsonParser = bodyParser.json();
+var jsonParser = bodyParser.json();
 
 var app = express();
 var apiRouter = express.Router();
@@ -214,11 +214,21 @@ app.get('/robots.txt', function (req, res) {
 //default route
 apiRouter.get('/', route.api);
 
+//check if token is valid
+apiRouter.get('/verifyToken', fn.verifyUserTOken,urlencodedParser);
+
 //User Auth
 apiRouter.post('/auth', urlencodedParser, route.auth);
 
 //get all user created entries
 apiRouter.get('/userEntries', fn.verifyUserTOken, urlencodedParser, route.userEntries);
+
+//edit row
+apiRouter.post('/editRow/:id',fn.verifyUserTOken, jsonParser, route.restEditRow);
+
+//delete row
+apiRouter.delete('/deleteRow/:id', fn.verifyUserTOken, urlencodedParser, route.destroyRow);
+
 
 
 app.use('/api', apiRouter);

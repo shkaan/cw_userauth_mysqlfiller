@@ -529,21 +529,25 @@ var api = function (req, res, next) {
     res.json({message: 'Welcome to the coolest API on earth!'});
 };
 
+
 var auth = function (req, res, next) {
     "use strict";
-    //console.log(req.body);
+    console.log(req.body);
+    console.log(req.query);
+    console.log(req.headers);
+
     new Model.User({username: req.body.username})
         .fetch()
         .then(function (modelData) {
             "use strict";
             //console.log(modelData);
             if (modelData === null) {
-                res.json({success: false, message: "Invalid username or password"})
+                res.json({success: false, message: "Invalid username or password", token: null})
             } else {
                 var userData = modelData.toJSON();
                 //console.log(userData);
                 if (!bcrypt.compareSync(req.body.password, userData.password)) {
-                    res.json({success: false, message: 'Invalid username or password'});
+                    res.json({success: false, message: "Invalid username or password", token: null});
                 } else {
                     jwt.sign(
                         {
@@ -556,7 +560,7 @@ var auth = function (req, res, next) {
                         }, function (err, token) {
                             if (err) {
                                 console.error(err);
-                                res.json({success: false, message: err.message});
+                                res.json({success: false, message: err.message, token: null});
                             } else {
                                 res.json({success: true, message: "GG", token: token})
                             }
@@ -566,22 +570,82 @@ var auth = function (req, res, next) {
         })
         .catch(function (err) {
             console.error(err);
+            res.json({success: false, message: err, token: null})
         })
 
 };
 
 var userEntries = function (req, res, next) {
-    console.log(req.user);
+    //console.log(req.user);
+    //console.log(req.body);
+    console.log(req.query);
+
+
     Model.WordsCollection.forge().query(function (qb) {
         //qb is knex query builder, use knex function here
-        qb.offset(0).limit(10);
+        qb.offset(parseInt(req.query.offset, 10) || 0).limit(parseInt(req.query.limit, 10) || 30);
     })
-        .fetch().then(function (result) {
-        //console.log(result);
-        res.json({success: true, apiData: result})
-    });
+        .fetch()
+        .then(function (result) {
+            //console.log(result);
+            res.json({success: true, apiData: result})
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({success: false, message: err, token: null})
+        })
 };
 
+
+var destroyRow = function (req, res, next) {
+    console.log(req.params);
+    new Model.Words({entryid: req.params.id})
+        .fetch({require: true})
+        .then(function (result) {
+            console.log(result);
+            result
+                .destroy()
+                .then(function () {
+                    res.json({success: true, message: "Row Deleted"});
+                })
+                .catch(function (err) {
+                    console.error(err);
+                    res.json({success: false, message: err.message});
+                })
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({success: false, message: err.message});
+        })
+};
+
+var restEditRow = function (req, res, next) {
+    //console.log(req.user);
+    console.log(req.params);
+    console.log(req.body);
+    if (req.body.question && req.body.answer) {
+        new Model.Words({entryid: req.params.id})
+            .fetch({require: true})
+            .then(function (result) {
+                result.set({updated_by: req.user.username});
+                result.save(req.body)
+                    .then(function (result) {
+                        res.json({success: true, message: "Saved Successfully", apiData:[result]});
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        res.json({success: false, message: err.message});
+                    });
+            })
+            .catch(function (err) {
+                console.error(err);
+                res.json({success: false, message: err.message});
+            });
+    } else {
+        res.json({success: false, message: 'Invalid data'});
+
+    }
+};
 
 // export functions
 /**************************************/
@@ -663,5 +727,12 @@ module.exports.auth = auth;
 
 //REST API return user entries
 module.exports.userEntries = userEntries;
+
+//REST API delete row
+module.exports.destroyRow = destroyRow;
+
+//REST API edti row
+module.exports.restEditRow = restEditRow;
+
 
 

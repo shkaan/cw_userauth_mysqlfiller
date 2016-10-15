@@ -40,18 +40,23 @@ var protectedAdmin = function (req, res, next) {
 };
 
 var verifyUserTOken = function (req, res, next) {
-    var token = (req.body) || (req.query) || req.headers['x-access-token'];
-    jwt.verify(token.token, 'supaSecretTokenDzenerejtor', function (err, decoded) {
+    console.log(req.path);
+    //console.log(req.headers['x-access-token']);
+    var token = req.headers['x-access-token'] || req.query.token || req.body.token;
+    console.log(token);
+    jwt.verify(token, 'supaSecretTokenDzenerejtor', function (err, decoded) {
         if (err) {
             console.error('invalid token');
             console.error(err);
             res.json({success: false, message: err.message});
+        } else if (req.path === '/verifyToken') {
+            res.json({success: true, message: 'Token is valid'});
         } else {
-            //console.log(decoded);
             req.user = decoded;
             next();
         }
     });
+
 };
 
 

@@ -3,7 +3,7 @@ var knex = require('knex')({
 
     //set to use env variable for connection in format: mysql://username:password@host:port/database
     connection: process.env.aruba_mysql //--mysql on arubacloud
-     // process.env.gd_mysql //--go daddy mysql
+    // process.env.gd_mysql //--go daddy mysql
     // process.env.mysql_url // --local mysql
     // or old fashioned hardcoded info if everything fails
     // connection:{
@@ -19,7 +19,7 @@ var knex = require('knex')({
 //    connection: process.env.JAWSDB_URL || process.env.mysql_url
 
 });
-var DB = require('bookshelf')(knex);
 
+var DB = require('bookshelf')(knex);
 
 module.exports.DB = DB;
