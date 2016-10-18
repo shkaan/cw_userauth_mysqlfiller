@@ -66,11 +66,14 @@ var indexData = function (req, res, next) {
     var filteredRowCount;
     var user = req.user;
     var dbColumn = {2: 'question', 3: 'answer', 4: 'created_at'};
+    var counter = 0;
     if (user) {
         user = user.toJSON();
     }
 
     var finished = function () {
+        counter++;
+        // console.log('Finish called: ' + counter);
         if (rowCount && tableData && filteredRowCount) {
             var dataObject = {
                 draw: req.query.draw,
@@ -78,7 +81,16 @@ var indexData = function (req, res, next) {
                 recordsFiltered: filteredRowCount,
                 aaData: tableData
             };
+            // console.log("and its gone");
             res.json(dataObject);
+        } else if (counter >= 3) {
+            var emptyTable = {
+                draw: req.query.draw,
+                recordsTotal: 0,
+                recordsFiltered: 0,
+                aaData: []
+            };
+            res.json(emptyTable);
         }
     };
 
@@ -105,18 +117,23 @@ var indexData = function (req, res, next) {
             .orderBy(dbColumn[req.query.order[0].column], req.query.order[0].dir)
     }).fetch()
         .then(function (model) {
+            //console.log(model);
             var jModel = model.toJSON();
             var len = jModel.length;
-            for (var i = 0; i < len; i++) {
-                if (req.query.order[0].dir === 'asc') {
-                    jModel[i].indexField = i + parseInt(req.query.start, 10) + 1;
-                } else {
-                    jModel[i].indexField = rowCount - (i + parseInt(req.query.start, 10));
+            if (model) {
+                for (var i = 0; i < len; i++) {
+                    if (req.query.order[0].dir === 'asc') {
+                        jModel[i].indexField = i + parseInt(req.query.start, 10) + 1;
+                    } else {
+                        jModel[i].indexField = rowCount - (i + parseInt(req.query.start, 10));
+                    }
                 }
             }
-            tableData = jModel;
+
+            tableData = jModel || null;
+            //console.log(tableData);
             console.log(rowCount);
-            console.log(jModel[0].indexField);
+            //console.log(jModel[0].indexField);
             finished();
         })
         .catch(function (err) {
@@ -309,7 +326,7 @@ var editRow = function (req, res, next) {
         var jqres = JSON.stringify(resultParse);
         //var jpars = JSON.parse(jqres);
         //console.log(result);
-        //console.log(jqres);
+        // console.log(jqres);
         //console.log(jpars);
         // res.writeHead(200, {'Content-Type': 'text/plain'});
         res.send(jqres);
@@ -377,7 +394,7 @@ var adminApprovedFetch = function (req, res, next) {
 };
 
 var dataRefresh = function (req, res, next) {
-    console.log(req.query);
+    // console.log(req.query);
     var rowCount;
     var filteredRowCount;
     var tableData;
@@ -437,7 +454,7 @@ var dataRefresh = function (req, res, next) {
 //POST
 var createUser = function (req, res, next) {
     //console.log(req.headers);
-    console.log(req.body);
+    // console.log(req.body);
     var data = req.body;
     // console.log(req.body);
     Model.newUserSave(data, function (callback) {
@@ -451,7 +468,7 @@ var createUser = function (req, res, next) {
 };
 
 var editUser = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body.password) {
         console.log('YAAAAAY PASSWORD - hashing');
         req.body.password = bcrypt.hashSync(req.body.password);
@@ -480,7 +497,7 @@ var deleteUser = function (req, res, next) {
 };
 
 var editWords = function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     if (req.body) {
         req.body.updated_by = req.user.attributes.username;
         Model.wordsEdit(req.body, function (callback) {
@@ -488,6 +505,7 @@ var editWords = function (req, res, next) {
             if (callback.error === true) {
                 res.status(500);
             }
+            //console.log((callback));
             res.send(JSON.stringify(callback));
         });
     }
@@ -630,7 +648,7 @@ var restEditRow = function (req, res, next) {
                 result.set({updated_by: req.user.username});
                 result.save(req.body)
                     .then(function (result) {
-                        res.json({success: true, message: "Saved Successfully", apiData:[result]});
+                        res.json({success: true, message: "Saved Successfully", apiData: [result]});
                     })
                     .catch(function (err) {
                         console.error(err);

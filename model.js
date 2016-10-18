@@ -146,7 +146,10 @@ var filteredRowCount = function (cond, cb) {
         qb.where('question', 'LIKE', cond + '%').orWhere('answer', 'LIKE', cond + '%')
     }).count().then(function (result) {
         cb(result);
-        console.log(result);
+        // console.log(result);
+    }).catch(function (err) {
+        console.error(err);
+        cb({error: true, message: 'Database Error!'});
     })
 };
 
@@ -161,7 +164,7 @@ var newWordsSave = function (data, cb) {
                 new Words(data)
                     .save()
                     .then(function (model) {
-                        console.log(model);
+                        // console.log(model);
                         cb({error: false, message: 'Saved succesfully!', xData: model.attributes.entryid});
 
 
@@ -311,6 +314,7 @@ var wordsEdit = function (data, callback) {
     new Words({entryid: data.entryid})
         .fetch({require: true})
         .then(function (result) {
+            // console.log(data)
             result.save(data)
                 .then(function (result) {
                     callback(result);
@@ -335,7 +339,7 @@ var wordsDelete = function (data, callback) {
             if (result.attributes.is_approved === 1) {
                 callback({error: true, message: 'Row is locked, uneditable and undeletable!'});
             } else {
-                console.log(result);
+                // console.log(result);
                 result
                     .destroy()
                     .then(function () {

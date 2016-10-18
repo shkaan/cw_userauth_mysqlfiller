@@ -412,7 +412,7 @@ $(function () {
             });
             $(findRow).parent().find('td:nth-child(2)').text(res.question);
             $(findRow).parent().find('td:nth-child(3)').text(res.answer);
-            $(findRow).parent().find('td:nth-child(6)').text(res.updated_by);
+            //$(findRow).parent().find('td:nth-child(6)').text(res.updated_by);
             // $.bootstrapSortable(true);
             $('#ajaxsuccess').html('Changes saved').fadeIn(10).delay(2000).fadeOut(2000);
 
